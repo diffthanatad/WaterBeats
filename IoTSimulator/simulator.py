@@ -11,6 +11,12 @@ class SimpleSimulatorFactory:
     ) -> "Simulator":
         if sensor_type == "temperature":
             simulator = TemperatureSimulator(id, interval, base_station_endpoint)
+        elif sensor_type == "soil_moisture":
+            simulator = SoilMoistureSimulator(id, interval, base_station_endpoint)
+        elif sensor_type == "water_level":
+            simulator = WaterLevelSimulator(id, interval, base_station_endpoint)
+        elif sensor_type == "water_pollution":
+            simulator = WaterPollutionSimulator(id, interval, base_station_endpoint)
         else:
             raise Exception(f"Unknown sensor type: {sensor_type}")
         return simulator
