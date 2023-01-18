@@ -1,13 +1,15 @@
 import math
 import random
-import time
 from asyncio import sleep
 import aiohttp
 from datetime import datetime
 
+
 class Simulator:
-    def __init__(self, base_station_endpoint: str) -> None:
+    def __init__(self, id: str, frequency: str, base_station_endpoint: str) -> None:
         self.x = 0
+        self.id = id
+        self.frequency = frequency
         self.base_station_endpoint = base_station_endpoint
 
     async def start(self) -> None:
@@ -17,7 +19,10 @@ class Simulator:
                 "timestamp": datetime.now().isoformat(),
                 "soil_moisture": reading,
             }
-            await self.send_data(data)
+            try:
+                await self.send_data(data)
+            except aiohttp.ClientConnectorError as e:
+                print(f"connection is not available: {e}")
             await sleep(1)
 
     def generate_data(self):
