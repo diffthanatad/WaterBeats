@@ -1,38 +1,69 @@
+import asyncio
+from enum import Enum
 import math
 import random
 from asyncio import sleep
 import aiohttp
 from datetime import datetime
 
+import websockets
+
 
 class SimpleSimulatorFactory:
+    """
+    This is a simple factory class that creates a simulator based on the sensor type.
+    """
+
     def create(
-        sensor_type: str, id: str, interval: int, base_station_endpoint: str, device_type: str, actuator_type: str,
+        sensor_type: str,
+        id: str,
+        interval: int,
+        base_station_endpoint: str,
+        device_type: str,
+        actuator_type: str,
     ) -> "Simulator":
-        print(sensor_type, id, interval, base_station_endpoint, device_type, actuator_type)
         if device_type == "sensor":
             if sensor_type == "temperature":
-                simulator = TemperatureSimulator(id, interval, base_station_endpoint, device_type)
+                simulator = TemperatureSimulator(
+                    id, interval, base_station_endpoint, device_type
+                )
             elif sensor_type == "soil_moisture":
-                simulator = SoilMoistureSimulator(id, interval, base_station_endpoint, device_type)
+                simulator = SoilMoistureSimulator(
+                    id, interval, base_station_endpoint, device_type
+                )
             elif sensor_type == "water_level":
-                simulator = WaterLevelSimulator(id, interval, base_station_endpoint, device_type)
+                simulator = WaterLevelSimulator(
+                    id, interval, base_station_endpoint, device_type
+                )
             elif sensor_type == "water_pollution":
-                simulator = WaterPollutionSimulator(id, interval, base_station_endpoint, device_type)
+                simulator = WaterPollutionSimulator(
+                    id, interval, base_station_endpoint, device_type
+                )
             else:
                 raise Exception(f"Unknown sensor type: {sensor_type}")
         elif device_type == "actuator":
             if actuator_type == "water_sprinkler":
-                simulator = WaterSprinklerSimulator(id, interval, base_station_endpoint, device_type)
+                simulator = WaterSprinklerSimulator(
+                    id, interval, base_station_endpoint, device_type
+                )
             elif actuator_type == "water_pump":
-                simulator = WaterPumpSimulator(id, interval, base_station_endpoint, device_type)
+                simulator = WaterPumpSimulator(
+                    id, interval, base_station_endpoint, device_type
+                )
             else:
                 raise Exception(f"Unknown actuator type: {actuator_type}")
+        else:
+            raise Exception(f"Unknown device type: {device_type}")
         return simulator
 
 
 class Simulator:
-    def __init__(self, id: str, interval: int, base_station_endpoint: str, device_type: str) -> None:
+    def __init__(
+        self, id: str, interval: int, base_station_endpoint: str, device_type: str
+    ) -> None:
+        """
+        This is the base class for all the simulators.
+        """
         self.x = 0
         self.id = id
         self.interval = interval
@@ -71,15 +102,18 @@ class Simulator:
                     )
                 else:
                     print(f"Data sent to base station: {data}")
-    
+
     async def start(self) -> None:
         if self.device_type == "sensor":
             await self.start_sensor()
         else:
-            self.start_actuator()
-    
-    def start_actuator(self) -> None:
-        print("start_actuator(self) - waiting for the instruction from IoT Base Station")
+            await self.start_actuator()
+
+    async def start_actuator(self) -> None:
+        async with websockets.connect(self.base_station_endpoint) as ws:
+            while True:
+                raw_text: str = await ws.recv()
+                asyncio.get_event_loop().create_task(self.handle_message(raw_text))
 
 
 class TemperatureSimulator(Simulator):
@@ -109,14 +143,30 @@ class WaterPollutionSimulator(Simulator):
         data["water_pollution"] = reading
         return data
 
+
+class SprinklerStatus(Enum):
+    ON = 1
+    OFF = 2
+
+
 class WaterSprinklerSimulator(Simulator):
-    def create_output_data(self, reading):
-        data = super().create_output_data(reading)
-        data["temperature"] = reading
-        return data
+    def __init__(
+        self, id: str, interval: int, base_station_endpoint: str, device_type: str
+    ) -> None:
+        super().__init__(id, interval, base_station_endpoint, device_type)
+        self.sprinkler = SprinklerStatus.OFF
+
+    async def handle_message(self, raw_text: str) -> None:
+        print(f"Received message: {raw_text}")
+        if raw_text == "on":
+            self.sprinkler = SprinklerStatus.ON
+            print("Turning on the sprinkler")
+        elif raw_text == "off":
+            self.sprinkler = SprinklerStatus.OFF
+            print("Turning off the sprinkler")
+
 
 class WaterPumpSimulator(Simulator):
-    def create_output_data(self, reading):
-        data = super().create_output_data(reading)
-        data["soil_moisture"] = reading
-        return data
+    async def handle_message(self, raw_text: str) -> None:
+        # TODO:
+        print(f"Executing {raw_text}")
