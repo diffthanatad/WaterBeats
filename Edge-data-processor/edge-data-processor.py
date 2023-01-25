@@ -59,5 +59,5 @@ class processing_data:
         return np.max(data)
 
 
-web_app = web_application("localhost", 5500, True)
+web_app = edge_data_processor("localhost", 5500, True)
 web_app.runserver()
