@@ -110,6 +110,7 @@ class Simulator:
             await self.start_actuator()
 
     async def start_actuator(self) -> None:
+        print("testing:", self.base_station_endpoint)
         async with websockets.connect(self.base_station_endpoint) as ws:
             while True:
                 raw_text: str = await ws.recv()
