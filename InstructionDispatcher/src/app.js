@@ -12,5 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 
 /* API routes */
 require("./routes/default.routes")(app);
+require("./routes/instruction.routes")(app);
 
 module.exports = app;
