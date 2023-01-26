@@ -92,7 +92,7 @@ class Simulator:
         value += 3 * random.random()
         return value
 
-    async def send_data(self, data):
+    async def send_data(self, data) -> str:
         async with aiohttp.ClientSession() as session:
             async with session.post(self.base_station_endpoint, json=data) as resp:
                 if resp.status != 200:
@@ -100,8 +100,10 @@ class Simulator:
                     raise Exception(
                         f"Error sending data to base station. status code: {resp.status}, response: {resp.text}"
                     )
+                    return f"Error sending data to base station. status code: {resp.status}, response: {resp.text}"
                 else:
                     print(f"Data sent to base station: {data}")
+                    return f"Data sent to base station: {data}"
 
     async def start(self) -> None:
         if self.device_type == "sensor":
@@ -157,14 +159,16 @@ class WaterSprinklerSimulator(Simulator):
         super().__init__(id, interval, base_station_endpoint, device_type)
         self.sprinkler = SprinklerStatus.OFF
 
-    async def handle_message(self, raw_text: str) -> None:
+    async def handle_message(self, raw_text: str) -> str:
         print(f"Received message: {raw_text}")
         if raw_text == "on":
             self.sprinkler = SprinklerStatus.ON
             print("Turning on the sprinkler")
+            return "Turning on the sprinkler"
         elif raw_text == "off":
             self.sprinkler = SprinklerStatus.OFF
             print("Turning off the sprinkler")
+            return "Turning off the sprinkler"
 
 
 class WaterPumpSimulator(Simulator):
