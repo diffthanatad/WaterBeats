@@ -1,0 +1,4 @@
+flask
+numpy
+aiohttp
+werkzeug

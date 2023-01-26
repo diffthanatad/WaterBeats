@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, json
-import redis
 import numpy as np
 from aiohttp import web
 from werkzeug.exceptions import HTTPException
