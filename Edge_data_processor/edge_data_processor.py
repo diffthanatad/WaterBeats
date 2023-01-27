@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, json
 import numpy as np
-from aiohttp import web
+import aiohttp
 from werkzeug.exceptions import HTTPException
 
 webapp = Flask(__name__)
@@ -62,7 +62,7 @@ class processing_data:
 
 class data_buffer_connection:
     # * Send data to the data buffer
-    async def send_data(self,data: json) -> str:
+    async def send_data(self,data) -> str:
         async with aiohttp.ClientSession() as session:
             async with session.post("http://localhost:23333/sensor", json=data) as resp:
                 if resp.status != 200:
