@@ -82,7 +82,7 @@ def handle_exception(e):
 @app.route("/sensor", methods=["GET", "POST", "DELETE"])
 def sensor_api():
     if request.method == "GET":
-        sensor_id = request.args.get("sensor_id")
+        sensor_id = request.args.get("sensorId")
         timestamp = request.args.get("timestamp")
         data = get_sensor_data(data_buffer, sensor_id, timestamp)
         if data is None:
@@ -94,7 +94,7 @@ def sensor_api():
         set_sensor_data(data_buffer, data)
         return ("", 201)
     elif request.method == "DELETE":
-        sensor_id = request.args.get("sensor_id")
+        sensor_id = request.args.get("sensorId")
         timestamp = request.args.get("timestamp")
         nums_del = delete_sensor_data(data_buffer, sensor_id, timestamp)
         if nums_del == 0:
@@ -104,7 +104,7 @@ def sensor_api():
 @app.route("/instruction", methods=["GET", "POST", "DELETE"])
 def actuator_api():
     if request.method == "GET":
-        actuator_id = request.args.get("actuator_id")
+        actuator_id = request.args.get("actuatorId")
         timestamp = request.args.get("timestamp")
         data = get_instruction_data(data_buffer, actuator_id, timestamp)
         if data is None:
@@ -116,7 +116,7 @@ def actuator_api():
         set_actuator_data(data_buffer, data)
         return ("", 201)
     elif request.method == "DELETE":
-        actuator_id = request.args.get("actuator_id")
+        actuator_id = request.args.get("actuatorId")
         timestamp = request.args.get("timestamp")
         nums_del = delete_actuator_data(data_buffer, actuator_id, timestamp)
         if nums_del == 0:
