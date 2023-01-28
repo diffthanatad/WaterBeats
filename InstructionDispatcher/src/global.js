@@ -35,6 +35,8 @@ var clients = {};
 */
 
 function addValueToList(key, value) {
+    if (!key) { return; }
+
     clients[key] = clients[key] || [];
 
     if (value) {
@@ -55,12 +57,21 @@ function getFirstValue(key) {
 }
 
 function removeAndReturnFirstValue(key) {
-    return clients[key].shift();
+    if (!key || !(key in clients)) { return null; }
+    
+    const firstItem = clients[key].shift();
+    return firstItem;
 }
 
 function removeKey(key) {
     delete clients[key];
     return;
+}
+
+function resetClients() {
+    for (const key in clients) {
+        delete clients[key];
+    }
 }
 
 module.exports = {
@@ -71,4 +82,5 @@ module.exports = {
     getFirstValue,
     removeAndReturnFirstValue,
     removeKey,
+    resetClients,
 }
