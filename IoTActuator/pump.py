@@ -48,6 +48,9 @@ class Pump(Actuator):
     def pumping(self, dur):
         print("pumping time is {}".format(dur))
         for i in range(dur):
+            if self.threadSpare:
+                self.flag = True
+                break
             time.sleep(1)
             print("time remains {}".format(dur-i))
 

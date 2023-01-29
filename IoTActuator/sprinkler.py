@@ -48,10 +48,13 @@ class Sprinkler(Actuator):
     def watering(self, dur):
         print("watering time is {}".format(dur))
         for i in range(dur):
+            if self.threadSpare:
+                self.flag = True
+                break
             time.sleep(1)
             print("time remains {}".format(dur-i))
 
 
 if __name__ == '__main__':
     sprinkler = Sprinkler(1, "ws://localhost:8765")
-    asyncio.run(sprinkler.main())
+    asyncio.run(sprinkler.receive_commands())
