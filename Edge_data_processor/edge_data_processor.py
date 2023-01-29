@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, json
 import numpy as np
 import aiohttp
 from werkzeug.exceptions import HTTPException
+import json
 
 webapp = Flask(__name__)
 
@@ -98,15 +99,17 @@ class data_buffer_connection:
             json: data of the specific sensor id and timestamp
         """
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"http://localhost:23333/sensor", sensor_id=sensor_id,timestamp=timestamp) as resp:
+            params = {"sensor_id": sensor_id, "timestamp": timestamp}
+            async with session.get(f"http://localhost:23333/sensor", params=params) as resp:
                 if resp.status != 200:
                     raise Exception(
                         f"Error while getting data from the DataBuffer: {resp.status}"
                     )
                     return f"Error while getting data from the DataBuffer: {resp.status}"
                 else:
-                    print(f"Data received from DataBuffer: {resp.json()}")
-                    return resp.json()
+                    response = await resp.json()
+                    print(f"Data received from DataBuffer: {response['data']}")
+                    return response['data']
     async def delete_data(self,sensor_id: str, timestamp: str) -> str:
         """delete data from the data buffer (in case that the data is sent to the main machine)
 
@@ -121,12 +124,13 @@ class data_buffer_connection:
             str: Data deleted from DataBuffer
         """
         async with aiohttp.ClientSession() as session:
-            async with session.delete(f"http://localhost:23333/sensor", sensor_id=sensor_id,timestamp=timestamp) as resp:
-                if resp.status != 204:
+            params = {"sensor_id": sensor_id, "timestamp": timestamp}
+            async with session.delete(f"http://localhost:23333/sensor", params=params) as resp:
+                if resp.status != 204 and resp.status != 202:
                     raise Exception(
                         f"Error while deleting data from the DataBuffer: {resp.status}"
                     )
                     return f"Error while deleting data from the DataBuffer: {resp.status}"
                 else:
-                    print(f"Data deleted from DataBuffer: {resp.json()}")
-                    return f"Data deleted from DataBuffer: {resp.json()}"
+                    print(f"Data deleted from DataBuffer")
+                    return f"Data deleted from DataBuffer"
