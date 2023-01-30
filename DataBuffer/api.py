@@ -3,10 +3,14 @@ from flask import Flask, make_response, request
 import redis
 from service import (
     delete_actuator_data,
+    delete_sensor_data,
     get_instruction_data,
+    get_sensor_data,
     pop_top_instruction,
     set_instruction,
+    set_sensor_data,
 )
+import service
 from data_buffer import DataBuffer
 
 app = Flask(__name__)
@@ -14,32 +18,6 @@ app = Flask(__name__)
 
 data_buffer = DataBuffer()
 
-
-def get_sensor_data(data_buffer: DataBuffer, sensor_id, timestamp):
-    key = f"{sensor_id}:{timestamp}"
-    fvs = data_buffer.hgetall(key)
-    if not fvs:
-        return None
-    return {
-        "sensorId": sensor_id,
-        "timestamp": timestamp,
-        "sensorType": str(fvs[b"sensorType"], encoding="utf-8"),
-        "data": float(fvs[b"data"]),
-    }
-
-
-def set_sensor_data(db: DataBuffer, data):
-    key = f"{data['sensorId']}:{data['timestamp']}"
-    fv_pairs = {
-        "sensorType": data["sensorType"],
-        "data": data["data"],
-    }
-    db.hset(key, fv_pairs)
-
-
-def delete_sensor_data(db: DataBuffer, sensor_id, timestamp):
-    key = f"{sensor_id}:{timestamp}"
-    return db.delete(key)
 
 
 @app.errorhandler(redis.exceptions.ConnectionError)
@@ -82,6 +60,23 @@ def sensor_api():
             return ("", 204)
         return ("", 202)
 
+@app.route("/sensor/history", methods=["GET", "DELETE"])
+def sensor_list_api():
+    if request.method == "GET":
+        timestamp = request.args.get("timestamp")
+        # data = data_buffer.get_all_by_value_range("sensors", 0, timestamp)
+        data = service.get_history_sensor_data_by_timestamp(data_buffer, timestamp)
+        if data is None:
+            return ("", 204)
+        resp_body = {"erroNo": 0, "message": "OK", "data": data}
+        return (resp_body, 200)
+    elif request.method == "DELETE":
+        timestamp = request.args.get("timestamp")
+        service.delete_history_sensor_data_by_timestamp(data_buffer, timestamp)
+        return ("", 200)
+    
+
+#### Instruction API ####
 
 @app.route("/instruction", methods=["GET", "POST", "DELETE"])
 def actuator_api():
