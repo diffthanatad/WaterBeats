@@ -19,18 +19,17 @@ wss.on('connection', function connection(ws) {
 
   /* saving the metadata about this client. */
   var actuatorId = 0;
+  var actuatorType = "";
 
   /* Polling for the task. If task exists, then send it to the destination actuator. */
   const sendInstructionInterval = setInterval(async () => {
-    // console.log("setInterval", actuatorId, ws.readyState);
-
     var firstTask = GLOBAL.removeAndReturnFirstValue(actuatorId);
-    // if (!firstTask) {
-    //   const response = await axios.get(`localhost:23333/instruction?actuatorId=${actuatorId}`);
-    //   if (response.status === 200) {
-    //     firstTask = response.data;
-    //   }
-    // }
+    if (!firstTask) {
+      const response = await axios.get(`localhost:23333/instruction/pop?${actuatorId}`);
+      if (response.status === 200) {
+        firstTask = response.data;
+      }
+    }
 
     if (firstTask) {
       PENDING_INSTRUCTION[actuatorId] = firstTask;
@@ -40,11 +39,25 @@ wss.on('connection', function connection(ws) {
         instruction: firstTask,
       }));
       
-      setTimeout(() => {
+      setTimeout(async () => {
         if (actuatorId in PENDING_INSTRUCTION) {
-          /* The instruction does not reached the actuator. I wil call the data buffer. */
-          // axios.post()
-          console.log(`Actuator does not reply ${actuatorId}`);
+          /* The instruction does not reached the actuator. Call the data buffer. */
+          console.log(`Actuator does not reply ${actuatorId}. Now, sending this ${firstTask} instruction to store in Data Buffer service.`);
+
+          const obj = {
+            actuatorId,
+            actuatorType,
+            data: firstTask,
+            timestamp: new Date().toISOString(),
+            unixTimestamp: new Date().getTime()
+          };
+
+          axios.post('localhost:23333/instruction', obj);
+          try {
+            await axios.get(`localhost:23333/instruction?actuatorId=${actuatorId}`);
+          } catch (error) {
+            console.log("Fail to store instruction in Data Buffer service.", error);
+          }
         }
       }, 2000)
     }
@@ -74,6 +87,7 @@ wss.on('connection', function connection(ws) {
     const message = JSON.parse(messageStr);
     const CONNECTION_TYPE = message.connectionType;
     const ID = message.actuatorId
+    const ACTUATOR_TYPE = message.actuatorType;
     const isDeviceRegistered = GLOBAL.connectionExist(ID);
 
     if (CONNECTION_TYPE === "OPEN_CONNECTION") {
@@ -84,6 +98,7 @@ wss.on('connection', function connection(ws) {
         }))
       } else {
         actuatorId = ID;
+        actuatorType = ACTUATOR_TYPE;
         GLOBAL.addValueToList(ID);
       }
     } else if (CONNECTION_TYPE === "STATUS_REPORT") {
