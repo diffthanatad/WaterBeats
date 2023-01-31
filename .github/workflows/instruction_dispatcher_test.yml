@@ -1,22 +1,12 @@
-name: Instruction Dispatcher Service CI Pipeline
+name: Instruction Dispatcher Service CI Pipeline.
 
 on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-#     strategy:
-#       matrix:
-#         node-version: [10.x, 12.x, 14.x, 15.x]
-
     steps:
-#       - uses: actions/checkout@v3
-#       - name: Use Node.js ${{ matrix.node-version }}
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: ${{ matrix.node-version }}
       - uses: actions/checkout@v2
 
       - name: Set up Node.js version
@@ -24,14 +14,14 @@ jobs:
         with:
           node-version: "16.x"
 
-      - name: Install dependencies
+      - name: Install dependencies.
         run: npm install
         working-directory: "./InstructionDispatcher"
       
-      - name: Build the appplication
+      - name: Build the appplication.
         run: npm run build --if-present
         working-directory: "./InstructionDispatcher"
         
-      - name: Test the appplication
+      - name: Test the appplication.
         run: npm test
         working-directory: "./InstructionDispatcher"
