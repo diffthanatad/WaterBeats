@@ -35,7 +35,10 @@ wss.on('connection', function connection(ws) {
     if (firstTask) {
       PENDING_INSTRUCTION[actuatorId] = firstTask;
 
-      ws.send(JSON.stringify(firstTask));
+      ws.send(JSON.stringify({
+        actuatorId,
+        instruction: firstTask,
+      }));
       
       setTimeout(() => {
         if (actuatorId in PENDING_INSTRUCTION) {
