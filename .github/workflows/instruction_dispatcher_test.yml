@@ -25,7 +25,7 @@ jobs:
           node-version: "16.x"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         working-directory: "./InstructionDispatcher"
       
       - name: Build the appplication
