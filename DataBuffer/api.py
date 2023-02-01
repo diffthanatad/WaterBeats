@@ -64,7 +64,6 @@ def sensor_api():
 def sensor_list_api():
     if request.method == "GET":
         timestamp = request.args.get("timestamp")
-        # data = data_buffer.get_all_by_value_range("sensors", 0, timestamp)
         data = service.get_history_sensor_data_by_timestamp(data_buffer, timestamp)
         if data is None:
             return ("", 204)
