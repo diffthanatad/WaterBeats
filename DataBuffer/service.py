@@ -27,7 +27,7 @@ def get_history_sensor_data_by_timestamp(db: DataBuffer, timestamp: int):
     return db.get_all_by_value_range("sensors_set", 0, timestamp)
 
 def delete_history_sensor_data_by_timestamp(db: DataBuffer, timestamp: int):
-    return db.delete_by_value_range("sensors_set", 0, timestamp)
+    return db.delete_all_by_value_range("sensors_set", 0, timestamp)
 
 def delete_sensor_data(db: DataBuffer, sensor_id, timestamp):
     key = f"{sensor_id}:{timestamp}"
