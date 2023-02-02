@@ -28,7 +28,7 @@ def handle_exception(e):
     response = make_response()
     response.data = json.dumps(
         {
-            "erroNo": 4,
+            "errorNo": 4,
             "message": "Redis connection error",
             "data": None,
         }
@@ -46,7 +46,7 @@ def sensor_api():
         data = get_sensor_data(data_buffer, sensor_id, timestamp)
         if data is None:
             return ("", 204)
-        resp_body = {"erroNo": 0, "message": "OK", "data": data}
+        resp_body = {"errorNo": 0, "message": "OK", "data": data}
         return (resp_body, 200)
     elif request.method == "POST":
         data = request.json
@@ -67,7 +67,7 @@ def sensor_list_api():
         data = service.get_history_sensor_data_by_timestamp(data_buffer, timestamp)
         if data is None:
             return ("", 204)
-        resp_body = {"erroNo": 0, "message": "OK", "data": data}
+        resp_body = {"errorNo": 0, "message": "OK", "data": data}
         return (resp_body, 200)
     elif request.method == "DELETE":
         timestamp = request.args.get("timestamp")
@@ -85,7 +85,7 @@ def actuator_api():
         data = get_instruction_data(data_buffer, actuator_id, timestamp)
         if data is None:
             return ("", 204)
-        resp_body = {"erroNo": 0, "message": "OK", "data": data}
+        resp_body = {"errorNo": 0, "message": "OK", "data": data}
         return (resp_body, 200)
     elif request.method == "POST":
         data = request.json
@@ -107,7 +107,7 @@ def instruction_pop():
     if data is None:
         return ("", 204)
     print('got data: ', data)
-    resp_body = {"erroNo": 0, "message": "OK", "data": data}
+    resp_body = {"errorNo": 0, "message": "OK", "data": data}
     return (resp_body, 200)
 
 
