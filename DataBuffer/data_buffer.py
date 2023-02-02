@@ -61,7 +61,6 @@ class DataBuffer:
         '''
         r = self._get_redis()
         members = r.smembers(set_key)
-        print('members', members)
         pipeline = r.pipeline()
         for m in members:
             pipeline.zrangebyscore(m, 0, max)

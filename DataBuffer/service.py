@@ -1,5 +1,13 @@
 from data_buffer import DataBuffer
 
+def parse_sensor_data_from_bytes(data: dict) -> dict:
+    return {
+        "sensorId": str(data[b'sensorId'], encoding='utf8'),
+        "timestamp": int(data[b'timestamp']),
+        "sensorType": str(data[b'sensorType'], encoding='utf8'),
+        "data": float(data[b'data']),
+    }
+
 def get_sensor_data(data_buffer: DataBuffer, sensor_id, timestamp):
     key = f"{sensor_id}:{timestamp}"
     fvs = data_buffer.hgetall(key)
@@ -20,11 +28,15 @@ def set_sensor_data(db: DataBuffer, data):
     fv_pairs = {
         "sensorType": data["sensorType"],
         "data": data["data"],
+        "sensorId": id,
+        "timestamp": ts,
     }
     db.hset_sorted(key, fv_pairs, ts, id, key, set_key="sensors_set")
 
 def get_history_sensor_data_by_timestamp(db: DataBuffer, timestamp: int):
-    return db.get_all_by_value_range("sensors_set", 0, timestamp)
+    ret= db.get_all_by_value_range("sensors_set", 0, timestamp)
+    ret = list(map(parse_sensor_data_from_bytes, ret))
+    return ret
 
 def delete_history_sensor_data_by_timestamp(db: DataBuffer, timestamp: int):
     return db.delete_all_by_value_range("sensors_set", 0, timestamp)
