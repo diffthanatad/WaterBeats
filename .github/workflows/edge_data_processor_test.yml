@@ -30,7 +30,7 @@ jobs:
         working-directory: ./DataBuffer
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi \
-           && python -m pip install api.py &
+           && python api.py &
       - name: Test with pytest
         working-directory: ./Edge_data_processor
         run: |
