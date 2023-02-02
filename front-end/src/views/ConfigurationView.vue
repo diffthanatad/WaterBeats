@@ -1,13 +1,13 @@
 <template>
-  <div class="home">
-    <h1>Home</h1>
+  <div class="configuration">
+    <h1>Configuration</h1>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'HomeView',
+  name: 'ConfigurationView',
   components: {
   }
 }
