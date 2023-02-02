@@ -57,4 +57,4 @@ class Pump(Actuator):
 
 if __name__ == '__main__':
     pump = Pump(1, "ws://localhost:8765")
-    asyncio.run(pump.main())
+    asyncio.run(pump.receive_commands())

@@ -25,6 +25,7 @@ class Actuator:
         for i, state in enumerate(states):
             self.events[state.lower()] = event_handler[i]
 
+
     def threadCommandRunning(self):
         self.flag = False
         while True:
