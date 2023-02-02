@@ -29,7 +29,8 @@ jobs:
       - name: Start Data Buffer
         working-directory: ./DataBuffer
         run: |
-          python api.py &
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi \
+           && python -m pip python api.py &
       - name: Test with pytest
         working-directory: ./Edge_data_processor
         run: |
