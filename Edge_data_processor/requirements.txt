@@ -1,0 +1,4 @@
+flask[async]
+numpy
+aiohttp
+werkzeug
