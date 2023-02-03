@@ -1,0 +1,5 @@
+flask[async]
+numpy
+aiohttp
+werkzeug
+pytest-asyncio
