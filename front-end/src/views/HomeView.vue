@@ -1,14 +1,16 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
+    <MapComp></MapComp>
   </div>
 </template>
 
 <script>
+import MapComp from '@/components/Map/MapComp.vue'
 
 export default {
   name: 'HomeView',
   components: {
+    MapComp,
   }
 }
 </script>
