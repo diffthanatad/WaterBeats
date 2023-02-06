@@ -3,7 +3,7 @@ use chrono::FixedOffset;
 use influxdb2::FromDataPoint;
 use serde::Serialize;
 
-#[derive(Debug, FromDataPoint, Default, Serialize)]
+#[derive(Debug, FromDataPoint, Default, Serialize, Clone)]
 pub struct SensorData {
     time: DateTime<FixedOffset>,
     sensor_id: String,

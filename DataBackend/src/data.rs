@@ -30,6 +30,31 @@ pub async fn get_latest_records_from_all_sensors_body(
     Ok(res)
 }
 
+pub async fn get_latest_record_by_id(id: &str) -> Result<model::SensorData, RequestError> {
+    let client = get_influxdb_client();
+    let bucket = get_default_bucket();
+    let qs = format!(
+        "from(bucket: \"{}\")
+        |> range(start: 0)
+        |> filter(fn: (r) => r._measurement == \"sensor_data\")
+        |> filter(fn: (r) => r.sensor_id == \"{}\" )
+        |> last()",
+        bucket, id
+    );
+    let query = Query::new(qs.to_string());
+    let res = client
+        .query::<model::SensorData>(Some(query))
+        .await
+        .map_err(|e| {
+            println!("query error: ");
+            println!("query: {}", qs);
+            println!("{:?}", e);
+            e
+        })?;
+    println!("{:?}", &res);
+    Ok(res[0].to_owned())
+}
+
 pub async fn debug_create_sample_data() -> Result<(), tide::Error> {
     let client = get_influxdb_client();
     let bucket = get_default_bucket();
@@ -45,7 +70,10 @@ pub async fn debug_create_sample_data() -> Result<(), tide::Error> {
         .timestamp(Utc::now().timestamp_nanos())
         .build()?];
 
-    let res = client.write(&bucket, stream::iter(points)).await.map_err(|e| e.into());
+    let res = client
+        .write(&bucket, stream::iter(points))
+        .await
+        .map_err(|e| e.into());
     return res;
 }
 
