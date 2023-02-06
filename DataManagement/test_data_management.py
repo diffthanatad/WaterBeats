@@ -4,7 +4,7 @@ import pytest
 
 WB_bucket = find_waterbeats_buckets()
 WB_token = create_token_for_bucket(WB_bucket["id"],WB_bucket["orgID"])
-WB_datamanagement = DataManagement(WB_bucket, WB_bucket["orgID"], WB_token, "https://localhost")
+WB_datamanagement = DataManagement(WB_bucket['name'], WB_bucket["orgID"], WB_token, "http://localhost:8086")
 
 
 

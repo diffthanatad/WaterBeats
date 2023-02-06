@@ -22,7 +22,7 @@ class DataManagement:
         """
         print(f'{self.org} {self.bucket} {self.token} {self.url} {self.bucket}')
         try :
-            await self.write_api.write(self.bucket, self.org, data_point)
+            self.write_api.write(self.bucket, self.org, data_point)
             return f"Data inserted"
         except Exception as e:
             return f"Error while inserting data to the Database: {e}"
