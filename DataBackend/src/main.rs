@@ -6,15 +6,18 @@ use tide::prelude::json;
 
 use data::get_latest_records_from_all_sensors_body;
 
+use crate::model::SensorDataExternal;
+
 #[async_std::main]
 async fn main() -> tide::Result<()> {
+    let listen_addr = std::env::var("WB_ADDRESS").unwrap_or("localhost:8080".to_string());
     let mut app = tide::new();
     app.at("/sensors/allLatest")
         .get(get_latest_records_from_all_sensors_api);
     app.at("/sensors/getLatestById")
         .get(get_latest_record_by_id);
     app.at("/debug/create").get(debug_create_sample_data_api);
-    app.listen("127.0.0.1:8080").await?;
+    app.listen(&listen_addr).await?;
     Ok(())
 }
 
@@ -27,10 +30,10 @@ struct ApiResponse<T> {
 
 async fn get_latest_records_from_all_sensors_api(_req: tide::Request<()>) -> tide::Result {
     let sensor_data_list = get_latest_records_from_all_sensors_body().await?;
-    Ok(json!(ApiResponse {
+    Ok(json!(ApiResponse::<Vec<SensorDataExternal>> {
         error: 0,
         message: None,
-        data: Some(sensor_data_list),
+        data: Some(sensor_data_list.into_iter().map(|e| e.into()).collect()),
     })
     .into())
 }
@@ -42,7 +45,6 @@ struct SensorIdQuery {
 
 async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
     let id: Result<SensorIdQuery, tide::Error> = req.query();
-    // let id: SensorIdQuery = req.query()?;
     if let Err(e) = id {
         println!("id error: {:?}", e);
         println!("{:?}", e.status());
@@ -56,22 +58,20 @@ async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
             .into());
     }
     let id = id.unwrap();
-    println!("id: {:?}", id);
     let data_res = data::get_latest_record_by_id(&id.id).await;
-    println!("get_latest_record_by_id: {:?}", data_res);
     if let Err(e) = data_res {
         return Ok(tide::Response::builder(500)
             .body(json!(ApiResponse::<()> {
                 error: 1,
-                message: Some(format!("read error: {:?}", e)),
+                message: Some(format!("failed to get data from DB: {:?}", e)),
                 data: None,
             }))
             .into());
     }
-    Ok(json!(ApiResponse {
+    Ok(json!(ApiResponse::<SensorDataExternal> {
         error: 0,
         message: None,
-        data: Some(data_res.unwrap()),
+        data: Some(data_res.unwrap().into()),
     })
     .into())
 }
@@ -87,6 +87,5 @@ async fn debug_create_sample_data_api(_req: tide::Request<()>) -> tide::Result {
             }))
             .into());
     }
-    // println!("debug_create_sample_data done");
     Ok("OK".into())
 }

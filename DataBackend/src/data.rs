@@ -20,13 +20,7 @@ pub async fn get_latest_records_from_all_sensors_body(
     let res = client
         .query::<model::SensorData>(Some(query))
         .await
-        .map_err(|e| {
-            println!("query error: ");
-            println!("query: {}", qs);
-            println!("{:?}", e);
-            e
-        })?;
-    println!("{:?}", res);
+        .map_err(|e| e)?;
     Ok(res)
 }
 
@@ -42,15 +36,7 @@ pub async fn get_latest_record_by_id(id: &str) -> Result<model::SensorData, Requ
         bucket, id
     );
     let query = Query::new(qs.to_string());
-    let res = client
-        .query::<model::SensorData>(Some(query))
-        .await
-        .map_err(|e| {
-            println!("query error: ");
-            println!("query: {}", qs);
-            println!("{:?}", e);
-            e
-        })?;
+    let res = client.query::<model::SensorData>(Some(query)).await?;
     println!("{:?}", &res);
     Ok(res[0].to_owned())
 }
@@ -82,7 +68,6 @@ fn get_influxdb_client() -> Client {
     let org = std::env::var("INFLUXDB_ORG").unwrap_or("WaterBeats".to_string());
     let token = std::env::var("INFLUXDB_TOKEN").unwrap_or("".to_string());
     let client = Client::new(&host, &org, &token);
-    println!("host: {}, org: {}, token: {}", host, org, token);
     client
 }
 
