@@ -1,4 +1,8 @@
 flask[async]
 influxdb_client
 werkzeug
+pytest
 pytest-asyncio
+aiohttp
+time
+random
