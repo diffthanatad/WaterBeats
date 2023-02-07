@@ -32,7 +32,7 @@ export default {
                 {
                     id: "1",
                     type: "Soil Moisture Sensor",
-                    status: "connected",
+                    status: "on",
                     value: "0.55 wfv",
                     timestamp: "2023-01-04 18:51:04",
                     location: [51.524692684598826, -0.13405083079203617]
@@ -40,7 +40,7 @@ export default {
                 {
                     id: "2",
                     type: "Soil Moisture Sensor",
-                    status: "offline",
+                    status: "off",
                     value: null,
                     timestamp: null,
                     location: [51.524926705352485, -0.13249806913374523]
@@ -48,7 +48,7 @@ export default {
                 {
                     id: "3",
                     type: "Temperature Sensor",
-                    status: "connected",
+                    status: "on",
                     value: "11°C",
                     timestamp: "2023-01-04 16:30:22",
                     location: [51.52191552403864, -0.13179715055845592]
@@ -56,7 +56,7 @@ export default {
                 {
                     id: "4",
                     type: "Temperature Sensor",
-                    status: "connected",
+                    status: "on",
                     value: "12°C",
                     timestamp: "2023-01-04 15:09:22",
                     location: [51.52597470028996, -0.13253025564190157]
