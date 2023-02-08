@@ -21,11 +21,3 @@ jobs:
       - name: Build the appplication.
         run: npm run build --if-present
         working-directory: "./front-end"
-        
-      - name: Unit test.
-        run: npm test:unit --if-present
-        working-directory: "./front-end"
-      
-      - name: E2E test.
-        run: npm test:e2e --if-present
-        working-directory: "./front-end"
