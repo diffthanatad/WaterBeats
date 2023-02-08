@@ -1,20 +1,21 @@
 <template>
   <div class="marker-component">
     <l-marker :lat-lng="marker.location">
-      <!-- <l-icon :lat-lng="marker.location" :icon-anchor=[0,0]> -->
-        <!-- <img v-if="iconImage === 1" class="marker-icon" src="@/assets/icon_water_blue.png" style=""/>
-        <img v-else-if="iconImage === 2" class="marker-icon" src="@/assets/icon_water_black.png" style=""/>
-        <img v-else-if="iconImage === 3" class="marker-icon" src="@/assets/icon_water_red.png" style=""/>
-        <img v-else-if="iconImage === 4" class="marker-icon" src="@/assets/icon_temperature_blue.png" style=""/>
-        <img v-else-if="iconImage === 5" class="marker-icon" src="@/assets/icon_temperature_black.png" style=""/>
-        <img v-else-if="iconImage === 6" class="marker-icon" src="@/assets/icon_temperature_red.png" style=""/> -->
-        <!-- <img class="marker-icon" :src="deviceIcon" /> -->
-        <!-- <img class="marker-icon" :src="`${selectIcon}" /> -->
-      <!-- </l-icon> -->
-      <l-icon
-          :icon-size="dynamicSize"
-          :icon-url="icon_water_black"
-        />
+      <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_water_blue" />
+      <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_water_black" />
+      <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_water_red" />
+      <l-icon v-else-if="iconImage === 4" :icon-size="dynamicSize" :icon-url="icon_temperature_blue" />
+      <l-icon v-else-if="iconImage === 5" :icon-size="dynamicSize" :icon-url="icon_temperature_black" />
+      <l-icon v-else-if="iconImage === 6" :icon-size="dynamicSize" :icon-url="icon_temperature_red" />
+      <l-icon v-else-if="iconImage === 7" :icon-size="dynamicSize" :icon-url="icon_sprinkler_blue" />
+      <l-icon v-else-if="iconImage === 8" :icon-size="dynamicSize" :icon-url="icon_sprinkler_black" />
+      <l-icon v-else-if="iconImage === 9" :icon-size="dynamicSize" :icon-url="icon_sprinkler_green" />
+      <l-icon v-else-if="iconImage === 10" :icon-size="dynamicSize" :icon-url="icon_sprinkler_red" />
+      <l-icon v-else-if="iconImage === 11" :icon-size="dynamicSize" :icon-url="icon_pump_blue" />
+      <l-icon v-else-if="iconImage === 12" :icon-size="dynamicSize" :icon-url="icon_pump_black" />
+      <l-icon v-else-if="iconImage === 13" :icon-size="dynamicSize" :icon-url="icon_pump_green" />
+      <l-icon v-else-if="iconImage === 14" :icon-size="dynamicSize" :icon-url="icon_pump_red" />
+      <l-icon v-else :icon-size="dynamicSize" :icon-url="icon_questionMark_black" />
       <l-popup style="width: 250px;">
         <div>
           <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }} {{ iconImage }}</h5>
@@ -37,7 +38,22 @@
 </template>
 
 <script>
-import icon_water_black from '@/assets/icon_water_black.png'
+import icon_water_blue from "@/assets/icon_water_blue.png"
+import icon_water_black from "@/assets/icon_water_black.png"
+import icon_water_red from "@/assets/icon_water_red.png"
+import icon_temperature_blue from "@/assets/icon_temperature_blue.png"
+import icon_temperature_black from "@/assets/icon_temperature_black.png"
+import icon_temperature_red from "@/assets/icon_temperature_red.png"
+import icon_sprinkler_blue from "@/assets/icon_sprinkler_blue.png"
+import icon_sprinkler_black from "@/assets/icon_sprinkler_black.png"
+import icon_sprinkler_green from "@/assets/icon_sprinkler_green.png"
+import icon_sprinkler_red from "@/assets/icon_sprinkler_red.png"
+import icon_pump_blue from "@/assets/icon_pump_blue.png"
+import icon_pump_black from "@/assets/icon_pump_black.png"
+import icon_pump_green from "@/assets/icon_pump_green.png"
+import icon_pump_red from "@/assets/icon_pump_red.png"
+import icon_questionMark_black from "@/assets/icon_questionMark_black.png"
+
 import { LMarker, LIcon, LPopup } from '@vue-leaflet/vue-leaflet';
 
 export default {
@@ -49,7 +65,23 @@ export default {
     }
   },
   setup() {
-    return { icon_water_black }
+    return { 
+      icon_water_blue,
+      icon_water_black,
+      icon_water_red,
+      icon_temperature_blue,
+      icon_temperature_black,
+      icon_temperature_red,
+      icon_sprinkler_blue,
+      icon_sprinkler_black,
+      icon_sprinkler_green,
+      icon_sprinkler_red,
+      icon_pump_blue,
+      icon_pump_black,
+      icon_pump_green,
+      icon_pump_red,
+      icon_questionMark_black,
+    }
   },
   components: {
     LMarker,
@@ -60,7 +92,7 @@ export default {
     return {
       staticAnchor: [16, 37],
       customText: "Foobar",
-      iconSize: 64,
+      iconSize: 40,
       iconImage: 0,
     }
   },
@@ -86,15 +118,21 @@ export default {
       if (deviceType === "Soil Moisture Sensor") {
         if (status === "on") { return 1; }
         else if (status === "off") { return 2; }
-        else if (status === "error") { return 3; }
+        else { return 3; }
       } else if (deviceType === "Temperature Sensor") {
         if (status === "on") { return 4; }
         else if (status === "off") { return 5; }
-        else if (status === "error") { return 6; }
-      } else if (deviceType === "Water Springkler") {
-        return '@/assets/icon_water_black.png';
-      } else {
-        return '@/assets/icon_water_black.png';
+        else { return 6; }
+      } else if (deviceType === "Water Sprinkler") {
+        if (status === "on") { return 7; }
+        else if (status === "off") { return 8; }
+        else if (status === "watering") { return 9; }
+        else { return 10; }
+      }  else if (deviceType === "Water Pump") {
+        if (status === "on") { return 11; }
+        else if (status === "off") { return 12; }
+        else if (status === "pumping") { return 13; }
+        else { return 14; }
       }
     },
   },

@@ -63,15 +63,21 @@ export default {
                 },
                 {
                     id: "5",
-                    type: "Water Springkler",
+                    type: "Water Sprinkler",
                     status: "watering",
                     location: [51.52397881654594, -0.130105538694122]
                 },
                 {
                     id: "6",
-                    type: "Water Springkler",
+                    type: "Water Sprinkler",
                     status: "off",
                     location: [51.52329792648238, -0.13508371862180735]
+                },
+                {
+                    id: "9",
+                    type: "dddWater Sprinkler",
+                    status: "off",
+                    location: [51.52306410413633, -0.12788555112319272]
                 }
             ],
         };
