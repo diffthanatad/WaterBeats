@@ -1,9 +1,7 @@
-from flask import Flask, request, jsonify, json
+from flask import Flask, request, json
 from werkzeug.exceptions import HTTPException
 from data_management import DataManagement, insert_sensor_data
 from create_token import find_waterbeats_buckets, create_token_for_bucket
-import asyncio
-
 
 webapp = Flask(__name__)
 
@@ -18,21 +16,25 @@ class server:
     def __receive_data() -> tuple:
         data = request.json
         try:
-            sensor_id = data['sensor_id']
-            sensor_type = data['sensor_type']
-            sensor_data = data['data']
-            unit = data['unit']
-            longitude = data['longitude']
-            latitude = data['latitude']
-            timestamp = data['timestamp']
+            sensor_id = str(data['sensor_id'])
+            sensor_type = str(data['sensor_type'])
+            sensor_data = float(data['data'])
+            unit = str(data['unit'])
+            longitude = float(data['longitude'])
+            latitude = float(data['latitude'])
+            timestamp = int(data['timestamp'])
             wb_bucket = find_waterbeats_buckets()
             wb_token = create_token_for_bucket(wb_bucket["id"],wb_bucket["orgID"])
             wb_datamangement = DataManagement(wb_bucket["id"], wb_bucket["orgID"], wb_token, "http://localhost:8086")
-            return (insert_sensor_data(wb_datamangement, sensor_id, sensor_type, sensor_data, unit, longitude, latitude, timestamp), 200)
+            try :
+                insert_sensor_data(wb_datamangement, sensor_id, sensor_type, sensor_data, unit, longitude, latitude, timestamp)
+                return ('', 200)
+            except Exception as e:
+                return (f"Error while inserting data to the DataBuffer: {e}", 500)
         except KeyError as k:
             return (f"Some data is missing: {k}", 400)
         except Exception as e:
-            return (f"Error while inserting data to the DataBuffer: {e}", 500)
+            return (f"Error: {e}", 500)
         
     @webapp.errorhandler(code_or_exception=HTTPException)
     def handle_exception(self,e) -> json:

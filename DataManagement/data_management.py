@@ -24,12 +24,12 @@ class DataManagement:
                 write_api.write(bucket=self.bucket, record=[data_point])
             return f"Data inserted"
         except Exception as e:
-            return f"Error while inserting data to the Database: {e}"
+            return e
         
 def insert_sensor_data(DM: DataManagement,sensor_id: str, sensor_type: str, data: float, unit: str, longitude: float, latitude: float, timestamp: int) -> str:
     """insert data to database
     Args:
-        sensor_id (str): Sensor ID
+        sensor_id (int): Sensor ID
         sensor_type (str): Sensor type
         data (float): Data
         unit (str): Unit of the data
@@ -42,7 +42,6 @@ def insert_sensor_data(DM: DataManagement,sensor_id: str, sensor_type: str, data
         str: Data inserted to database
     """
     
-    
     # * Create data point
     data_point = influxdb_client.Point("sensor_data") \
         .tag("sensor_id", sensor_id) \
@@ -54,5 +53,5 @@ def insert_sensor_data(DM: DataManagement,sensor_id: str, sensor_type: str, data
         .time(timestamp)
     
     # * Write data to database
-    return DM.write_data(data_point)
-
+    response = DM.write_data(data_point)
+    return response
