@@ -1,0 +1,11 @@
+ ~/kafka/bin/zookeeper-server-start.sh ~/kafka/config/zookeeper.properties
+
+ ~/kafka/bin/kafka-server-start.sh ~/kafka/config/server.properties
+
+faust -A bs_hub worker -l info
+
+faust -A bs_hub send @soil_moisture_readings '{"sensor_id": "foo", "reading_value": "15"}'
+
+python main.py --id 2333 --target http://localhost:23333/new_data --sensor_type soil_moisture  --device_type sensor
+
+

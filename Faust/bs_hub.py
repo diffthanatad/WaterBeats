@@ -83,8 +83,6 @@ async def batch_agent_soil_moisture(soil_moisture_data):
         bp.store_locally(raw_data, 'soil_moisture')
 
 
-
-
 # streaming agents
 @app.agent(humidity_readings, sink=[batch_agent_humidity])
 async def stream_agent_humidity(humidity_raw_data):
@@ -121,7 +119,6 @@ async def actuator_agent(instructions):
     async for instruction in instructions:
         print('Actuator agent received new instruction')
         print(instruction)
-
 
 
 @app.timer(interval=2)
