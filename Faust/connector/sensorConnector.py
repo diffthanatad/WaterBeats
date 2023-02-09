@@ -26,8 +26,9 @@ async def handle_request(request):
         elif 'water_level' in data:
             topic = "humidity_readings"
             value = data["water_level"]
-        command = "cd .. && faust -A bs_hub send @{} '{{\"sensor_id\": \"{}\", \"reading_value\": \"{}\"}}'".format(
+        command = "cd .. && faust -A bs_hub send @{} '{{\"\"\"sensor_id\"\"\": \"\"\"{}\"\"\", \"\"\"reading_value\"\"\": \"\"\"{}\"\"\"}}'".format(
             topic, id, value)
+        print(command)
         changeToCommand(command)
         response = web.Response(text="Received data: {}".format(data))
     else:
