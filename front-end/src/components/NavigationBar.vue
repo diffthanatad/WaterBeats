@@ -24,7 +24,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'Configuration' }">Configuration</router-link>
+                                <router-link :to="{ name: 'ActuatorConfigurationView' }">Actuator Configuration</router-link>
                             </a>
                         </li>
                         <li class="nav-item">

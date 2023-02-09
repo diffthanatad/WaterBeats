@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GraphView from '../views/GraphView.vue'
-import ConfigurationView from '../views/ConfigurationView.vue'
+import ActuatorConfigurationView from '../views/ActuatorConfigurationView.vue'
 import AdminView from '../views/AdminView.vue'
 import SettingView from '../views/SettingView.vue'
 
@@ -17,9 +17,9 @@ const routes = [
     component: GraphView
   },
   {
-    path: '/configuration',
-    name: 'Configuration',
-    component: ConfigurationView
+    path: '/actuator_configuration',
+    name: 'ActuatorConfigurationView',
+    component: ActuatorConfigurationView
   },
   {
     path: '/admin',

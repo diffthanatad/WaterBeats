@@ -1,6 +1,6 @@
 <template>
   <div class="marker-component">
-    <l-marker :lat-lng="marker.location">
+    <l-marker :lat-lng="marker.location" @click="onClickMapMarker">
       <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_water_blue" />
       <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_water_black" />
       <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_water_red" />
@@ -108,6 +108,9 @@ export default {
     this.selectIcon();
   },
   methods: {
+    onClickMapMarker() {
+      console.log("onClickMapMarker()", this.marker.id);
+    },
     selectIcon() {
       this.iconImage = this.findIcon();
     },
