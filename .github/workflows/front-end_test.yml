@@ -1,4 +1,4 @@
-name: Instruction Dispatcher Service CI Pipeline.
+name: Front-end application CI Pipeline.
 
 on: [push]
 
@@ -16,12 +16,8 @@ jobs:
 
       - name: Install dependencies.
         run: npm install
-        working-directory: "./InstructionDispatcher"
+        working-directory: "./front-end"
       
       - name: Build the appplication.
         run: npm run build --if-present
-        working-directory: "./InstructionDispatcher"
-        
-      - name: Test the appplication.
-        run: npm test
-        working-directory: "./InstructionDispatcher"
+        working-directory: "./front-end"
