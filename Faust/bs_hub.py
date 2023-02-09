@@ -83,8 +83,6 @@ async def batch_agent_soil_moisture(soil_moisture_data):
         bp.store_locally(raw_data, 'soil_moisture')
 
 
-
-
 # streaming agents
 @app.agent(humidity_readings, sink=[batch_agent_humidity])
 async def stream_agent_humidity(humidity_raw_data):
@@ -123,10 +121,10 @@ async def actuator_agent(instructions):
         print(instruction)
 
 
-
-@app.timer(interval=2)
-async def every_2_seconds():
-    randTemp = random.randint(5, 25)
-    message = SoilMoistureReading('someSensorID', randTemp)
-    print(message)
-    await soil_moisture_readings.send(value=message)
+#
+# @app.timer(interval=2)
+# async def every_2_seconds():
+#     randTemp = random.randint(5, 25)
+#     message = SoilMoistureReading('someSensorID', randTemp)
+#     print(message)
+#     await soil_moisture_readings.send(value=message)
