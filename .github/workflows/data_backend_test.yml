@@ -18,7 +18,7 @@ jobs:
       - name: Initialize database
         working-directory: TSDB
         run: |
-          INFLUXDB_TOKEN=$(python ./create_token.py | tail -n 1) init_data.py
+          INFLUXDB_TOKEN=$(python ./create_token.py | tail -n 1) python init_data.py
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:
