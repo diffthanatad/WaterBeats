@@ -1,109 +1,80 @@
 <template>
-    <div class="configuration-page d-flex flex-row">
+    <div class="configuration-page">
         <div class="left-half">
-            <MapComp></MapComp>
+            <MapComp :inputDevices="devices" />
         </div>
         <div class="right-half">
-            <div class="row">
+            <h1>Actuator Configuration Page</h1>
+            <hr />
+            <div class="row mb-3">
                 <div class="col-6">
-                    <Field class="form-select" name="field" as="select" v-model="deviceType"
-                        aria-label="Default select example">
+                    <select class="form-select" name="field" as="select" v-model="deviceType">
                         <option value="pump">Pump</option>
                         <option value="sprinkler">Sprinkler</option>
-                    </Field>
+                    </select>
                 </div>
                 <div class="col-6">
-                    <button type="button" class="btn btn-primary col-6" @click.prevent="searchDeviceByActuatorType">
+                    <button type="button" class="btn btn-primary col-6" @click.prevent="getActuatorByType">
                         <i class="bi bi-search"></i>Search
                     </button>
                 </div>
             </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Currently Selected Device</label>
+                <select class="form-select" id="inputGroupSelect01" v-model="selectedDevice">
+                    <option v-for="device in devices" :key="device.id" :value="device.id"> {{ device.id }} </option>
+                </select>
+            </div>
             <hr />
             <h3> Rules </h3>
-            <!-- <form @submit.prevent="onSubmit">
-                <input type="email" name="email" />
-                <button>Sign up for newsletter</button>
-            </form> -->
-            <!-- <Form @submit="onSubmit">
-                <Field name="email" type="email" rules="required"/>
-                <ErrorMessage name="email" />
-                <button>Sign up for newsletter</button>
-            </Form> -->
-            <Form @submit="onSubmitRule">
-                <div class="mb-3 row">
-                    <label for="inputTemperatureLow" class="col-sm-6 col-form-label">Turn on when temperature is</label>
-                    <div class="col-sm-2">
-                        <Field class="form-control" name="temperatureLow" v-model="temperatureLow"
-                            rules="required" />
-                        <ErrorMessage name="temperatureLow" />
-                    </div>
-                    <div class="col-sm-2">
-                        <Field class="form-control" name="temperatureHigh" v-model="temperatureHigh"
-                            :rules="validateNumber" />
-                        <ErrorMessage name="temperatureHigh" />
-                    </div>
+            <form @submit.prevent="onSubmitRule">
+                <div class="row mb-3">
+                    <FormRuleSetting label="Turn on when temperature is" firstInputLabel="Low"
+                        firstPlaceholder="low ..." :firstInputInitialValue="rules.temperatureLow"
+                        secondInputLabel="High" secondPlaceholder="high ..."
+                        :secondInputInitialValue="rules.temperatureHigh"
+                        @onChangeInputValue="changeInputValueForTemperature" />
                 </div>
-                <button class="btn btn-primary">Save</button>
-            </Form>
+                <div class="row mb-3">
+                    <FormRuleSetting label="Turn on when soil moisture is" firstInputLabel="Low"
+                        firstPlaceholder="low ..." :firstInputInitialValue="rules.soilMoistureLow"
+                        secondInputLabel="High" secondPlaceholder="high ..."
+                        :secondInputInitialValue="rules.soilMoistureHigh"
+                        @onChangeInputValue="changeInputValueForSoilMoisture" />
+                </div>
+                <div class="row mb-3">
+                    <FormRuleSetting label="Turn on when time is" firstInputLabel="Min" firstPlaceholder="minutes?"
+                        :firstInputInitialValue="rules.minute" secondInputLabel="Time" secondPlaceholder=" 24 hr."
+                        :secondInputInitialValue="rules.time" @onChangeInputValue="changeInputValueForTime" />
+                </div>
+                <div class="row justify-content-center">
+                    <button class="btn btn-primary"><i class="bi bi-save2"></i>Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
 import MapComp from '@/components/Map/MapComp.vue'
-import { Form, Field, ErrorMessage, } from 'vee-validate';
+import FormRuleSetting from '@/components/Form/FormRuleSetting.vue';
+import { getActuatorByType } from '@/services/actuatorService.js';
+import { getRuleByActuatorId, updateRuleByActuatorId } from '@/services/ruleService.js';
+
+// import { Form } from 'vee-validate';
 
 export default {
     name: 'ActuatorConfigurationView',
     components: {
+        // Form,
         MapComp,
-        Field,
-        Form,
-        ErrorMessage,
+        FormRuleSetting,
     },
     data() {
         return {
-            deviceType: "pump",
-            temperatureLow: 0,
-            temperatureHigh: 0,
-            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            center: [51.52498676710948, -0.1344647153442085], /* University College London */
-            attribution: '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            zoom: 16,
-            interval: 7,
-            sensors: [
-                {
-                    id: "1",
-                    type: "Soil Moisture Sensor",
-                    status: "on",
-                    value: "0.55 wfv",
-                    timestamp: "2023-01-04 18:51:04",
-                    location: [51.524692684598826, -0.13405083079203617]
-                },
-                {
-                    id: "2",
-                    type: "Soil Moisture Sensor",
-                    status: "off",
-                    value: null,
-                    timestamp: null,
-                    location: [51.524926705352485, -0.13249806913374523]
-                },
-                {
-                    id: "3",
-                    type: "Temperature Sensor",
-                    status: "on",
-                    value: "11°C",
-                    timestamp: "2023-01-04 16:30:22",
-                    location: [51.52191552403864, -0.13179715055845592]
-                },
-                {
-                    id: "4",
-                    type: "Temperature Sensor",
-                    status: "on",
-                    value: "12°C",
-                    timestamp: "2023-01-04 15:09:22",
-                    location: [51.52597470028996, -0.13253025564190157]
-                },
+            selectedDevice: '',
+            deviceType: 'pump',
+            devices: [
                 {
                     id: "5",
                     type: "Water Sprinkler",
@@ -115,61 +86,92 @@ export default {
                     type: "Water Sprinkler",
                     status: "off",
                     location: [51.52329792648238, -0.13508371862180735]
-                },
-                {
-                    id: "9",
-                    type: "dddWater Sprinkler",
-                    status: "off",
-                    location: [51.52306410413633, -0.12788555112319272]
                 }
             ],
+            rules: {
+                temperatureLow: "1",
+                temperatureHigh: "2",
+                soilMoistureLow: "3",
+                soilMoistureHigh: "4",
+                minute: "10",
+                time: "10:00",
+            },
         };
     },
+    mounted() {
+        // this.getActuatorByType();
+    },
     methods: {
-        searchDeviceByActuatorType() {
-            console.log("searchDeviceByActuatorType()", this.deviceType);
-        },
-        validateNumber(value) {
-            if (!value) { return 'This field is required'; }
-            const regex = /^(0|[1-9]\d*)(\.\d+)?$/;
-            if (!regex.test(value)) { return 'This field must be a valid number'; }
-            return true;
-        },
-        // onSubmitRule(values) {
-        //     console.log(JSON.stringify(values, null, 2));
-        // }
-        validateEmail(value) {
-            // if the field is empty
-            if (!value) {
-                return 'This field is required';
+        async getActuatorByType() {
+            try {
+                console.log("getActuatorByType():", this.deviceType)
+
+                this.actuators.length = 0;
+                const response = await getActuatorByType(this.deviceType);
+
+                if (response.status !== 200) { return; }
+
+                const data = response.data;
+                this.actuators = data;
+            } catch (error) {
+                console.log("ActuatorConfigurationView.vue, getActuatorByType():", error);
             }
-            // if the field is not a valid email
-            const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-            if (!regex.test(value)) {
-                return 'This field must be a valid email';
+        },
+        async getRuleByActuatorId() {
+            try {
+                console.log("getRuleByActuatorId():", this.selectedDevice)
+                this.rules = {}
+
+                const response = await getRuleByActuatorId(this.selectedDevice);
+
+                if (response.status !== 200) { return; }
+
+                const data = response.data;
+                this.rules = data;
+            } catch (error) {
+                console.log("ActuatorConfigurationView.vue, getRuleByActuatorId():", error);
             }
-            // All is good
-            return true;
         },
-        onSubmitRule(values) {
-            console.log(values);
+        async onSubmitRule() {
+            try {
+                const obj = {
+                    temperature_low: this.rules.temperatureLow,
+                    temperature_high: this.rules.temperatureHigh,
+                    soil_moisture_low: this.rules.soilMoistureLow,
+                    soil_moisture_high: this.rules.soilMoistureHigh,
+                    time_period: this.rules.minute,
+                    start_time: this.rules.time,
+                }
+                console.log("onSubmitRule():", obj);
+                await updateRuleByActuatorId(obj);
+            } catch (error) {
+                console.log("ActuatorConfigurationView.vue, onSubmitRule():", error);
+            }
         },
-        onSubmit(value) {
-            console.log('Submitted', value);
+        changeInputValueForTemperature(obj) {
+            this.rules.temperatureLow = obj.firstInputValue;
+            this.rules.temperatureHigh = obj.secondInputValue;
         },
+        changeInputValueForSoilMoisture(obj) {
+            this.rules.soilMoistureLow = obj.firstInputValue;
+            this.rules.soilMoistureHigh = obj.secondInputValue;
+        },
+        changeInputValueForTime(obj) {
+            this.rules.minute = obj.firstInputValue;
+            this.rules.time = obj.secondInputValue;
+        },
+    },
+    watch: {
+        selectedDevice() {
+            // this.getRuleByActuatorId();
+        }
     },
 }
 </script>
 
 <style scoped>
-/* .map {
-    width: 47% !important;
-    height: 90% !important;
-} */
-.configuration-page {}
-
-.form-select {
-    /* width: 200px; */
+.configuration-page {
+    height: 100%;
 }
 
 .btn {
@@ -181,15 +183,13 @@ export default {
 }
 
 .left-half {
-    background-color: #ff9e2c;
     position: absolute;
     left: 0px;
     width: 50%;
-    height: 100%;
+    height: 93.5%;
 }
 
 .right-half {
-    background-color: #b6701e;
     position: absolute;
     right: 0px;
     width: 50%;
