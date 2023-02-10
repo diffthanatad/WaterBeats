@@ -74,3 +74,23 @@ fn get_influxdb_client() -> Client {
 fn get_default_bucket() -> String {
     std::env::var("INFLUXDB_BUCKET").unwrap_or("WaterBeats".to_string())
 }
+
+mod test {
+    #[async_std::test]
+    async fn test_get_latest_record_by_id() {
+        let id = "test_sensor_1";
+        let res = super::get_latest_record_by_id(id).await;
+        assert!(res.is_ok(), "{:?}", res);
+        let data = res.unwrap();
+        assert_eq!(data.sensor_id, id);
+        assert_eq!(data.sensor_type, "temperature");
+    }
+
+    #[async_std::test]
+    async fn test_get_lastest_record_for_all() {
+        let res = super::get_latest_records_from_all_sensors_body().await;
+        assert!(res.is_ok());
+        let data = res.unwrap();
+        assert!(data.len() > 0);
+    }
+}
