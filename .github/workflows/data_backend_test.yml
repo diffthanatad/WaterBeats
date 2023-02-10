@@ -23,4 +23,5 @@ jobs:
       - name: Run tests
         working-directory: DataBackend
         run: |
+          export INFLUXDB_TOKEN=$(python ../TSDB/create_token.py | tail -n 1)
           cargo test
