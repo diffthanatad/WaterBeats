@@ -20,6 +20,10 @@
         <div>
           <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }} {{ iconImage }}</h5>
           <div class="row">
+            <div class="col-4"><i class="bi bi-person-badge"></i></div>
+            <div class="col-8"> {{ marker.id ? marker.id : "N/A" }} </div>
+          </div>
+          <div class="row">
             <div class="col-4"><i class="bi bi-clock"></i></div>
             <div class="col-8"> {{ marker.timestamp ? marker.timestamp : "N/A" }} </div>
           </div>
