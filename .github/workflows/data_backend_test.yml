@@ -15,6 +15,7 @@ jobs:
         working-directory: TSDB
         run: |
           bash ./influxdb.sh &
+          sleep 10
       - name: Initialize database
         working-directory: TSDB
         run: |
