@@ -18,4 +18,9 @@ L.Icon.Default.mergeOptions({
    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
+// vue-validate for input and form validation.
+// import { ValidationProvider } from 'vee-validate';
+import '../src/helpers/validator.js';
+// Vue.component('ValidationProvider', ValidationProvider);
+
 createApp(App).use(store).use(router).mount('#app')

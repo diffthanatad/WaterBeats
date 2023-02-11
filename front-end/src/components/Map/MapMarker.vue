@@ -1,6 +1,6 @@
 <template>
   <div class="marker-component">
-    <l-marker :lat-lng="marker.location">
+    <l-marker :lat-lng="marker.location" @click="onClickMapMarker">
       <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_water_blue" />
       <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_water_black" />
       <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_water_red" />
@@ -19,6 +19,10 @@
       <l-popup style="width: 250px;">
         <div>
           <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }} {{ iconImage }}</h5>
+          <div class="row">
+            <div class="col-4"><i class="bi bi-person-badge"></i></div>
+            <div class="col-8"> {{ marker.id ? marker.id : "N/A" }} </div>
+          </div>
           <div class="row">
             <div class="col-4"><i class="bi bi-clock"></i></div>
             <div class="col-8"> {{ marker.timestamp ? marker.timestamp : "N/A" }} </div>
@@ -108,6 +112,9 @@ export default {
     this.selectIcon();
   },
   methods: {
+    onClickMapMarker() {
+      console.log("onClickMapMarker()", this.marker.id);
+    },
     selectIcon() {
       this.iconImage = this.findIcon();
     },
