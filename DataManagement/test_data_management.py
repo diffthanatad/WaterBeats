@@ -1,4 +1,4 @@
-from data_management import DataManagement, insert_sensor_data
+from data_management import DataManagement, insert_sensor_data, insert_actuator_data
 from create_token import find_waterbeats_buckets, create_token_for_bucket
 import pytest
 import time
@@ -66,4 +66,57 @@ async def test_insert_sensor_data_api_2_interval():
                 print(resp.text)
                 assert resp.status == 200
         print(i)
+        time.sleep(2)
+
+def test_insert_actuator_data():
+    actuator_id = "1"
+    actuator_type = "test_type"
+    status = "on"
+    longitude = random.uniform(-1000, 1000)
+    latitude = random.uniform(-1000, 1000)
+    timestamp = time.time_ns()
+    response = insert_actuator_data(WB_datamanagement, actuator_id, actuator_type, status, longitude, latitude, timestamp)
+    assert response == "Data inserted"
+    
+@pytest.mark.asyncio
+async def test_insert_actuator_data():
+    json_data = {
+        "actuator_id": "actuator_1",
+        "actuator_type": "test_type",
+        "status": "off",
+        "longitude": random.uniform(-1000, 1000),
+        "latitude": random.uniform(-1000, 1000),
+        "timestamp": time.time_ns()
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.post('http://localhost:5555/actuator_data', json=json_data) as resp:
+            assert resp.status == 200
+
+@pytest.mark.asyncio
+async def test_insert_actuator_data_missing_data():
+    json_data = {
+        "actuator_id": "actuator_1",
+        "actuator_type": "test_type",
+        "status": "off",
+        "longitude": random.uniform(-1000, 1000),
+        "timestamp": time.time_ns()
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.post('http://localhost:5555/actuator_data', json=json_data) as resp:
+            assert resp.status == 400
+
+@pytest.mark.asyncio
+async def test_insert_sensor_data_api_2_interval():
+    json_data = {
+        "actuator_id": "actuator_2",
+        "actuator_type": "test_type",
+        "status": "on",
+        "longitude": random.uniform(-1000, 1000),
+        "latitude": random.uniform(-1000, 1000),
+        "timestamp": time.time_ns()
+    }
+    for i in range(10):
+        async with aiohttp.ClientSession() as session:
+            async with session.post('http://localhost:5555/actuator_data', json=json_data) as resp:
+                assert resp.status == 200
         time.sleep(2)
