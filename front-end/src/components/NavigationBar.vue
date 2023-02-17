@@ -38,7 +38,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-outline-success" type="button">Sign Out</button>
+                            <button class="btn btn-outline-success" type="button" @click.prevent="logOut">Sign Out</button>
                         </li>
                     </ul>
                 </div>
@@ -56,6 +56,9 @@ export default {
     computed: {
     },
     methods: {
+        async logOut() {
+            this.$router.push({ name: 'LogIn' })
+        }
     }
 }
 </script>
