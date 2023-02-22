@@ -14,13 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup InfluxDB
-        uses: influxdata/influxdb-action@v3
-        with:
-          influxdb_version: latest
-          influxdb_org: WaterBeats
-          influxdb_user: WaterBeats
-          influxdb_password: WaterBeats
-          influxdb_bucket: WaterBeats
+        working-directory: ../TSDB
+        run: |
+          bash ./setup_influxdb.sh
+      - name: Initialize InfluxDB
+        working-directory: ../TSDB
+        run: |
+          INFLUXDB_TOKEN=$(python ./create_token.py | tail -n 1) python init_data.py
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
