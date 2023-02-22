@@ -4,3 +4,4 @@ werkzeug
 pytest
 pytest-asyncio
 aiohttp
+requests
