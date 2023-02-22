@@ -13,7 +13,7 @@ jobs:
       - name: Setup InfluxDB
         working-directory: TSDB
         run: |
-          bash ./influxdb.sh
+          bash ./influxdb.sh & sleep 10
       - name: Initialize InfluxDB
         working-directory: TSDB
         run: |
