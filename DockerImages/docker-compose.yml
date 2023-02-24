@@ -1,0 +1,17 @@
+version: '3'
+services:
+  database:
+    image: "postgres:14"
+    container_name: postgres14-waterbeats
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: waterbeats
+    volumes:
+      - ./postgres_database_schema.sql:/docker-entrypoint-initdb.d/postgres_database_schema.sql
+    ports:
+      - "5432:5432"
+
+# Command to use for running this docker compose file
+# $ docker-compose up
+# $ docker-compose down --volumes --remove-orphans
