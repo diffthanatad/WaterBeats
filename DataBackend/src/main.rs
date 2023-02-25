@@ -1,6 +1,8 @@
 mod data;
 mod model;
 
+use chrono::{DateTime, FixedOffset};
+use model::{DeviceDataExternal};
 use serde::{Deserialize, Serialize};
 use tide::prelude::json;
 
@@ -16,7 +18,10 @@ async fn main() -> tide::Result<()> {
         .get(get_latest_records_from_all_sensors_api);
     app.at("/sensors/getLatestById")
         .get(get_latest_record_by_id);
+    app.at("/sensors/record").get(get_range_data_by_sensor_id);
+    app.at("/devices/latest").get(get_all_latest_devices_record);
     app.at("/debug/create").get(debug_create_sample_data_api);
+    println!("Listening on {}", listen_addr);
     app.listen(&listen_addr).await?;
     Ok(())
 }
@@ -58,7 +63,7 @@ async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
             .into());
     }
     let id = id.unwrap();
-    let data_res = data::get_latest_record_by_id(&id.id).await;
+    let data_res = data::get_latest_record_by_sensor_id(&id.id).await;
     if let Err(e) = data_res {
         return Ok(tide::Response::builder(500)
             .body(json!(ApiResponse::<()> {
@@ -72,6 +77,69 @@ async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
         error: 0,
         message: None,
         data: Some(data_res.unwrap().into()),
+    })
+    .into())
+}
+
+async fn get_all_latest_devices_record(_req: tide::Request<()>) -> tide::Result {
+    let data_res = data::get_all_latest_devices_data().await;
+    println!("got data_res: {:?}", data_res);
+    if let Err(e) = data_res {
+        println!("{:?}", e);
+        return Ok(tide::Response::builder(500)
+            .body(json!(ApiResponse::<()> {
+                error: 1,
+                message: Some(format!("failed to get data from DB: {:?}", e)),
+                data: None,
+            }))
+            .into());
+    }
+    Ok(json!(ApiResponse::<Vec<DeviceDataExternal>> {
+        error: 0,
+        message: None,
+        data: Some(data_res.unwrap().into_iter().map(|e| e.into()).collect()),
+    })
+    .into())
+}
+
+
+
+#[derive(Deserialize)]
+struct SensorDataRangeQuery {
+    pub id: String,
+    pub start: DateTime<FixedOffset>,
+    pub end: DateTime<FixedOffset>,
+}
+
+async fn get_range_data_by_sensor_id(req: tide::Request<()>) -> tide::Result {
+    let q = req.query::<SensorDataRangeQuery>();
+    if let Err(e) = q {
+        return Ok(tide::Response::builder(500)
+            .body(json!(ApiResponse::<()> {
+                error: 1,
+                message: Some(format!(": {:?}", e)),
+                data: None,
+            }))
+            .into());
+    }
+    let q = q.unwrap();
+    let start_ts = q.start.timestamp();
+    let end_ts = q.end.timestamp();
+    let data_res = data::get_records_by_sensor_id_and_range(&q.id, start_ts, end_ts).await;
+    println!("got data_res: {:?}", data_res);
+    if let Err(e) = data_res {
+        return Ok(tide::Response::builder(500)
+            .body(json!(ApiResponse::<()> {
+                error: 1,
+                message: Some(format!("failed to get data from DB: {:?}", e)),
+                data: None,
+            }))
+            .into());
+    }
+    Ok(json!(ApiResponse::<Vec<SensorDataExternal>> {
+        error: 0,
+        message: None,
+        data: Some(data_res.unwrap().into_iter().map(|e| e.into()).collect()),
     })
     .into())
 }

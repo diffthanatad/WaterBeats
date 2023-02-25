@@ -13,6 +13,7 @@ class SensorDataGenerator:
         self.unit = "C"
         self.longitude = 123.1
         self.latitude = -42.0
+        # 1641773400 is 2022-01-10T00:10:00Z
         self.timestamp = dt.fromtimestamp(1641773400)
         self.data_y = 20
         self.data_x = 0
@@ -55,14 +56,52 @@ data_lines = map(
 payload = "\n".join(data_lines)
 print(payload)
 
-token = os.environ["INFLUXDB_TOKEN"]
-r = requests.post(
-    "http://localhost:8086/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
-    data=payload,
-    headers={
-        "Authorization": f"Token {token}",
-    },
+actuator_data_lines = map(
+    lambda x: f'actuator_data,actuator_id={x["actuator_id"]},actuator_type={x["actuator_type"]} status="{x["status"]}",longitude={x["longitude"]},latitude={x["latitude"]} {int(x["timestamp"].timestamp() * 1e9)}',
+    [
+        {
+            "actuator_id": "test_actuator_1",
+            "actuator_type": "pump",
+            "status": "off",
+            "longitude": 123.1,
+            "latitude": -42.0,
+            "timestamp": dt.fromtimestamp(1641773400),
+        },
+        {
+            "actuator_id": "test_actuator_1",
+            "actuator_type": "pump",
+            "status": "on",
+            "longitude": 123.1,
+            "latitude": -42.0,
+            "timestamp": dt.fromtimestamp(1641773403),
+        },
+        {
+            "actuator_id": "test_sprinkler_1",
+            "actuator_type": "sprinkler",
+            "status": "off",
+            "longitude": 2.08,
+            "latitude": -41.9,
+            "timestamp": dt.fromtimestamp(1641773402),
+        },
+    ],
 )
-if r.status_code != 204:
-    print("Error writing to InfluxDB")
-    print(r.text)
+
+token = os.environ["INFLUXDB_TOKEN"]
+
+def write_to_influxdb(payload):
+    r = requests.post(
+        "http://localhost:8086/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
+        data=payload,
+        headers={
+            "Authorization": f"Token {token}",
+        },
+    )
+    if r.status_code != 204:
+        print("Error writing to InfluxDB")
+        print(r.text)
+
+write_to_influxdb(payload)
+
+actuator_data_payload = "\n".join(actuator_data_lines)
+print(actuator_data_payload)
+write_to_influxdb(actuator_data_payload)
