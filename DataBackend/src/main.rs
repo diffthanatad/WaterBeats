@@ -2,7 +2,7 @@ mod data;
 mod model;
 
 use chrono::{DateTime, FixedOffset};
-use model::{DeviceDataExternal};
+use model::DeviceDataExternal;
 use serde::{Deserialize, Serialize};
 use tide::prelude::json;
 
@@ -20,6 +20,7 @@ async fn main() -> tide::Result<()> {
         .get(get_latest_record_by_id);
     app.at("/sensors/record").get(get_range_data_by_sensor_id);
     app.at("/devices/latest").get(get_all_latest_devices_record);
+    app.at("/actuators/latest").get(get_actuators_by_type);
     app.at("/debug/create").get(debug_create_sample_data_api);
     println!("Listening on {}", listen_addr);
     app.listen(&listen_addr).await?;
@@ -102,8 +103,6 @@ async fn get_all_latest_devices_record(_req: tide::Request<()>) -> tide::Result 
     .into())
 }
 
-
-
 #[derive(Deserialize)]
 struct SensorDataRangeQuery {
     pub id: String,
@@ -137,6 +136,44 @@ async fn get_range_data_by_sensor_id(req: tide::Request<()>) -> tide::Result {
             .into());
     }
     Ok(json!(ApiResponse::<Vec<SensorDataExternal>> {
+        error: 0,
+        message: None,
+        data: Some(data_res.unwrap().into_iter().map(|e| e.into()).collect()),
+    })
+    .into())
+}
+
+
+#[derive(Deserialize)]
+struct ActuatorTypeQuery {
+    #[serde(rename = "type")]
+    pub actuator_type: String,
+}
+
+async fn get_actuators_by_type(req: tide::Request<()>) -> tide::Result {
+    let query = req.query::<ActuatorTypeQuery>();
+    if let Err(e) = query {
+        return Ok(tide::Response::builder(500)
+            .body(json!(ApiResponse::<()> {
+                error: 1,
+                message: Some(format!("Error parsing query: {:?}", e)),
+                data: None,
+            }))
+            .into());
+    }
+    let actuator_type = query.unwrap().actuator_type;
+    let data_res = data::get_latest_actuators_by_type(&actuator_type).await;
+    println!("got data_res: {:?}", data_res);
+    if let Err(e) = data_res {
+        return Ok(tide::Response::builder(500)
+            .body(json!(ApiResponse::<()> {
+                error: 1,
+                message: Some(format!("failed to get data from DB: {:?}", e)),
+                data: None,
+            }))
+            .into());
+    }
+    Ok(json!(ApiResponse::<Vec<model::ActuatorDataExternal>> {
         error: 0,
         message: None,
         data: Some(data_res.unwrap().into_iter().map(|e| e.into()).collect()),

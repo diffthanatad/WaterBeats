@@ -35,6 +35,15 @@ pub struct ActuatorData {
     latitude: f64,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct ActuatorDataExternal {
+    time: DateTime<FixedOffset>,
+    actuator_id: String,
+    actuator_type: String,
+    status: String,
+    location: (f64, f64),
+}
+
 /// The data structure of sensor data returned by the API
 #[derive(Debug, Serialize, Clone)]
 pub struct SensorDataExternal {
@@ -47,15 +56,6 @@ pub struct SensorDataExternal {
     location: (f64, f64),
 }
 
-#[derive(Debug, Serialize, Clone)]
-pub struct ActuatorDataExternal {
-    time: DateTime<FixedOffset>,
-    actuator_id: String,
-    actuator_type: String,
-    status: String,
-    /// the location of the sensor, in the format of (longitude, latitude)
-    location: (f64, f64),
-}
 
 impl Into<ActuatorDataExternal> for ActuatorData {
     fn into(self) -> ActuatorDataExternal {

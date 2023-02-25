@@ -83,6 +83,22 @@ pub async fn get_all_latest_devices_data() -> Result<Vec<model::DeviceData>, Req
     Ok(res)
 }
 
+pub async fn get_latest_actuators_by_type(typ: &str) -> Result<Vec<model::ActuatorData>, RequestError>{
+    let client = get_influxdb_client();
+    let bucket = get_default_bucket();
+    let qs = format!(
+        "from(bucket: \"{}\")
+        |> range(start: 0)
+        |> filter(fn: (r) => r._measurement == \"actuator_data\")
+        |> filter(fn: (r) => r.actuator_type == \"{}\" )
+        |> last()",
+        bucket, typ
+    );
+    let query = Query::new(qs.to_string());
+    let res = client.query::<model::ActuatorData>(Some(query)).await;
+    res
+}
+
 pub async fn debug_create_sample_data() -> Result<(), tide::Error> {
     let client = get_influxdb_client();
     let bucket = get_default_bucket();
@@ -134,5 +150,16 @@ mod test {
         assert!(res.is_ok());
         let data = res.unwrap();
         assert!(data.len() > 0);
+    }
+
+    #[async_std::test]
+    async fn test_get_sprinkler_data() {
+        let res = super::get_latest_actuators_by_type("sprinkler").await;
+        assert!(res.is_ok());
+        let data = res.unwrap();
+        assert!(data.len() == 1);
+        let res = super::get_latest_actuators_by_type("transformer").await;
+        assert!(res.is_ok());
+        assert!(res.unwrap().len() == 0, "expected 0, got a Vec of {:?}", data);
     }
 }
