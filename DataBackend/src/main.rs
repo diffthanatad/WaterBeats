@@ -14,13 +14,13 @@ use crate::model::SensorDataExternal;
 async fn main() -> tide::Result<()> {
     let listen_addr = std::env::var("WB_ADDRESS").unwrap_or("localhost:8080".to_string());
     let mut app = tide::new();
-    app.at("/sensors/allLatest")
+    app.at("/sensor/allLatest")
         .get(get_latest_records_from_all_sensors_api);
-    app.at("/sensors/getLatestById")
+    app.at("/sensor/getLatestById")
         .get(get_latest_record_by_id);
-    app.at("/sensors/record").get(get_range_data_by_sensor_id);
-    app.at("/devices/latest").get(get_all_latest_devices_record);
-    app.at("/actuators/latest").get(get_actuators_by_type);
+    app.at("/sensor/record").get(get_range_data_by_sensor_id);
+    app.at("/device/latest").get(get_all_latest_devices_record);
+    app.at("/actuator/latestByType").get(get_actuators_by_type);
     app.at("/debug/create").get(debug_create_sample_data_api);
     println!("Listening on {}", listen_addr);
     app.listen(&listen_addr).await?;
