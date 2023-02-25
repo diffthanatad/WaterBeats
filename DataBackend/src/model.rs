@@ -120,11 +120,12 @@ impl Into<DeviceData> for SensorData {
     }
 }
 
+#[cfg(test)]
 mod test {
-    // use chrono::DateTime;
+    use chrono::DateTime;
 
-    // use super::SensorData;
-    // use super::SensorDataExternal;
+    use super::SensorData;
+    use super::SensorDataExternal;
 
     #[test]
     fn test_convert_sensor_data_to_external_struct() {
