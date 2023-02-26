@@ -1,0 +1,17 @@
+
+[:python_version == "2.7"]
+futures
+
+[tests]
+doubles
+flake8
+flake8-quotes
+mock
+pytest
+pytest-cov
+pytest-mock
+Sphinx
+sphinx_rtd_theme
+six<2.0,>=1.10.0
+gevent
+tornado

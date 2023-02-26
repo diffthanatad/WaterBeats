@@ -17,8 +17,8 @@ start kafka cmd in kafka/:
 .\bin\windows\kafka-server-start.bat .\config\server.properties
 
 start Faust application in Faust/:
-faust -A bs_hub worker -l info
+faust -A base_station worker -l info
 
 send message to agent @humidity_readings manually:
-faust -A bs_hub send @humidity_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
-faust -A bs_hub send @soil_moisture_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
+faust -A base_station send @humidity_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
+faust -A base_station send @soil_moisture_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
