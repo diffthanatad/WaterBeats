@@ -25,7 +25,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'Configuration' }" style="text-decoration: none;">CONFIG</router-link>
+                                <router-link :to="{ name: 'ActuatorConfigurationView' }">Actuator Configuration</router-link>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -38,8 +38,8 @@
                                 <router-link :to="{ name: 'Setting' }" style="text-decoration: none;">SETTINGS</router-link>
                             </a>
                         </li>
-                        <li class="navbar-btn">
-                            <button class="btn btn-outline-success" type="button">SIGN OUT</button>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-success" type="button" @click.prevent="logOut">Sign Out</button>
                         </li>
                     </ul>
                 </div>
@@ -57,6 +57,9 @@ export default {
     computed: {
     },
     methods: {
+        async logOut() {
+            this.$router.push({ name: 'LogIn' })
+        }
     }
 }
 </script>

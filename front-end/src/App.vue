@@ -1,5 +1,7 @@
 <template>
-  <NavigationBar />
+  <div id="nav" v-if="hide">
+    <NavigationBar />
+  </div>
   <router-view/>
 </template>
 
@@ -10,7 +12,15 @@ export default {
   name: 'AppView',
   components: {
     NavigationBar
-  }
+  },
+  computed: {
+    hide () {
+      return this.$route.path !== "/login"
+    },
+    loading() {
+      return this.$store.getters['loading/isLoading'];
+    }
+  },
 }
 </script>
 
