@@ -25,4 +25,7 @@ export default {
 </script>
 
 <style>
+/* * {
+  font-family: 'Kumbh Sans', sans-serif;
+} */
 </style>

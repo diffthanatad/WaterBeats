@@ -19,6 +19,7 @@
     "leaflet": "^1.9.3",
     "vee-validate": "^4.7.4",
     "vue": "^3.2.13",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0",
     "yup": "^1.0.0"
