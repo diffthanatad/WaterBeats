@@ -1,4 +1,5 @@
 node_modules/
+bs_env/
 .env
 dist
 .DS_Store

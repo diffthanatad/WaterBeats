@@ -1,0 +1,2 @@
+[console_scripts]
+faust = faust.cli.faust:cli
