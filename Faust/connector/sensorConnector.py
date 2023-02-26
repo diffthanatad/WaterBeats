@@ -4,7 +4,9 @@ import subprocess
 import json
 
 def changeToCommand(command):
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    newcommand = 'cd Faust && faust -A bs_hub send @soil_moisture_readings "{"""sensor_id""": """External_Sensor""", """reading_value""": """123"""}"'
+    result = subprocess.run(newcommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #print('hi')
     if result.returncode == 0:
         print(result.stdout.decode('utf-8'))
     else:
@@ -26,9 +28,9 @@ async def handle_request(request):
         elif 'water_level' in data:
             topic = "humidity_readings"
             value = data["water_level"]
-        command = "cd .. && faust -A bs_hub send @{} '{{\"\"\"sensor_id\"\"\": \"\"\"{}\"\"\", \"\"\"reading_value\"\"\": \"\"\"{}\"\"\"}}'".format(
+        command = "cd Faust && faust -A bs_hub send @{} '{{\"\"\"sensor_id\"\"\": \"\"\"{}\"\"\", \"\"\"reading_value\"\"\": \"\"\"{}\"\"\"}}'".format(
             topic, id, value)
-        print(command)
+        #print(command)
         changeToCommand(command)
         response = web.Response(text="Received data: {}".format(data))
     else:

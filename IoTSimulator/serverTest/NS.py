@@ -1,6 +1,12 @@
 # import aiohttp
 from aiohttp import web
 import asyncio
+import socket
+
+hostname=socket.gethostname()   
+IPAddr=socket.gethostbyname(hostname)   
+print("Your Computer Name is:"+hostname)   
+print("Your Computer IP Address is:"+IPAddr) 
 
 async def handle_request(request):
     if request.method == 'POST':

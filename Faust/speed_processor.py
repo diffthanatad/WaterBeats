@@ -6,9 +6,9 @@ async def calculateActuatorInstruction(event):
     elif type(event) == bs.TemperatureReading:
         print('TemperatureReading')
     elif type(event) == bs.SoilMoistureReading:
-        if event.reading_value < 10:
+        if int(event.reading_value) < 10:
             message = bs.ActuatorInstruction('someActuatorID', 'ON')
             await bs.actuator_instructions.send(value=message)
-        elif event.reading_value > 20:
+        elif int(event.reading_value) > 20:
             message = bs.ActuatorInstruction('someActuatorID', 'OFF')
             await bs.actuator_instructions.send(value=message)

@@ -108,6 +108,8 @@ async def stream_agent_soil_moisture(soil_moisture_raw_data):
         if raw_data.timestamp == 'default':
             raw_data.timestamp = get_timestamp()
         print('stream agent received soil moisture data at', raw_data.timestamp)
+        print('############################################')
+        print(raw_data)
         yield raw_data
         await sp.calculateActuatorInstruction(raw_data)
         
@@ -121,9 +123,9 @@ async def actuator_agent(instructions):
         print(instruction)
 
 
-@app.timer(interval=2)
-async def every_2_seconds():
-    randTemp = random.randint(5, 25)
-    message = SoilMoistureReading('someSensorID', randTemp)
-    print(message)
-    await soil_moisture_readings.send(value=message)
+# @app.timer(interval=2)
+# async def every_2_seconds():
+#     randTemp = random.randint(5, 25)
+#     message = SoilMoistureReading('someSensorID', randTemp)
+#     print(message)
+#     await soil_moisture_readings.send(value=message)
