@@ -2,10 +2,12 @@
 
  ~/kafka/bin/kafka-server-start.sh ~/kafka/config/server.properties
 
-faust -A bs_hub worker -l info
+conda activate faustTest
 
-faust -A bs_hub send @soil_moisture_readings '{"sensor_id": "foo", "reading_value": "15"}'
+cd BaseStation && cd Faust && faust -A base_station worker -l info
 
-python main.py --id 2333 --target http://localhost:23333/new_data --sensor_type soil_moisture  --device_type sensor
+faust -A base_station send @soil_moisture_readings '{"sensor_id": "foo", "reading_value": "15"}'
+
+cd Sensor && python main.py --id 2333 --target http://localhost:23333/new_data --sensor_type soil_moisture  --device_type sensor
 
 
