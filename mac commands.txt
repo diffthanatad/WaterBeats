@@ -8,6 +8,6 @@ cd BaseStation && cd Faust && faust -A base_station worker -l info
 
 faust -A base_station send @soil_moisture_readings '{"sensor_id": "foo", "reading_value": "15"}'
 
-cd Sensor && python main.py --id 2333 --target http://localhost:23333/new_data --sensor_type soil_moisture  --device_type sensor
+cd BaseStation && cd Faust && cd simulations && cd Sensor && python main.py --id 2333 --target http://localhost:23333/new_data --sensor_type soil_moisture  --device_type sensor
 
 
