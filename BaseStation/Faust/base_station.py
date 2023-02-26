@@ -13,7 +13,7 @@ import batch_processor as bp
 
 
 app = faust.App(
-    'base_station_hub',
+    'base_station',
     broker='kafka://localhost:9092',
     value_serializer='json',
 )

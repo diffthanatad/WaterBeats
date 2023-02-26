@@ -1,4 +1,4 @@
-import bs_hub as bs
+import base_station as bs
 
 async def calculateActuatorInstruction(event):
     if type(event) == bs.HumidityReading:
