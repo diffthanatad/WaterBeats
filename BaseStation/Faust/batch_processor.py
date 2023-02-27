@@ -10,7 +10,8 @@ soil_moisture_f = script_location / 'local_database/soil_moisture_cold_store.csv
 def get_timestamp():
   return time.strftime('%Y-%m-%d %H:%M:%S')
 
-def store_locally(batch, data_type):
+def store_locally(batch):
+    data_type = batch[0].sensor_type
     if data_type == 'humidity':
         cold_store_f = humidity_f
     elif data_type == 'temperature':

@@ -38,8 +38,8 @@ On MacOS: `start_kafka.sh` then `start_faust.sh`
 
 ### Sending messages manually
 Each sensor readings channel is reponsible for one sensor type and has a corresponding agent to process these messages.  
-You can send a message to an agent directly (e.g., to @soil_moisture_readings).
+You can send a message to an channel manually (e.g., to @humidity_stream).
 
-On Windows: `faust -A base_station send @soil_moisture_readings "{"""sensor_id""": """foo""", """reading_value""": """15"""}"`
+On Windows: `faust -A base_station send @humidity_stream "{"""sensor_id""": """foo""", """reading""": """15"""}"`
 
-On MacOS: `faust -A base_station send @soil_moisture_readings '{"sensor_id": "foo", "reading_value": "15"}'`
+On MacOS: `faust -A base_station send @humidity_stream '{"sensor_id": "foo", "reading": "15"}'`

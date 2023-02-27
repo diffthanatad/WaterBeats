@@ -1,8 +1,0 @@
-SETUP INSTRUCTIONS:
-pip install kafka
-pip install faust-streaming
-pip install pandas
-
-send message to agent @humidity_readings manually:
-faust -A base_station send @humidity_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
-faust -A base_station send @soil_moisture_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
