@@ -3,22 +3,6 @@ pip install kafka
 pip install faust-streaming
 pip install pandas
 
-download kafka binary: scala 2.13 - kafka_2.13-3.3.2.tgz
-place kafka directory:
-C:/kafka/
-
-
-
-RUN INSTRUCTIONS:
-start zookeeper cmd in kafka/:
-.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
-
-start kafka cmd in kafka/:
-.\bin\windows\kafka-server-start.bat .\config\server.properties
-
-start Faust application in Faust/:
-faust -A base_station worker -l info
-
 send message to agent @humidity_readings manually:
 faust -A base_station send @humidity_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
 faust -A base_station send @soil_moisture_readings "{"""sensor_id""": """foo""", """reading_value""": """bar"""}"
