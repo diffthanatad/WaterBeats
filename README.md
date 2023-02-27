@@ -29,9 +29,17 @@ Install packages from requirements.txt
 pip install -r requirements.txt
 ```
 
-## Quick Start
+## Quick start
 
 ### Start zookeeper and kafka, then start a Faust worker
 On Windows: `start_kafka.bat` then `start_faust.bat`
 
 On MacOS: `start_kafka.sh` then `start_faust.sh`
+
+### Sending messages manually
+Each sensor readings channel is reponsible for one sensor type and has a corresponding agent to process these messages.  
+You can send a message to an agent directly (e.g., to @soil_moisture_readings).
+
+On Windows: `faust -A base_station send @soil_moisture_readings "{"""sensor_id""": """foo""", """reading_value""": """15"""}"`
+
+On MacOS: `faust -A base_station send @soil_moisture_readings '{"sensor_id": "foo", "reading_value": "15"}'`
