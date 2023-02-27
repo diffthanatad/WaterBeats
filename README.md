@@ -11,9 +11,23 @@ This branch contains the full base station functionality.
 - local database and cloud database connections
 
 ## Prerequisites
+### Download Kafka
 Download the latest stable Apache Kafka (3.4.0) binary for Scala 2.13 from https://kafka.apache.org/downloads.
 
 Extract to the root directory (e.g., C:\ on Windows) and rename the directory to kafka.
+
+### Set up a Python environment
+Create a python virtual environment
+```
+python -m venv bs_env
+```
+
+Activate the environment appropriately in `bs_env/Scripts/`
+
+Install packages from requirements.txt
+```
+pip install -r requirements.txt
+```
 
 ## Quick Start
 
