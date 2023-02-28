@@ -60,7 +60,7 @@
             />
             <br />
           </div>
-          <button @click="changePassword">Change Password</button>
+          <button @click.prevent="changePassword">Change Password</button>
         </form>
       </div>
     </div>
