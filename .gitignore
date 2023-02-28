@@ -1,5 +1,6 @@
 node_modules/
-bs_env/
 .env
 dist
 .DS_Store
+bs_env/
+base_station-data/

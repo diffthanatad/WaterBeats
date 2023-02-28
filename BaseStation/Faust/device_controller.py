@@ -4,8 +4,8 @@ from enum import Enum
 
 class SensorType(Enum):
     HUMIDITY_SENSOR = 'humidity sensor'
-    TEMPERATURE_SENSOR = 'humidity sensor'
-    SOIL_MOISTURE_SENSOR = 'humidity sensor'
+    TEMPERATURE_SENSOR = 'temperature sensor'
+    SOIL_MOISTURE_SENSOR = 'soil moisture sensor'
 
 class ActuatorType(Enum):
     SPRINKLER = 'sprinkler'
@@ -29,11 +29,41 @@ class Actuator(Device):
         super().__init__(actuator_id, actuator_type, longitude, latitude)
         self.state: bool = False
 
+script_location = Path(__file__).absolute().parent
+file_location = script_location / 'local_data/sensors.csv'
+
+sensors = {}
+
+try:
+    with open(file_location, 'r', newline='') as f:
+        reader = csv.reader(f, delimiter=',')
+        next(reader, None) # sensor_id,sensor_type,reading_unit,latitude,longitude
+        for row in reader:
+            sensors[row[0]] = Sensor(*row)
+
+except Exception as e:
+    print(e)
+
+#print(sensors['30:AE:A4:14:C2:90'].device_id)
+
+print(sensors)
+
+def getSensorData(sensor_id):
+    return sensors[sensor_id]
+
+
+
+
+
+
+
+
 class Condition:
     time: str = None
     recurring: bool = False
     subject: Sensor = None
     reading: float = None
+    relation: str = None
 
 class Instruction:
     """Instructions to an actuator.
@@ -49,22 +79,3 @@ class Instruction:
     intensity: float
     duration: int = -1
     condition: Condition = None
-
-
-
-script_location = Path(__file__).absolute().parent
-file_location = script_location / 'local_database/sensors.csv'
-
-sensors = {}
-
-try:
-    with open(file_location, 'r', newline='') as f:
-        reader = csv.reader(f, delimiter=',')
-        next(reader, None) # sensor_id,sensor_type,reading_unit,latitude,longitude
-        for row in reader:
-            sensors[row[0]] = Sensor(*row)
-
-except Exception as e:
-    print(e)
-
-print(sensors['30:AE:A4:14:C2:90'].device_id)

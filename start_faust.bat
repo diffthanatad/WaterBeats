@@ -1,2 +1,1 @@
-cd %~dp0\BaseStation\Faust
-start faust -A base_station worker -l info
+start "" python "%~dp0\BaseStation\Faust\base_station.py" worker -l info
