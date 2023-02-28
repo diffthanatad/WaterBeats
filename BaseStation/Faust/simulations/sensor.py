@@ -16,3 +16,4 @@ for i in range(2):
     producer.send('humidity_stream', humidity_msg)
     producer.send('temperature_stream', temperature_msg)
     producer.send('soil_moisture_stream', soil_moisture_msg)
+    

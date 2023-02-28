@@ -1,6 +1,5 @@
 import faust
 import time
-import random
 
 import config_supplier
 import speed_processor as sp
@@ -25,6 +24,8 @@ app = faust.App(
 
 def get_timestamp():
     return time.strftime('%Y-%m-%d %H:%M:%S')
+
+latest_sensor_message = 'No messages'
 
 class SensorMessage(faust.Record):
     sensor_id: str
@@ -78,6 +79,9 @@ def fillMessage(message):
     message.reading_unit = sensor_data.reading_unit
     message.latitude = sensor_data.latitude
     message.longitude = sensor_data.longitude
+
+    global latest_sensor_message
+    latest_sensor_message = message
     return message
 
 # streaming agents
@@ -104,5 +108,13 @@ async def stream_agent_soil_moisture(messages):
 
 
 
+@app.page('/')
+async def index(self, request):
+    global latest_sensor_message
+    return self.json(latest_sensor_message)
+
+
+
 if __name__ == '__main__':
     app.main()
+    
