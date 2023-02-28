@@ -7,10 +7,10 @@ import requests
 
 
 class SensorDataGenerator:
-    def __init__(self) -> None:
-        self.sensor_id = "test_sensor_1"
-        self.sensor_type = "temperature"
-        self.unit = "C"
+    def __init__(self, sensor_id: str, sensor_type: str, unit: str) -> None:
+        self.sensor_id = sensor_id
+        self.sensor_type = sensor_type
+        self.unit = unit
         self.longitude = 123.1
         self.latitude = -42.0
         # 1641773400 is 2022-01-10T00:10:00Z
@@ -42,11 +42,18 @@ class SensorDataGenerator:
         }
 
 
-gen = SensorDataGenerator()
 data = []
-for i in range(1000):
-    d = next(gen)
-    data.append(d)
+for generator_args in [
+    ("test_sensor_0", "temperature", "F"),
+    ("test_sensor_1", "temperature", "C"),
+    ("test_sensor_2", "soil_moisture", "%"),
+    ("test_sensor_3", "water_level", "mm"),
+    ("test_sensor_4", "water_pollution", "ppm"),
+]:
+    data_generator = SensorDataGenerator(*generator_args)
+    for i in range(1000):
+        d = next(data_generator)
+        data.append(d)
 
 # save data to influxdb
 data_lines = map(
@@ -54,7 +61,6 @@ data_lines = map(
     data,
 )
 payload = "\n".join(data_lines)
-print(payload)
 
 actuator_data_lines = map(
     lambda x: f'actuator_data,actuator_id={x["actuator_id"]},actuator_type={x["actuator_type"]} status="{x["status"]}",longitude={x["longitude"]},latitude={x["latitude"]} {int(x["timestamp"].timestamp() * 1e9)}',
