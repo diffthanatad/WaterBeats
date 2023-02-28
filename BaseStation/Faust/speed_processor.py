@@ -13,3 +13,8 @@ async def calculateActuatorInstruction(event):
             elif int(event.reading_value) > 20:
                 message = bs.ActuatorInstruction('someActuatorID', 'OFF')
                 await bs.actuator_instructions.send(value=message)
+
+
+# update sensor/actuator status
+# check instructions
+# send message if instruction valid

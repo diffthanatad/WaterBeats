@@ -1,0 +1,3 @@
+sensor_id,sensor_type,reading_unit,latitude,longitude
+30:AE:A4:14:C2:90,humidity sensor,Celsius,-90,180
+30:AE:A4:14:C2:91,temperature sensor,Celsius,-90,180
