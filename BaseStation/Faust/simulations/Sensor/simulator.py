@@ -1,4 +1,5 @@
 import asyncio
+import time
 from enum import Enum
 import math
 import random
@@ -19,47 +20,50 @@ class SimpleSimulatorFactory:
         id: str,
         interval: int,
         base_station_endpoint: str,
-        device_type: str,
-        actuator_type: str,
+        # device_type: str,
+        # actuator_type: str,
+        longitude: str,
+        latitude: str,
+        unit : str
     ) -> "Simulator":
-        if device_type == "sensor":
-            if sensor_type == "temperature":
-                simulator = TemperatureSimulator(
-                    id, interval, base_station_endpoint, device_type
-                )
-            elif sensor_type == "soil_moisture":
-                simulator = SoilMoistureSimulator(
-                    id, interval, base_station_endpoint, device_type
-                )
-            elif sensor_type == "water_level":
-                simulator = WaterLevelSimulator(
-                    id, interval, base_station_endpoint, device_type
-                )
-            elif sensor_type == "water_pollution":
-                simulator = WaterPollutionSimulator(
-                    id, interval, base_station_endpoint, device_type
-                )
-            else:
-                raise Exception(f"Unknown sensor type: {sensor_type}")
-        elif device_type == "actuator":
-            if actuator_type == "water_sprinkler":
-                simulator = WaterSprinklerSimulator(
-                    id, interval, base_station_endpoint, device_type
-                )
-            elif actuator_type == "water_pump":
-                simulator = WaterPumpSimulator(
-                    id, interval, base_station_endpoint, device_type
-                )
-            else:
-                raise Exception(f"Unknown actuator type: {actuator_type}")
+        # if device_type == "sensor":
+        if sensor_type == "temperature":
+            simulator = TemperatureSimulator(
+                id, interval, base_station_endpoint,longitude,latitude, unit
+            )
+        elif sensor_type == "soil_moisture":
+            simulator = SoilMoistureSimulator(
+                id, interval, base_station_endpoint, longitude, latitude, unit
+            )
+        elif sensor_type == "water_level":
+            simulator = WaterLevelSimulator(
+                id, interval, base_station_endpoint, longitude, latitude, unit
+            )
+        elif sensor_type == "water_pollution":
+            simulator = WaterPollutionSimulator(
+                id, interval, base_station_endpoint, longitude, latitude, unit
+            )
         else:
-            raise Exception(f"Unknown device type: {device_type}")
+            raise Exception(f"Unknown sensor type: {sensor_type}")
+        # elif device_type == "actuator":
+        #     if actuator_type == "water_sprinkler":
+        #         simulator = WaterSprinklerSimulator(
+        #             id, interval, base_station_endpoint, device_type
+        #         )
+        #     elif actuator_type == "water_pump":
+        #         simulator = WaterPumpSimulator(
+        #             id, interval, base_station_endpoint, device_type
+        #         )
+        #     else:
+        #         raise Exception(f"Unknown actuator type: {actuator_type}")
+        # else:
+        #     raise Exception(f"Unknown device type: {device_type}")
         return simulator
 
 
 class Simulator:
     def __init__(
-        self, id: str, interval: int, base_station_endpoint: str, device_type: str
+        self, id: str, interval: int, base_station_endpoint: str, longitude: str, latitude: str, unit: str
     ) -> None:
         """
         This is the base class for all the simulators.
@@ -67,8 +71,10 @@ class Simulator:
         self.x = 0
         self.id = id
         self.interval = interval
+        self.longitude = longitude
+        self.latitude = latitude
         self.base_station_endpoint = base_station_endpoint
-        self.device_type = device_type
+        self.unit = unit
 
     async def start_sensor(self) -> None:
         while True:
@@ -83,7 +89,11 @@ class Simulator:
     def create_output_data(self, _reading):
         return {
             "sensor_id": self.id,
-            "timestamp": datetime.now().isoformat(),
+            # "timestamp": datetime.now().isoformat(),
+            "timestamp" : time.time_ns(),
+            "longitude": self.longitude,
+            "latitude" : self.latitude,
+            "unit" : self.unit
         }
 
     def generate_data(self):
@@ -105,11 +115,11 @@ class Simulator:
                     print(f"Data sent to base station: {data}")
                     return f"Data sent to base station: {data}"
 
-    async def start(self) -> None:
-        if self.device_type == "sensor":
-            await self.start_sensor()
-        else:
-            await self.start_actuator()
+    # async def start(self) -> None:
+    #     if self.device_type == "sensor":
+    #         await self.start_sensor()
+    #     else:
+    #         await self.start_actuator()
 
     async def start_actuator(self) -> None:
         print("testing:", self.base_station_endpoint)

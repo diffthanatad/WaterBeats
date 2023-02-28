@@ -32,7 +32,7 @@ async def main():
     simulator = SimpleSimulatorFactory.create(
         args.sensor_type, args.id, args.interval, args.target, args.device_type, args.actuator_type
     )
-    await simulator.start()
+    await simulator.start_sensor()
 
 if __name__ == "__main__":
     asyncio.run(main())
