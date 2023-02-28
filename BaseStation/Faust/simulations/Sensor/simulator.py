@@ -132,28 +132,32 @@ class Simulator:
 class TemperatureSimulator(Simulator):
     def create_output_data(self, reading):
         data = super().create_output_data(reading)
-        data["temperature"] = reading
+        data["data"] = reading
+        data["sensor_type"] = "temperature"
         return data
 
 
 class SoilMoistureSimulator(Simulator):
     def create_output_data(self, reading):
         data = super().create_output_data(reading)
-        data["soil_moisture"] = reading
+        data["data"] = reading
+        data["sensor_type"] = "soil_moisture"
         return data
 
 
 class WaterLevelSimulator(Simulator):
     def create_output_data(self, reading):
         data = super().create_output_data(reading)
-        data["water_level"] = reading
+        data["data"] = reading
+        data["sensor_type"] = "water_level"
         return data
 
 
 class WaterPollutionSimulator(Simulator):
     def create_output_data(self, reading):
         data = super().create_output_data(reading)
-        data["water_pollution"] = reading
+        data["data"] = reading
+        data["sensor_type"] = "water_pollution"
         return data
 
 
