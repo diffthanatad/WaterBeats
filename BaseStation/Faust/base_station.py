@@ -90,21 +90,21 @@ async def stream_agent_humidity(messages):
     async for message in messages:
         message = fillMessage(message)
         yield message
-        #sp.calculateActuatorInstruction(message)
+        #sp.sendToHub(message)
 
 @app.agent(temperature_stream, sink=[temperature_batch])
 async def stream_agent_temperature(messages):
     async for message in messages:
         message = fillMessage(message)
         yield message
-        #sp.calculateActuatorInstruction(message)
+        #sp.sendToHub(message)
 
 @app.agent(soil_moisture_stream, sink=[soil_moisture_batch])
 async def stream_agent_soil_moisture(messages):
     async for message in messages:
         message = fillMessage(message)
         yield message
-        #await sp.calculateActuatorInstruction(message)
+        #await sp.sendToHub(message)
 
 
 
@@ -117,4 +117,3 @@ async def index(self, request):
 
 if __name__ == '__main__':
     app.main()
-    
