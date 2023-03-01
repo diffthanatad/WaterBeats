@@ -27,9 +27,7 @@ async fn main() -> tide::Result<()> {
 
     app.with(cors);
     app.with(tide::log::LogMiddleware::new());
-    // app.with(tide::utils::After(|mut request: tide::Request<()>, next: tide::Next<()>| {
 
-    // }));
     app.at("/sensor/allLatest")
         .get(get_latest_records_from_all_sensors_api);
     app.at("/sensor/getLatestById").get(get_latest_record_by_id);
@@ -49,7 +47,17 @@ struct ApiResponse<T> {
 }
 
 async fn get_latest_records_from_all_sensors_api(_req: tide::Request<()>) -> tide::Result {
-    let sensor_data_list = get_latest_records_from_all_sensors_body().await?;
+    let sensor_data_list = get_latest_records_from_all_sensors_body().await;
+    if let Err(e) = sensor_data_list {
+        return Ok(tide::Response::builder(500)
+            .body(json!(ApiResponse::<()> {
+                error: 1,
+                message: Some(format!("failed to get data from DB: {:?}", e)),
+                data: None,
+            }))
+            .into());
+    }
+    let sensor_data_list = sensor_data_list.unwrap();
     Ok(json!(ApiResponse::<Vec<SensorDataExternal>> {
         error: 0,
         message: None,
@@ -60,7 +68,7 @@ async fn get_latest_records_from_all_sensors_api(_req: tide::Request<()>) -> tid
 
 #[derive(Debug, Deserialize)]
 struct SensorIdQuery {
-    id: String,
+    sensor_id: String,
 }
 
 async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
