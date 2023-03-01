@@ -4,7 +4,6 @@
       <button
         v-for="name in tabNames"
         :key="name"
-        class="tablinks"
         :style="tabColor(name)"
         @click="updateSelected(name)">
         {{ name }}
@@ -17,6 +16,7 @@
 
 * {
   font-family: 'Kumbh Sans', sans-serif;
+  text-transform: uppercase;
 }
 
 .tab {
@@ -47,6 +47,7 @@
   border: 1px solid #ccc;
   border-top: none;
 }
+
 </style>
 
 <script>
