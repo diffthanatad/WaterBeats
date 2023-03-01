@@ -14,6 +14,12 @@
       </div>
     </div>
     <div class="row mb-3">
+      <label for="passwordInput" class="col-4 col-form-label">Password</label>
+      <div class="col-8">
+        <input type="text" class="form-control" id="passwordInput" v-model="password">
+      </div>
+    </div>
+    <div class="row mb-3">
       <label for="roleInput" class="col-4 col-form-label">Role </label>
       <div class="col-8">
         <select class="form-select" aria-label="Default select example" id="roleInput" v-model="role">
@@ -41,7 +47,7 @@
 
 <script>
 import PopupModal from '@/components/Modal/PopupModal.vue';
-import { createUser } from '@/services/userService.js';
+import { signUp } from '@/services/userService.js';
 
 export default {
   name: 'CreateUserDialogue',
@@ -54,6 +60,7 @@ export default {
     cancelButton: 'No', /* Text for cancel button. */
     username: undefined,
     name: undefined,
+    password: undefined,
     role: "user",
     status: 1,
 
@@ -63,7 +70,7 @@ export default {
   }),
   computed: {
     disableYesButton() {
-      return (!this.username || !this.name) ? true : false
+      return (!this.username || !this.name || !this.password) ? true : false
     }
   },
   methods: {
@@ -84,18 +91,24 @@ export default {
       })
     },
     async _confirm() {
-      const obj = {
-        username: this.username,
-        name: this.name,
-        role: this.role,
-        status: this.status,
-      };
+      try {
+        const obj = {
+          username: this.username,
+          name: this.name,
+          password: this.password,
+          role: this.role,
+          status: this.status,
+        };
 
-      const response = await createUser(obj);
+        const response = await signUp(obj);
 
-      if (response.status === 201) {
-        this.$refs.popup.close()
-        this.resolvePromise(true)
+        if (response.status === 201) {
+          this.$refs.popup.close()
+          this.resolvePromise(true)
+          this.$emit('refreshPage')
+        }
+      } catch (error) {
+        console.log("CreateUserDialogue, _cofirm():", error, "\n");
       }
     },
     _cancel() {

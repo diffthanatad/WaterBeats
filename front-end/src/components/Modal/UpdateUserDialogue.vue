@@ -27,12 +27,12 @@
       <label for="statusInput" class="col-4 col-form-label">Status </label>
       <div class="col-8">
         <select class="form-select" aria-label="Default select example" id="statusInput" v-model="status">
-          <option value="1">active</option>
-          <option value="0">deactivated</option>
+          <option value="0">active</option>
+          <option value="1">deactivated</option>
         </select>
       </div>
     </div>
-    
+
     <div class="btns">
       <button class="cancel-btn" @click="_cancel">{{ cancelButton }}</button>
       <button class="ok-btn" @click="_confirm">{{ okButton }}</button>
@@ -42,7 +42,7 @@
 
 <script>
 import PopupModal from '@/components/Modal/PopupModal.vue';
-import { updateUser } from "@/services/userService.js";
+import { updateUserByAdmin } from "@/services/userService.js";
 
 export default {
   name: 'UpdateUserDialogue',
@@ -87,19 +87,23 @@ export default {
       })
     },
     async _confirm() {
-      const obj = {
-        id: this.id,
-        username: this.username,
-        name: this.name,
-        role: this.role,
-        status: this.status,
-      };
+      try {
+        const obj = {
+          id: this.id,
+          username: this.username,
+          name: this.name,
+          role: this.role,
+          disable: this.status,
+        };
 
-      const response = await updateUser(obj);
+        const response = await updateUserByAdmin(obj);
 
-      if (response.status === 201) {
-        this.$refs.popup.close()
-        this.resolvePromise(true)
+        if (response.status === 200) {
+          this.$refs.popup.close()
+          this.resolvePromise(true)
+        }
+      } catch (error) {
+        console.log("UpdateUserDialogue, _confirm():", error, "\n");
       }
     },
     _cancel() {
