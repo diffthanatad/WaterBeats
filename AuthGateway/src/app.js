@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 require("./route/default.route")(app);
 require("./route/auth.route")(app);
 require("./route/user.route")(app);
-// require("./route/proxy.route")(app);
+require("./route/proxy.route")(app);
 
 /* Database configuration. Uncomment when you want to clear database and let Sequelize generate SQL create statement for you. */
 const db = require("./model");
