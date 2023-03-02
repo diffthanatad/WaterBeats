@@ -1,3 +1,5 @@
+import time
+
 import faust
 import datetime
 
@@ -103,13 +105,23 @@ def fillTaskMessage(message):
     latest_task_message = message
     return message
 
+def jsonMessage(message):
+    return {
+        "sensor_id" : message.sensor_id,
+        "sensor_type" : message.sensor_type,
+        "data" : message.reading,
+        "unit" : message.reading_unit,
+        "longitude" : message.longitude,
+        "latitude" : message.latitude,
+        "timestamp" : time.time_ns(), # This is just temporary used
+    }
 # streaming agents
 @app.agent(humidity_stream, sink=[humidity_batch])
 async def stream_agent_humidity(messages):
     async for message in messages:
         message = fillSensorMessage(message)
         await sp.process(message)
-        sp.sendToHub(message)
+        await sp.sendToHub(jsonMessage(message))
         print('hi')
         yield message
 
