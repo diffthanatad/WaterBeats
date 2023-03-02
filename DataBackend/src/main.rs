@@ -86,7 +86,7 @@ async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
             .into());
     }
     let id = id.unwrap();
-    let data_res = data::get_latest_record_by_sensor_id(&id.id).await;
+    let data_res = data::get_latest_record_by_sensor_id(&id.sensor_id).await;
     if let Err(e) = data_res {
         return Ok(tide::Response::builder(500)
             .body(json!(ApiResponse::<()> {
