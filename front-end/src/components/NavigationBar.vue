@@ -20,7 +20,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'Graph' }" style="text-decoration: none;">GRAPHS</router-link>
+                                <router-link :to="{ name: 'Graph' }" style="text-decoration: none;">VISUALISATION</router-link>
                             </a>
                         </li>
                         <li class="nav-item">

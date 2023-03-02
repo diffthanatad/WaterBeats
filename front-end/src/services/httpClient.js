@@ -5,7 +5,7 @@ const httpClient = axios.create({
     baseURL: process.env.VUE_APP_SERVICE_URL,
     timeout: 6000, /* 6 seconds before timeout */
     headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
     }
 });
 
@@ -27,7 +27,7 @@ const errorInterceptor = error => {
         return Promise.reject(error);
     }
 
-    /* all the error responses */ 
+    /* all the error responses */
     switch(error.response.status) {
         case 400:
             break;
@@ -37,7 +37,7 @@ const errorInterceptor = error => {
             break;
         case 500:
             break;
-        case 502: 
+        case 502:
             break;
         default:
             console.error("Service httpClient, errorInterceptor, status other status code:", error, "\n");
