@@ -10,10 +10,6 @@ headers = {
 }
 
 response = requests.request("POST", url, headers=headers, data=payload)
-
-print(response.status_code)
-print(response.headers)
-print(response.text)
 cookie = response.headers["Set-Cookie"]
 
 
@@ -23,7 +19,6 @@ def find_waterbeats_buckets():
     headers = {"Cookie": cookie}
     response = requests.request("GET", url, headers=headers, data=payload)
     data = response.json()
-    print(data)
     waterbeats_bucket = [bucket for bucket in data['buckets'] if bucket["name"] == "WaterBeats"][0]
     return waterbeats_bucket
 
@@ -54,9 +49,6 @@ def create_token_for_bucket(bucket_id, org_id):
         "Content-Type": "application/json"
     }
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-    print(response.status_code)
-    print(response.headers)
-    print(response.text)
     data = response.json()
     return data["token"]
 
@@ -64,5 +56,5 @@ wb_bucket = find_waterbeats_buckets()
 bucket_id = wb_bucket["id"]
 org_id = wb_bucket["orgID"]
 print(f"Bucket ID: {bucket_id}, Org ID: {org_id}")
-print(create_token_for_bucket(bucket_id, org_id))
+print("Token created: \n" + create_token_for_bucket(bucket_id, org_id))
 

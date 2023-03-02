@@ -1,170 +1,101 @@
 <template>
   <div>
-    <span id="ss_elem" class="listbox-label">
-        Sensor List:
-    </span>
-    <ul id="ss_elem_list" tabindex="0" role="listbox" aria-labelledby="ss_elem">
-      <li id="ss_elem_Np" role="option">
-      sensor_T1
-      </li>
-      <li id="ss_elem_Pu" role="option">
-      sensor_T2
-      </li>
-      <li id="ss_elem_Am" role="option">
-      sensor_T3
-      </li>
-    </ul>
+    <span class="header">Sensor ID List:</span>
+    <div class="list_container">
+      <select class="list" multiple>
+        <option class="item" v-for="sensorId in sensorIdList" :key="sensorId" @click="handleClicks($event);">
+          {{sensorId}}
+        </option>
+      </select>
+    </div>
   </div>
 </template>
 
-<style>
-.listbox-area {
-  display: grid;
-  grid-gap: 2em;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 20px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  background: #eee;
+<style scoped>
+.header {
+  font-size: 1.1vw;
+  text-decoration: underline;
 }
 
-[role="listbox"] {
-  margin: 1em 0 0;
-  padding: 0;
-  min-height: 18em;
-  border: 1px solid #aaa;
-  background: white;
+.list_container {
+  padding-bottom: 20px;
 }
 
-[role="listbox"]#ss_elem_list {
-  position: relative;
-  max-height: 18em;
-  overflow-y: auto;
+.list {
+  width: 15vw;
+  height: 22vw;
+  border-color: #cbd1e0;
+  font-size: 1.1vw;
 }
 
-[role="listbox"] + *,
-.listbox-label + * {
-  margin-top: 1em;
+.item:hover {
+  background-color: #b3d7ff;
 }
 
-[role="group"] {
-  margin: 0;
-  padding: 0;
-}
-
-[role="group"] > [role="presentation"] {
-  display: block;
-  margin: 0;
-  padding: 0 0.5em;
-  font-weight: bold;
-  line-height: 2;
-  background-color: #ccc;
-}
-
-[role="option"] {
-  position: relative;
-  display: block;
-  padding: 0 1em 0 1.5em;
-  line-height: 1.8em;
-}
-
-[role="option"].focused {
-  background: #bde4ff;
-}
-
-[role="option"][aria-selected="true"]::before {
-  position: absolute;
-  left: 0.5em;
-  content: "✓";
-}
-
-button[aria-haspopup="listbox"] {
-  position: relative;
-  padding: 5px 10px;
-  width: 150px;
-  border-radius: 0;
-  text-align: left;
-}
-
-button[aria-haspopup="listbox"]::after {
-  position: absolute;
-  right: 5px;
-  top: 10px;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
-  border-top-color: currentcolor;
-  border-bottom: 0;
-  content: "";
-}
-
-button[aria-haspopup="listbox"][aria-expanded="true"]::after {
-  position: absolute;
-  right: 5px;
-  top: 10px;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
-  border-top: 0;
-  border-bottom-color: currentcolor;
-  content: "";
-}
-
-button[aria-haspopup="listbox"] + [role="listbox"] {
-  position: absolute;
-  margin: 0;
-  width: 9.5em;
-  max-height: 10em;
-  border-top: 0;
-  overflow-y: auto;
-}
-
-[role="toolbar"] {
-  display: flex;
-}
-
-[role="toolbar"] > * {
-  border: 1px solid #aaa;
-  background: #ccc;
-}
-
-[role="toolbar"] > [aria-disabled="false"]:focus {
-  background-color: #eee;
-}
-
-button {
-  font-size: inherit;
-}
-
-button[aria-disabled="true"] {
-  opacity: 0.5;
-}
-
-.move-right-btn::after {
-  content: " →";
-}
-
-.move-left-btn::before {
-  content: "← ";
-}
-
-.annotate {
-  color: #366ed4;
-  font-style: italic;
-}
-
-.hidden {
-  display: none;
-}
-
-.offscreen {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  font-size: 14px;
-  white-space: nowrap;
-}
 </style>
+
+<script setup>
+import { defineExpose } from 'vue'
+
+function childMethod() {
+  this.updateSensorList()
+}
+
+defineExpose({ childMethod })
+</script>
+
+<script>
+import {tabSelect} from "@/store/tab-select.js"
+import {chart} from "@/store/chart-data"
+import {getAllLatest} from '@/services/sensorService.js'
+
+export default {
+  name: 'SensorList',
+  expose: ["updateSensorList"],
+  props: ["updateLineGraph", "updateSensorInfo"],
+  components: {},
+  data() {
+    return  {
+      sensorIdList: [],
+      style: ""
+    }
+  },
+  methods: {
+    updateSensorIdStore(sensorId) {
+      sensorId = (sensorId === undefined) ? "" : sensorId
+      chart.value.setSensorId(sensorId)
+    },
+    async updateSensorList() {
+      const response = await getAllLatest()
+
+      if (response.status !== 200) {
+        this.updateSensorIdStore("")
+        this.sensorIdList = []
+        return
+      }
+      let sensorIds = []
+      const sensorsList = response.data.data
+      const selectedTabName = tabSelect.value.selectedTab
+
+      for (let sensor of sensorsList.values()) {
+        if (sensor["type"] == selectedTabName) {
+          sensorIds.push(sensor["id"])
+        }
+      }
+      // Assign the first sensor ID to 'sensorId' in @/store/chat-data.js
+      this.updateSensorIdStore(sensorIds[0])
+      this.sensorIdList = sensorIds
+
+      await this.updateLineGraph()
+      await this.updateSensorInfo()
+    },
+    async handleClicks(click) {
+      chart.value.setSensorId(click.target.innerHTML)
+      await this.updateLineGraph()
+    }
+  },
+  async created() {
+    await this.updateSensorList()
+  }
+}
+</script>
