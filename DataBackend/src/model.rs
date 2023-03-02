@@ -1,7 +1,18 @@
 use chrono::DateTime;
 use chrono::FixedOffset;
 use influxdb2::FromDataPoint;
+use serde::Deserialize;
 use serde::Serialize;
+
+#[derive(Deserialize)]
+pub enum SensorType {
+    #[serde(rename = "temperature")]
+    Temperature,
+    #[serde(rename = "soil_moisture")]
+    SoilMoisture,
+    #[serde(rename = "water_level")]
+    WaterLevel,
+}
 
 #[derive(Debug, FromDataPoint, Default, Serialize, Clone)]
 pub struct SensorData {
@@ -14,13 +25,24 @@ pub struct SensorData {
     latitude: f64,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Default, FromDataPoint, Serialize, Clone)]
 pub struct ActuatorData {
+    time: DateTime<FixedOffset>,
+    pub actuator_id: String,
+    pub actuator_type: String,
     status: String,
     longitude: f64,
     latitude: f64,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct ActuatorDataExternal {
+    time: DateTime<FixedOffset>,
+    actuator_id: String,
+    actuator_type: String,
+    status: String,
+    location: (f64, f64),
+}
 
 /// The data structure of sensor data returned by the API
 #[derive(Debug, Serialize, Clone)]
@@ -34,10 +56,30 @@ pub struct SensorDataExternal {
     location: (f64, f64),
 }
 
-#[derive(Debug)]
-enum DeviceData {
-    Sensor(SensorData),
-    Actuator,
+
+impl Into<ActuatorDataExternal> for ActuatorData {
+    fn into(self) -> ActuatorDataExternal {
+        ActuatorDataExternal {
+            time: self.time,
+            actuator_id: self.actuator_id,
+            actuator_type: self.actuator_type,
+            status: self.status,
+            location: (self.longitude, self.latitude),
+        }
+    }
+}
+
+#[derive(Debug, Serialize)]
+#[serde(untagged)]
+pub enum DeviceDataExternal {
+    SensorData(SensorDataExternal),
+    ActuatorData(ActuatorDataExternal),
+}
+
+#[derive(Debug, Serialize)]
+pub enum DeviceData {
+    SensorData(SensorData),
+    ActuatorData(ActuatorData),
 }
 
 impl Into<SensorDataExternal> for SensorData {
@@ -53,12 +95,32 @@ impl Into<SensorDataExternal> for SensorData {
     }
 }
 
-impl Into<DeviceData> for SensorData {
-    fn into(self) -> DeviceData {
-        DeviceData::Sensor(self)
+impl Into<DeviceDataExternal> for DeviceData {
+    fn into(self) -> DeviceDataExternal {
+        match self {
+            DeviceData::SensorData(sensor_data) => {
+                DeviceDataExternal::SensorData(sensor_data.into())
+            }
+            DeviceData::ActuatorData(actuator_data) => {
+                DeviceDataExternal::ActuatorData(actuator_data.into())
+            }
+        }
     }
 }
 
+impl Into<DeviceData> for ActuatorData {
+    fn into(self) -> DeviceData {
+        DeviceData::ActuatorData(self)
+    }
+}
+
+impl Into<DeviceData> for SensorData {
+    fn into(self) -> DeviceData {
+        DeviceData::SensorData(self)
+    }
+}
+
+#[cfg(test)]
 mod test {
     use chrono::DateTime;
 
