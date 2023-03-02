@@ -16,20 +16,20 @@
       <l-icon v-else-if="iconImage === 13" :icon-size="dynamicSize" :icon-url="icon_pump_green" />
       <l-icon v-else-if="iconImage === 14" :icon-size="dynamicSize" :icon-url="icon_pump_red" />
       <l-icon v-else :icon-size="dynamicSize" :icon-url="icon_questionMark_black" />
-      <l-popup style="width: 250px;">
+      <l-popup style="width: 300px;">
         <div>
-          <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }} {{ iconImage }}</h5>
+          <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }}</h5>
           <div class="row">
             <div class="col-4"><i class="bi bi-person-badge"></i></div>
             <div class="col-8"> {{ marker.id ? marker.id : "N/A" }} </div>
           </div>
           <div class="row">
             <div class="col-4"><i class="bi bi-clock"></i></div>
-            <div class="col-8"> {{ marker.timestamp ? marker.timestamp : "N/A" }} </div>
+            <div class="col-8"> {{ marker.timestamp }} </div>
           </div>
           <div class="row">
             <div class="col-4">Value</div>
-            <div class="col-8"> {{ marker.value ? marker.value : "N/A" }} </div>
+            <div class="col-8"> {{ marker.value ? marker.value : "N/A" }}</div>
           </div>
           <div class="row">
             <div class="col-4"> Status: </div>
@@ -122,20 +122,20 @@ export default {
       const deviceType = this.marker.type;
       const status = this.marker.status;
 
-      if (deviceType === "Soil Moisture Sensor") {
+      if (deviceType === "soil_moisture") {
         if (status === "on") { return 1; }
         else if (status === "off") { return 2; }
         else { return 3; }
-      } else if (deviceType === "Temperature Sensor") {
+      } else if (deviceType === "temperature") {
         if (status === "on") { return 4; }
         else if (status === "off") { return 5; }
         else { return 6; }
-      } else if (deviceType === "Water Sprinkler") {
+      } else if (deviceType === "sprinkler") {
         if (status === "on") { return 7; }
         else if (status === "off") { return 8; }
         else if (status === "watering") { return 9; }
         else { return 10; }
-      }  else if (deviceType === "Water Pump") {
+      }  else if (deviceType === "pump") {
         if (status === "on") { return 11; }
         else if (status === "off") { return 12; }
         else if (status === "pumping") { return 13; }
