@@ -99,7 +99,7 @@ async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
     Ok(json!(ApiResponse::<SensorDataExternal> {
         error: 0,
         message: None,
-        data: Some(data_res.unwrap().into()),
+        data: data_res.unwrap().map(|e| e.into()),
     })
     .into())
 }
