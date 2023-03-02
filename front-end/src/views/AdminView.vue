@@ -49,7 +49,7 @@ import UserTableEntry from '@/components/Table/UserTableEntry.vue';
 import PaginationInformation from '@/components/Pagination/PaginationInformation.vue';
 import CreateUserDialogue from "@/components/Modal/CreateUserDialogue.vue";
 
-// import { getAllUsersWithPagination } from "@/services/userService.js";
+import { getAllUsersWithPagination } from "@/services/userService.js";
 
 export default {
   name: 'AdminView',
@@ -75,41 +75,48 @@ export default {
           name: "Adam Smith",
           username: "adam01",
           role: "admin",
-          status: 1
+          disable: 1
         },
         {
           id: 2,
           name: "David Brown",
           username: "david01",
           role: "user",
-          status: 0
+          disable: 0
         },
         {
           id: 3,
           name: "Magnus Carlsen",
           username: "magnus",
           role: "admin",
-          status: 1
+          disable: 1
         },
       ]
     }
   },
   mounted() {
-    // this.getAllUsers();
+    this.getAllUsers();
   },
   computed: {
   },
   methods: {
     async getAllUsers() {
-      // const response = await getAllUsersWithPagination(this.searchUsername, this.currentPage);
-      // this.loadResource(response);
+      const response = await getAllUsersWithPagination(this.searchUsername, this.currentPage);
+      this.loadResource(response);
+    },
+    returnItselfOrDefaultValue(value, defaultValue) {
+      if (value) {
+        return value;
+      } else {
+        return defaultValue;
+      }
     },
     loadResource(response) {
-      this.orders = response.data.orders;
+      this.users = response.data.users;
 
-      // this.currentPage = returnItselfOrDefaultValue(response.data.currentPage, 0);
-      // this.totalPages = returnItselfOrDefaultValue(response.data.totalPages, 0);
-      // this.totalItems = returnItselfOrDefaultValue(response.data.totalItems, 0);
+      this.currentPage = this.returnItselfOrDefaultValue(response.data.currentPage, 0);
+      this.totalPages = this.returnItselfOrDefaultValue(response.data.totalPages, 0);
+      this.totalItems = this.returnItselfOrDefaultValue(response.data.totalItems, 0);
 
       this.hasPrevious = this.currentPage <= 0 ? false : true;
       this.hasNext = (this.currentPage + 1) < this.totalPages ? true : false;
@@ -126,6 +133,7 @@ export default {
         });
 
         if (ok) {
+          this.getAllUsers();
           return;
         }
       } catch (error) {

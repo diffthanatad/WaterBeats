@@ -3,12 +3,12 @@
         <td>{{ item.name }}</td>
         <td>{{ item.username }}</td>
         <td>{{ item.role }}</td>
-        <td>{{ item.status ? "Active" : "Deactivated" }}</td>
+        <td>{{ item.disable ? "Deactivated" : "Active" }}</td>
         <td>
-            <button type="button" class="btn btn-warning" style="margin-right: 10px;" @click.prevent="showUpdateUserModal">
+            <button type="button" class="btn btn-warning" style="margin-right: 10px;" @click.prevent="showUpdateUserModal" :disabled="isYourself">
                 <i class="bi bi-pencil-square"></i>
             </button>
-            <button type="button" class="btn btn-danger" @click.prevent="showDeleteUserModal">
+            <button type="button" class="btn btn-danger" @click.prevent="showDeleteUserModal" :disabled="isYourself">
                 <i class="bi bi-trash"></i>
             </button>
         </td>
@@ -20,7 +20,7 @@
 <script>
 import ConfirmDialogue from "@/components/Modal/ConfirmDialogue.vue";
 import UpdateUserDialogue from "@/components/Modal/UpdateUserDialogue.vue";
-// import { deleteUser, updateUser } from "@/services/userService.js";
+import { deleteUser } from "@/services/userService.js";
 
 export default {
     name: "UserTableEntry",
@@ -31,16 +31,26 @@ export default {
         ConfirmDialogue,
         UpdateUserDialogue,
     },
+    computed: {
+        isYourself() {
+            const USERNAME = localStorage.getItem('username');
+            return USERNAME === this.$props.item.username;
+        }
+    },
     methods: {
         async showUpdateUserModal() {
             try {
+                var status;
+                if (this.$props.item.status === "Deactivate") { status = 1; }
+                else { status = 0; }
+
                 const ok = await this.$refs.updateUserDialogue.show({
                     title: 'Update User',
                     okButton: 'yes',
                     name: this.$props.item.name,
                     username: this.$props.item.username,
                     role: this.$props.item.role,
-                    status: this.$props.item.status,
+                    status: status,
                     id: this.$props.item.id,
                 });
 
@@ -48,7 +58,7 @@ export default {
                     this.$emit('refreshPage')
                 }
             } catch (error) {
-                console.log("error:", error);
+                console.log("UserTableEntry, showUpdateUserModal():", error, "\n");
             }
         },
         async showDeleteUserModal() {
@@ -60,11 +70,11 @@ export default {
                 });
 
                 if (ok) {
-                    // await deleteUser(this.$props.item.id)
+                    await deleteUser(this.$props.item.id)
                     this.$emit('refreshPage')
                 }
             } catch (error) {
-                console.log("error:", error);
+                console.log("UserTableEntry, showDeleteUserModal():", error, "\n");
             }
         },
     }
