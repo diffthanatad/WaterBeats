@@ -1,5 +1,5 @@
 import faust
-import time
+import datetime
 
 import config_supplier
 import speed_processor as sp
@@ -23,9 +23,10 @@ app = faust.App(
 )
 
 def get_timestamp():
-    return time.strftime('%Y-%m-%d %H:%M:%S')
+    return datetime.datetime.now()
 
 latest_sensor_message = 'No messages'
+latest_task_message = 'No messages'
 
 class SensorMessage(faust.Record):
     sensor_id: str
@@ -45,6 +46,14 @@ class TemperatureMessage(SensorMessage):
 class SoilMoistureMessage(SensorMessage):
     sensor_type: str = 'soil moisture sensor'
 
+class TaskMessage(faust.Record):
+    actuator_target: str
+    state: bool
+    intensity: float
+    actuator_type: str = ''
+    duration: int = -1
+    timestamp: str = ''
+
 # defines humidity, temperature, soil moisture topics to receive sensor messages
 humidity_stream = app.topic('humidity_stream', value_type=HumidityMessage)
 temperature_stream = app.topic('temperature_stream', value_type=TemperatureMessage)
@@ -54,6 +63,7 @@ humidity_batch = app.topic('humidity_batch', value_type=HumidityMessage)
 temperature_batch = app.topic('temperature_batch', value_type=TemperatureMessage)
 soil_moisture_batch = app.topic('soil_moisture_batch', value_type=SoilMoistureMessage)
 
+task_stream = app.topic('task_stream', value_type=TaskMessage)
 
 # batch agents
 @app.agent(humidity_batch)
@@ -73,7 +83,7 @@ async def batch_agent_soil_moisture(batches):
 
 
 
-def fillMessage(message):
+def fillSensorMessage(message):
     message.timestamp = get_timestamp()
     sensor_data = dc.getSensorData(message.sensor_id)
     message.reading_unit = sensor_data.reading_unit
@@ -84,34 +94,66 @@ def fillMessage(message):
     latest_sensor_message = message
     return message
 
+def fillTaskMessage(message):
+    message.timestamp = get_timestamp()
+    actuator_data = dc.getActuatorData(message.actuator_target)
+    message.actuator_type = actuator_data.device_type
+
+    global latest_task_message
+    latest_task_message = message
+    return message
+
 # streaming agents
 @app.agent(humidity_stream, sink=[humidity_batch])
 async def stream_agent_humidity(messages):
     async for message in messages:
-        message = fillMessage(message)
+        message = fillSensorMessage(message)
+        await sp.process(message)
+        sp.sendToHub(message)
+        print('hi')
         yield message
-        #sp.sendToHub(message)
 
 @app.agent(temperature_stream, sink=[temperature_batch])
 async def stream_agent_temperature(messages):
     async for message in messages:
-        message = fillMessage(message)
+        message = fillSensorMessage(message)
+        await sp.process(message)
+        sp.sendToHub(message)
+        print('hi')
         yield message
-        #sp.sendToHub(message)
 
 @app.agent(soil_moisture_stream, sink=[soil_moisture_batch])
 async def stream_agent_soil_moisture(messages):
     async for message in messages:
-        message = fillMessage(message)
+        message = fillSensorMessage(message)
+        await sp.process(message)
+        sp.sendToHub(message)
+        print('hi')
         yield message
-        #await sp.sendToHub(message)
 
 
 
-@app.page('/')
-async def index(self, request):
+# tasks agent
+@app.agent(task_stream)
+async def tasks_agent(messages):
+    async for message in messages:
+        message = fillTaskMessage(message)
+        newState = 'ON' if message.state else 'OFF'
+        print('Task Dispatched: ' + 'Actuator ' + message.actuator_target + ' of type ' 
+              + message.actuator_type + ' to be turned ' + newState + ' at ' + str(message.intensity) 
+              + ' intensity for ' + str(message.duration) + ' seconds ')
+
+
+
+@app.page('/sensor-messages/')
+async def update_sensor_message(self, request):
     global latest_sensor_message
     return self.json(latest_sensor_message)
+
+@app.page('/task-messages/')
+async def update_task_message(self, request):
+    global latest_task_message
+    return self.json(latest_task_message)
 
 
 
