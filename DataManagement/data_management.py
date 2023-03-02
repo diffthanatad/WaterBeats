@@ -1,4 +1,3 @@
-import asyncio
 import influxdb_client
 from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
 from influxdb_client.client.write_api import ASYNCHRONOUS
@@ -15,10 +14,8 @@ class DataManagement:
             longitude (float): Longitude of the sensor
             latitude (float): Latitude of the sensor
             timestamp (str): Timestamp of the data
-        Raises:
-            Exception: Error while inserting data to database
         Returns:
-            str: Data inserted to database
+            str: > successfully: true or false
         """
         # * Create data point
         data_point = influxdb_client.Point.measurement("sensor_data") \
@@ -44,13 +41,12 @@ class DataManagement:
             status (str): Status of the actuator
             longitude (float): Longitude of the actuator
             latitude (float): Latitude of the actuator
-        Raises:
-            Exception: Error while inserting data to database
+            timestamp (str): Timestamp of the data
         Returns:
-            str: Data inserted to database
+            str: > successfully: true or false
         """
         # * Create data point
-        data_point = influxdb_client.Point("actuator_data") \
+        data_point = influxdb_client.Point.measurement("actuator_data") \
             .tag("actuator_id", actuator_id) \
             .tag("actuator_type", actuator_type) \
             .field("status", status) \
