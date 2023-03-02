@@ -687,6 +687,7 @@ dependencies = [
  "futures",
  "influxdb2",
  "influxdb2-structmap",
+ "log",
  "num-traits",
  "serde",
  "tide",

@@ -24,7 +24,7 @@ pub async fn get_latest_records_from_all_sensors_body(
     Ok(res)
 }
 
-pub async fn get_latest_record_by_sensor_id(id: &str) -> Result<model::SensorData, RequestError> {
+pub async fn get_latest_record_by_sensor_id(id: &str) -> Result<Option<model::SensorData>, RequestError> {
     let client = get_influxdb_client();
     let bucket = get_default_bucket();
     let qs = format!(
@@ -37,8 +37,10 @@ pub async fn get_latest_record_by_sensor_id(id: &str) -> Result<model::SensorDat
     );
     let query = Query::new(qs.to_string());
     let res = client.query::<model::SensorData>(Some(query)).await?;
-    println!("{:?}", &res);
-    Ok(res[0].to_owned())
+    if res.len() == 0 {
+        return Ok(None)
+    }
+    Ok(Some(res[0].to_owned()))
 }
 
 pub async fn get_records_by_sensor_id_and_range(id: &str, start: i64, end: i64) -> Result<Vec<model::SensorData>, RequestError> {
@@ -139,7 +141,7 @@ mod test {
         let id = "test_sensor_1";
         let res = super::get_latest_record_by_sensor_id(id).await;
         assert!(res.is_ok(), "{:?}", res);
-        let data = res.unwrap();
+        let data = res.unwrap().unwrap();
         assert_eq!(data.sensor_id, id);
         assert_eq!(data.sensor_type, "temperature");
     }
