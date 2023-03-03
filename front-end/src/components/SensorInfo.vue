@@ -72,9 +72,6 @@ export default {
 
       this.sensorInfo = sensorInfo
     }
-  },
-  // created() {
-  //   this.updateSensorInfo()
-  // }
+  }
 }
 </script>

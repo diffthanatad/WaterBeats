@@ -38,7 +38,9 @@ pub struct ActuatorData {
 #[derive(Clone, Debug, Serialize)]
 pub struct ActuatorDataExternal {
     time: DateTime<FixedOffset>,
+    #[serde(rename = "id")]
     actuator_id: String,
+    #[serde(rename = "type")]
     actuator_type: String,
     status: String,
     location: (f64, f64),
@@ -48,7 +50,9 @@ pub struct ActuatorDataExternal {
 #[derive(Debug, Serialize, Clone)]
 pub struct SensorDataExternal {
     time: DateTime<FixedOffset>,
+    #[serde(rename = "id")]
     sensor_id: String,
+    #[serde(rename = "type")]
     sensor_type: String,
     data: f64,
     unit: String,
@@ -64,7 +68,7 @@ impl Into<ActuatorDataExternal> for ActuatorData {
             actuator_id: self.actuator_id,
             actuator_type: self.actuator_type,
             status: self.status,
-            location: (self.longitude, self.latitude),
+            location: (self.latitude, self.longitude),
         }
     }
 }
@@ -90,7 +94,7 @@ impl Into<SensorDataExternal> for SensorData {
             sensor_type: self.sensor_type,
             data: self.data,
             unit: self.unit,
-            location: (self.longitude, self.latitude),
+            location: (self.latitude, self.longitude),
         }
     }
 }
@@ -144,7 +148,7 @@ mod test {
         assert_eq!(sensor_data.sensor_type, sensor_data_external.sensor_type);
         assert_eq!(sensor_data.data, sensor_data_external.data);
         assert_eq!(sensor_data.unit, sensor_data_external.unit);
-        assert_eq!(sensor_data.longitude, sensor_data_external.location.0);
-        assert_eq!(sensor_data.latitude, sensor_data_external.location.1);
+        assert_eq!(sensor_data.longitude, sensor_data_external.location.1);
+        assert_eq!(sensor_data.latitude, sensor_data_external.location.0);
     }
 }
