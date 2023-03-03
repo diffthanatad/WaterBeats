@@ -1,5 +1,14 @@
 version: '3'
 services:
+  back-end:
+    image: "diffs/ucl-waterbeats:auth-gateway_1.0.0"
+    container_name: waterbeats-auth-gateway
+    environment:
+      JWT_SECRET: Thursday2March2023
+      DATABASE_URL: postgres://user:pass@postgres14-waterbeats/waterbeats
+      CLIENT_ORIGIN: http://localhost:8080/
+    ports:
+      - "9091:9091"
   database:
     image: "postgres:14"
     container_name: postgres14-waterbeats
