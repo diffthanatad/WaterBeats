@@ -21,12 +21,6 @@
         <div class="column-user-detail">
           <label> {{ role }}</label>
         </div>
-        <div class="column-user-detail">
-          <label><b>Last Signed In: </b></label>
-        </div>
-        <div class="column-user-detail">
-          <label> {{ lastSignedIn }}</label>
-        </div>
       </div>
     </div>
     <div class="change-password container">
@@ -60,7 +54,7 @@
             />
             <br />
           </div>
-          <button @click.prevent="changePassword">Change Password</button>
+          <button @click.prevent="changePasswordFunc">Change Password</button>
         </form>
       </div>
     </div>
@@ -68,25 +62,47 @@
 </template>
 
 <script>
+import { getSingleUser, changePassword } from "@/services/userService";
+
 export default {
   name: "SettingView",
   components: {},
   data() {
     return {
-      username: "adam01",
-      fullname: "Adam Smith",
-      role: "admin",
-      lastSignedIn: "2021-05-01 12:00:00",
+      username: "",
+      fullname: "",
+      role: "",
+      id: 0,
       currentPassword: "",
       newPassword: "",
       confirmNewPassword: "",
     };
   },
+  async mounted() {
+    await this.getUserData();
+  },
   methods: {
-    changePassword() {
-      console.log(
-        `${this.currentPassword}-${this.newPassword}-${this.confirmNewPassword}`
-      );
+    async changePasswordFunc() {
+      if (this.newPassword === this.confirmNewPassword) {
+        const jsonData = {
+          id: this.id,
+          oldPassword: this.currentPassword,
+          newPassword: this.newPassword,
+        };
+        const response = await changePassword(jsonData);
+        if (response.status === 200) {
+          alert("Change password successfully");
+        } else {
+          alert("Change password failed");
+        }
+      }
+    },
+    async getUserData() {
+      this.username = localStorage.getItem("username");
+      const response = await getSingleUser(this.username);
+      this.fullname = response.data.name;
+      this.role = response.data.role;
+      this.id = response.data.id;
     },
   },
 };
@@ -124,8 +140,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
-
 
 .column {
   float: left;
