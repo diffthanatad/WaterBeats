@@ -73,13 +73,14 @@ export default {
         this.sensorIdList = []
         return
       }
+
       let sensorIds = []
       const sensorsList = response.data.data
       const selectedTabName = tabSelect.value.selectedTab
 
       for (let sensor of sensorsList.values()) {
-        if (sensor["type"] == selectedTabName) {
-          sensorIds.push(sensor["id"])
+        if (sensor["sensor_type"] == selectedTabName) {
+          sensorIds.push(sensor["sensor_id"])
         }
       }
       // Assign the first sensor ID to 'sensorId' in @/store/chat-data.js
@@ -91,7 +92,9 @@ export default {
     },
     async handleClicks(click) {
       chart.value.setSensorId(click.target.innerHTML)
+
       await this.updateLineGraph()
+      await this.updateSensorInfo()
     }
   },
   async created() {

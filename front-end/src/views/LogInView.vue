@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      /* search input fields. */ 
+      /* search input fields. */
       inputUsername: "",
       inputPassword: "",
     };
@@ -63,8 +63,8 @@ export default {
           localStorage.setItem('username', data.username);
           localStorage.setItem('jwt', data.accessToken);
           localStorage.setItem('role', data.role);
-          
-          this.$router.push({name: "Home"}); 
+
+          this.$router.push({name: "Home"});
         } else {
           localStorage.removeItem('username');
           localStorage.removeItem('jwt');

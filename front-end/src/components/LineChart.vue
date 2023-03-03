@@ -29,7 +29,7 @@
 }
 
 .chart {
-  padding-top: 50px;
+  padding-top: 30px;
 }
 
 .sensor-list {
@@ -103,7 +103,7 @@ export default {
           x: {
             title: {
               display:true,
-              text: "TIME"
+              text: "TIMESTAMP"
             },
             ticks: {
               maxRotation: 50,
@@ -118,11 +118,11 @@ export default {
     async updateLineGraph() {
       let sensorId = chart.value.sensorId
 
-      const date = new Date()
-      let end = date.toISOString()
-
-      date.setDate(date.getDate() - 1);
+      let date = new Date("January 01, 2000")
       let start = date.toISOString()
+
+      date = new Date()
+      let end = date.toISOString()
 
       const response = await getRecord(sensorId, start, end)
 
@@ -133,16 +133,20 @@ export default {
         }
         return
       }
-      const dataList = response.data.data
+      const dataList = response.data.data.slice(0, 100);
       let timestamps = []
       let sensorData = []
 
       for (let data of dataList) {
         let date = new Date(data["time"])
-        let hour = date.getHours()
-        let minute = date.getMinutes()
 
-        timestamps.push(hour + ":" + minute)
+        let hour = date.getHours()
+        hour = (hour < 10) ? "0" + hour : hour
+
+        let minute = date.getMinutes()
+        minute = (minute < 10) ? "0" + minute : minute
+
+        timestamps.push(date.toLocaleDateString() + " " + hour + ":" + minute)
         sensorData.push(data["data"])
       }
 

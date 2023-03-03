@@ -5,18 +5,19 @@ const httpClient = axios.create({
     baseURL: process.env.VUE_APP_SERVICE_URL,
     timeout: 6000, /* 6 seconds before timeout */
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": "Token mXi3ub6PggpvNGCbYggehLDHp3FEeR701MW9ofM6bB-Vj6jnqKoKklLGTs8KHgn3LvIXcCW8u9BmaAI1pAWkWQ=="
     }
 });
 
-const getAuthToken = () => localStorage.getItem('jwt');
+// const getAuthToken = () => localStorage.getItem('jwt');
 
-const authInterceptor = (config) => {
-    // store.dispatch("loading/start");
+// const authInterceptor = (config) => {
+//     // store.dispatch("loading/start");
 
-    config.headers['Authorization'] = `Bearer ${getAuthToken()}`;
-    return config;
-}
+//     config.headers['Authorization'] = `Bearer ${getAuthToken()}`;
+//     return config;
+// }
 
 const errorInterceptor = error => {
     console.log(error);
@@ -43,7 +44,7 @@ const errorInterceptor = error => {
             console.error("Service httpClient, errorInterceptor, status other status code:", error, "\n");
     }
 
-    store.dispatch("loading/finish");
+    // store.dispatch("loading/finish");
     return Promise.reject(error);
 }
 
@@ -59,11 +60,11 @@ const responseInterceptor = response => {
             break;
     }
 
-    store.dispatch("loading/finish");
+    // store.dispatch("loading/finish");
     return response;
 }
 
-httpClient.interceptors.request.use(authInterceptor);
+// httpClient.interceptors.request.use(authInterceptor);
 httpClient.interceptors.response.use(responseInterceptor, errorInterceptor);
 
 export default httpClient;

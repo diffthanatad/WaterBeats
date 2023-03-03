@@ -4,9 +4,9 @@
             <MapComp :inputDevices="devices" />
         </div>
         <div class="right-half">
-            <h1>Actuator Configuration Page</h1>
+            <h2 style="padding-top: 10px;">Event Configuration</h2>
             <hr />
-            <div class="row mb-3">
+            <!-- <div class="row mb-3">
                 <div class="col-6">
                     <select class="form-select" name="field" as="select" v-model="deviceType">
                         <option value="pump">Pump</option>
@@ -25,9 +25,12 @@
                     <option v-for="device in devices" :key="device.id" :value="device.id"> {{ device.id }} </option>
                 </select>
             </div>
-            <hr />
-            <h3> Rules </h3>
+            <hr /> -->
             <form @submit.prevent="onSubmitRule">
+                <ActuatorSetting />
+                <!-- <div class="row mb-3">
+                    <ActuatorSetting label="" />
+                </div>
                 <div class="row mb-3">
                     <FormRuleSetting label="Turn on when temperature is" firstInputLabel="Low"
                         firstPlaceholder="low ..." :firstInputInitialValue="rules.temperatureLow"
@@ -46,7 +49,7 @@
                     <FormRuleSetting label="Turn on when time is" firstInputLabel="Min" firstPlaceholder="minutes?"
                         :firstInputInitialValue="rules.minute" secondInputLabel="Time" secondPlaceholder=" 24 hr."
                         :secondInputInitialValue="rules.time" @onChangeInputValue="changeInputValueForTime" />
-                </div>
+                </div> -->
                 <div class="row justify-content-center">
                     <button class="btn btn-primary"><i class="bi bi-save2"></i>Save</button>
                 </div>
@@ -57,7 +60,8 @@
 
 <script>
 import MapComp from '@/components/Map/MapComp.vue'
-import FormRuleSetting from '@/components/Form/FormRuleSetting.vue';
+// import FormRuleSetting from '@/components/Form/FormRuleSetting.vue';
+import ActuatorSetting from '@/components/Form/ActuatorSetting.vue';
 import { getActuatorByType } from '@/services/actuatorService.js';
 import { getRuleByActuatorId, updateRuleByActuatorId } from '@/services/ruleService.js';
 
@@ -68,7 +72,8 @@ export default {
     components: {
         // Form,
         MapComp,
-        FormRuleSetting,
+        // FormRuleSetting,
+        ActuatorSetting
     },
     data() {
         return {
@@ -170,6 +175,11 @@ export default {
 </script>
 
 <style scoped>
+
+ActuatorSetting {
+    padding-bottom: 20px;
+}
+
 .configuration-page {
     height: 100%;
 }

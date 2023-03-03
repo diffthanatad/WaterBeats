@@ -12,10 +12,10 @@ export function getAllLatest() {
     return httpClient.get(`${END_POINT}/allLatest`);
 }
 
-export function getLatestById(id){
-    return httpClient.get(`${END_POINT}/getLatestById?sensor_id=` + id);
+export function getLatestById(id) {
+    return httpClient.get(`${END_POINT}/getLatestById?id=` + id);
 }
 
-export function getRecord(id, start, end){
-    return httpClient.get(`${END_POINT}/record?id=$` + id + '&start=$' + start + '&end=$' + end);
+export function getRecord(id, start, end) {
+    return httpClient.get(`${END_POINT}/record?id=` + id + '&start=' + start + '&end=' + end);
 }

@@ -66,12 +66,15 @@ export default {
       let sensorInfo = ""
       sensorInfo += "Sensor ID: \n" + info["sensor_id"] + "\n\n"
       sensorInfo += "Sensor Type: \n" + info["sensor_type"] + "\n\n"
-      sensorInfo += "Current Data: " + info["data"] + "\n\n"
-      // sensorInfo += "Unit: " + info["unit"] + "\n\n"
+      sensorInfo += "Current Data: " + info["data"].toFixed(2) + "\n\n"
+      sensorInfo += "Unit: " + info["unit"] + "\n\n"
       sensorInfo += "Location: " + info["location"] + "\n"
 
       this.sensorInfo = sensorInfo
     }
-  }
+  },
+  // created() {
+  //   this.updateSensorInfo()
+  // }
 }
 </script>

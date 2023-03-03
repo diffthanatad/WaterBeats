@@ -25,7 +25,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'ActuatorConfigurationView' }" style="text-decoration: none;">ACTUATOR CONFIG</router-link>
+                                <router-link :to="{ name: 'ActuatorConfigurationView' }" style="text-decoration: none;">EVENTS</router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link">
+                                <router-link :to="{ name: 'Alerts' }" style="text-decoration: none;">ALERTS</router-link>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -33,11 +38,11 @@
                                 <router-link :to="{ name: 'Admin' }" style="text-decoration: none;">ADMIN</router-link>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link">
                                 <router-link :to="{ name: 'Setting' }" style="text-decoration: none;">SETTINGS</router-link>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <button class="btn btn-outline-success" type="button" @click.prevent="logOut">SIGN OUT</button>
                         </li>

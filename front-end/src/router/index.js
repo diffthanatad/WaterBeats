@@ -5,6 +5,7 @@ import ActuatorConfigurationView from '../views/ActuatorConfigurationView.vue'
 import AdminView from '../views/AdminView.vue'
 import SettingView from '../views/SettingView.vue'
 import LogInView from '../views/LogInView.vue'
+import AlertsView from '../views/AlertsView.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/login',
     name: 'LogIn',
     component: LogInView
+  },
+  {
+    path: '/alerts',
+    name: 'Alerts',
+    component: AlertsView
   }
 ]
 
@@ -44,15 +50,15 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const authRequired = to.name !== "LogIn";
-  const loggedIn = localStorage.getItem('username');
+// router.beforeEach((to, from, next) => {
+//   const authRequired = to.name !== "LogIn";
+//   const loggedIn = localStorage.getItem('username');
 
-  if (authRequired && !loggedIn) {
-    return next('/login');
-  } else {
-    next();
-  }
-})
+//   if (authRequired && !loggedIn) {
+//     return next('/login');
+//   } else {
+//     next();
+//   }
+// })
 
 export default router
