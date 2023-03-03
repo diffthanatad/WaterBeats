@@ -15,6 +15,8 @@ This branch contains the full base station functionality.
 Download the latest stable Apache Kafka (3.4.0) binary for Scala 2.13 from https://kafka.apache.org/downloads.
 
 Extract to the root directory (e.g., C:\ on Windows) and rename the directory to kafka.
+(macOS) Extract to the user's home directory (e.g., /Users/username where "username" is the name of your user account on the Mac.) and rename the directory to kafka.
+
 
 ### Set up a Python environment
 Create a python virtual environment
@@ -40,6 +42,6 @@ On MacOS: `start_kafka.sh` then `start_faust.sh`
 Each sensor readings channel is reponsible for one sensor type and has a corresponding agent to process these messages.  
 You can send a message to a channel manually (e.g., to @humidity_stream).
 
-On Windows: `faust -A base_station send @humidity_stream "{"""sensor_id""": """foo""", """reading""": """15"""}"`
+On Windows: `faust -A base_station send @humidity_stream "{"""sensor_id""": """test_sensor1""", """reading""": """15"""}"`
 
-On MacOS: `faust -A base_station send @humidity_stream '{"sensor_id": "foo", "reading": "15"}'`
+On MacOS: `faust -A base_station send @humidity_stream '{"sensor_id": "test_sensor1", "reading": "15"}'`

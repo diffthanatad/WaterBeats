@@ -1,3 +1,5 @@
+import aiohttp
+
 import base_station as bs
 import rule_engine as re
 import device_controller as dc
@@ -16,5 +18,10 @@ async def process(message):
 
 
 # forward to main hub
-def sendToHub(message):
-    pass
+async def sendToHub(message):
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post('http://localhost:5555/sensor_data', json=message) as resp:
+                print("Response Status: {}".format(resp.status))
+    except aiohttp.ClientConnectorError as e:
+        print(f"connection is not available: {e}")
