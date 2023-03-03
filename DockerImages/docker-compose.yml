@@ -11,7 +11,7 @@ services:
       - ./postgres_database_schema.sql:/docker-entrypoint-initdb.d/postgres_database_schema.sql
     ports:
       - "5432:5432"
-  back-end:
+  proxy-server:
     image: "diffs/ucl-waterbeats:auth-gateway_1.0.3"
     container_name: waterbeats-auth-gateway
     environment:
@@ -29,7 +29,6 @@ services:
     container_name: data-backend
     ports:
       - "8888:8888"
-
 
 # Command to use for running this docker compose file
 # $ docker-compose up

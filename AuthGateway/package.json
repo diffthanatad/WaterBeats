@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --inspect ./src/index.js",
+    "run": "node dist/index.js",
     "build": "babel src --out-dir dist",
     "test": "jest --verbose --detectOpenHandles --coverage"
   },
