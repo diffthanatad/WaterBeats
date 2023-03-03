@@ -107,19 +107,19 @@ def fillTaskMessage(message):
 @app.agent(humidity_stream, sink=[humidity_batch])
 async def stream_agent_humidity(messages):
     async for message in messages:
+        print(message)
         message = fillSensorMessage(message)
         await sp.process(message)
         sp.sendToHub(message)
-        print('hi')
         yield message
 
 @app.agent(temperature_stream, sink=[temperature_batch])
 async def stream_agent_temperature(messages):
     async for message in messages:
+        print(message)
         message = fillSensorMessage(message)
         await sp.process(message)
         sp.sendToHub(message)
-        print('hi')
         yield message
 
 @app.agent(soil_moisture_stream, sink=[soil_moisture_batch])
@@ -128,7 +128,6 @@ async def stream_agent_soil_moisture(messages):
         message = fillSensorMessage(message)
         await sp.process(message)
         sp.sendToHub(message)
-        print('hi')
         yield message
 
 

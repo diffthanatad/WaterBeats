@@ -42,21 +42,6 @@ void loop() {
     return;
   }
 
-  if (WiFi.status()==WL_CONNECTED){
-    HTTPClient http;
-
-    http.begin(server);
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-      String httpRequestData = "field1=" + String(t);    
-      int httpResponseCode = http.POST(httpRequestData);
-     
-      Serial.print("HTTP Response code is: ");
-      Serial.println(httpResponseCode);
-      http.end();
-    }
-    else {
-      Serial.println("WiFi is Disconnected!");
-    }
 
   Serial.print(F("Humidity: "));
   Serial.print(h);

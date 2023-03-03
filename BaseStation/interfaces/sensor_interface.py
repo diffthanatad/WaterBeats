@@ -1,42 +1,37 @@
-# import aiohttp
-from aiohttp import web
-import subprocess
+import socket
+import sys
 import json
+import producer as p
+from aiohttp import web
+from pathlib import Path
 
-def changeToCommand(command):
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode == 0:
-        print(result.stdout.decode('utf-8'))
-    else:
-        print(result.stderr.decode('utf-8'))
+path = str(Path(Path(__file__).parent.absolute()).parent.absolute())
+sys.path.insert(0, path)
+
+from Faust import device_controller as dc
+
+hostname=socket.gethostname()
+IPAddr=socket.gethostbyname(hostname)
+print("Device Name: "+hostname)
+print("Device IP Address: "+IPAddr)
 
 async def handle_request(request):
     if request.method == 'POST':
-        json_data = await request.text()
-        data = json.loads(json_data)
-        id = data["sensor_id"]
-        timestamp = data["timestamp"]
-        if 'temperature' in data:
-            # temperature sensor
-            topic = "temperature_readings"
-            value = data["temperature"]
-        elif 'soil_moisture' in data:
-            topic = "soil_moisture_readings"
-            value = data["soil_moisture"]
-        elif 'water_level' in data:
-            topic = "humidity_readings"
-            value = data["water_level"]
-        command = "cd .. && cd Faust && faust -A base_station send @{} '{{\"sensor_id\": \"{}\", \"reading_value\": \"{}\"}}'".format(
-            topic, id, value)
-        print(command)
-        changeToCommand(command)
+        data = await request.text()
+        print(data)
         response = web.Response(text="Received data: {}".format(data))
+        json_data = json.loads(data)
+        sensor_data = dc.getSensorData(json_data['sensor_id'])
+        if not sensor_data == None:
+            p.send_sensor_msg(json_data, sensor_data.device_type, True)
+        else:
+            print('sensor_id not found in record:', json_data['sensor_id'])
     else:
         response = web.Response(status=405)
     return response
 
 app = web.Application()
-app.add_routes([web.post('/new_data', handle_request)])
+app.add_routes([web.post('/sensor_data', handle_request)])
 
 if __name__ == '__main__':
     PORT = 23333

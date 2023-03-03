@@ -56,7 +56,7 @@ except Exception as e:
     print(e)
 
 def getSensorData(sensor_id):
-    return sensors[sensor_id]
+    return sensors.get(sensor_id, None)
 
 def getActuatorData(actuator_id):
-    return actuators[actuator_id]
+    return sensors.get(actuator_id, None)
