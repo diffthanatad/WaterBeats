@@ -1,14 +1,5 @@
 version: '3'
 services:
-  back-end:
-    image: "diffs/ucl-waterbeats:auth-gateway_1.0.0"
-    container_name: waterbeats-auth-gateway
-    environment:
-      JWT_SECRET: Thursday2March2023
-      DATABASE_URL: postgres://user:pass@postgres14-waterbeats/waterbeats
-      CLIENT_ORIGIN: http://localhost:8080/
-    ports:
-      - "9091:9091"
   database:
     image: "postgres:14"
     container_name: postgres14-waterbeats
@@ -20,6 +11,25 @@ services:
       - ./postgres_database_schema.sql:/docker-entrypoint-initdb.d/postgres_database_schema.sql
     ports:
       - "5432:5432"
+  back-end:
+    image: "diffs/ucl-waterbeats:auth-gateway_1.0.3"
+    container_name: waterbeats-auth-gateway
+    environment:
+      JWT_SECRET: Thursday2March2023
+      DATABASE_URL: postgres://user:pass@postgres14-waterbeats/waterbeats
+      CLIENT_ORIGIN: http://localhost:8080/
+    ports:
+      - "9091:9091"
+    depends_on:
+      - database
+  data-backend:
+    build:
+      context: ../DataBackend
+      dockerfile: "Dockerfile"
+    container_name: data-backend
+    ports:
+      - "8888:8888"
+
 
 # Command to use for running this docker compose file
 # $ docker-compose up
