@@ -59,4 +59,4 @@ def getSensorData(sensor_id):
     return sensors.get(sensor_id, None)
 
 def getActuatorData(actuator_id):
-    return sensors.get(actuator_id, None)
+    return actuators.get(actuator_id, None)

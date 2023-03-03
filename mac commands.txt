@@ -1,9 +1,0 @@
- ~/kafka/bin/zookeeper-server-start.sh ~/kafka/config/zookeeper.properties
-
- ~/kafka/bin/kafka-server-start.sh ~/kafka/config/server.properties
-
-conda activate faustTest
-
-cd BaseStation && cd Faust && faust -A base_station worker -l info
-
-cd BaseStation && cd Faust && cd simulations && cd Sensor && python main.py --id 2333 --target http://localhost:23333/new_data --sensor_type soil_moisture  --device_type sensor
