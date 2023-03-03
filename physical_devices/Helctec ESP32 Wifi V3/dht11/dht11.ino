@@ -51,7 +51,6 @@ void loop() {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
-
   Serial.print(F("Humidity: "));
   Serial.print(h);
   Serial.print(F("%  Temperature: "));
