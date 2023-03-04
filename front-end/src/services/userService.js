@@ -1,10 +1,10 @@
 import httpClient from './httpClient';
 
-const END_POINT = '/user';
+const END_POINT = '/api/user';
 
-const signIn = (obj) => httpClient.post('auth/signin', obj);
+const signIn = (obj) => httpClient.post('/api/auth/signin', obj);
 
-const signUp = (obj) => httpClient.post('auth/signup', obj);
+const signUp = (obj) => httpClient.post('/api/auth/signup', obj);
 
 const deleteUser = (id) => httpClient.delete(`${END_POINT}/${id}`);
 
