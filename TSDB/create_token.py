@@ -3,7 +3,6 @@ import json
 import os
 import requests
 
-print("Hi")
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8086")
 url = f"{BASE_URL}/api/v2/signin"
 
