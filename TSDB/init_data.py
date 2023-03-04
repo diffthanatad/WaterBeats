@@ -6,7 +6,7 @@ from math import sin
 from typing import Tuple
 import requests
 
-
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8086")
 class SensorDataGenerator:
     def __init__(
         self,
@@ -108,7 +108,7 @@ token = os.environ["INFLUXDB_TOKEN"]
 
 def write_to_influxdb(payload):
     r = requests.post(
-        "http://localhost:8086/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
+        f"{BASE_URL}/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
         data=payload,
         headers={
             "Authorization": f"Token {token}",
