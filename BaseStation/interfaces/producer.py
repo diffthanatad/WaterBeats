@@ -30,16 +30,7 @@ def send_task_msg(task_msg, flush = False):
     if flush:
         producer.flush()
 
-
-
-humidity_msg = {'sensor_id':'test_sensor1', 'reading':60}
-temperature_msg = {'sensor_id':'test_sensor2', 'reading':20}
-soil_moisture_msg = {'sensor_id':'test_sensor3', 'reading':10}
-
-#send_humidity_msg(humidity_msg, True)
-#send_temperature_msg(temperature_msg, True)
-#send_soil_moisture_msg(soil_moisture_msg, True)
-
-task_msg = {'actuator_target':'test_actuator1', 'state':True, 'intensity':0.5, 'duration':10}
-
-send_task_msg(task_msg, True)
+def send_rule_msg(rule_msg, flush = False):
+    producer.send('rule_stream', rule_msg)
+    if flush:
+        producer.flush()

@@ -7,6 +7,7 @@ import config_supplier
 import speed_processor as sp
 import batch_processor as bp
 import device_controller as dc
+import rule_engine as re
 
 
 
@@ -32,7 +33,7 @@ latest_task_message = 'No messages'
 
 class SensorMessage(faust.Record):
     sensor_id: str
-    reading: str
+    reading: float
     sensor_type: str = ''
     reading_unit: str = ''
     timestamp: str = ''
@@ -54,7 +55,21 @@ class TaskMessage(faust.Record):
     intensity: float
     actuator_type: str = ''
     duration: int = -1
-    timestamp: str = ''
+
+
+# class TimeConditionMessage(ConditionMessage):
+#     sensor_subject: str
+#     reading: float
+#     relation: str
+
+class SensorConditionMessage(faust.Record):
+    sensor_subject: str
+    reading: float
+    relation: str
+
+class RuleMessage(faust.Record):
+    task_message: TaskMessage
+    condition_message: SensorConditionMessage = None
 
 # defines humidity, temperature, soil moisture topics to receive sensor messages
 humidity_stream = app.topic('humidity_stream', value_type=HumidityMessage)
@@ -66,6 +81,7 @@ temperature_batch = app.topic('temperature_batch', value_type=TemperatureMessage
 soil_moisture_batch = app.topic('soil_moisture_batch', value_type=SoilMoistureMessage)
 
 task_stream = app.topic('task_stream', value_type=TaskMessage)
+rule_stream = app.topic('rule_stream', value_type=RuleMessage)
 
 # batch agents
 @app.agent(humidity_batch)
@@ -142,18 +158,28 @@ async def stream_agent_soil_moisture(messages):
         #await sp.sendToHub(jsonMessage(message))
         yield message
 
-
+rules_table = app.Table('rules', default=RuleMessage)
 
 # tasks agent
 @app.agent(task_stream)
 async def tasks_agent(messages):
     async for message in messages:
+        print('received')
         message = fillTaskMessage(message)
         newState = 'ON' if message.state else 'OFF'
         print('Task Dispatched: ' + 'Actuator ' + message.actuator_target + ' of type ' 
               + message.actuator_type + ' to be turned ' + newState + ' at ' + str(message.intensity) 
               + ' intensity for ' + str(message.duration) + ' seconds ')
 
+
+# rules agent
+@app.agent(rule_stream)
+async def rules_agent(messages):
+    async for message in messages:
+        if message.condition_message == None:
+            await task_stream.send(value=(message.task_message))
+        else:
+            re.addRule(message)
 
 
 @app.page('/sensor-messages/')
