@@ -1,5 +1,24 @@
 version: '3'
 services:
+  front-end:
+    image: "diffs/ucl-waterbeats:front-end_1.0.1"
+    container_name: waterbeats-front-end
+    environment:
+      VUE_APP_SERVICE_URL: "http://localhost:9091/"
+    ports:
+      - "8080:80"
+  proxy-server:
+    image: "diffs/ucl-waterbeats:auth-gateway_1.0.3"
+    container_name: waterbeats-auth-gateway
+    environment:
+      JWT_SECRET: Thursday2March2023
+      DATABASE_URL: postgres://user:pass@postgres14-waterbeats/waterbeats
+      CLIENT_ORIGIN: http://localhost:8080
+      BACKEND_URL: http://data-backend:8888/
+    ports:
+      - "9091:9091"
+    depends_on:
+      - database
   database:
     image: "postgres:14"
     container_name: postgres14-waterbeats
@@ -11,18 +30,6 @@ services:
       - ./postgres_database_schema.sql:/docker-entrypoint-initdb.d/postgres_database_schema.sql
     ports:
       - "5432:5432"
-  proxy-server:
-    image: "diffs/ucl-waterbeats:auth-gateway_1.0.3"
-    container_name: waterbeats-auth-gateway
-    environment:
-      JWT_SECRET: Thursday2March2023
-      DATABASE_URL: postgres://user:pass@postgres14-waterbeats/waterbeats
-      CLIENT_ORIGIN: http://localhost:8080/
-      BACKEND_URL: http://data-backend:8888/
-    ports:
-      - "9091:9091"
-    depends_on:
-      - database
   data-backend:
     build:
       context: ../DataBackend
@@ -40,7 +47,7 @@ services:
       - influxdb_init
     volumes:
       - ../TSDB:/scripts
-    command: bash -c 'export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && data_backend'
+    command: bash -c 'sleep 5 && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && data_backend'
   influxdb:
     image: "influxdb:2.6.1"
     container_name: influxdb
@@ -59,7 +66,7 @@ services:
       BASE_URL: "http://influxdb:8086"
     volumes:
       - ../TSDB:/scripts
-    command: bash -c 'pip install requests && export INFLUXDB_TOKEN=$$(python /scripts/create_token.py | tail -n 1) && python /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
+    command: bash -c 'pip3 install requests && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && python3 /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
     depends_on:
       - influxdb
 
