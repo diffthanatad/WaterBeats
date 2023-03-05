@@ -179,7 +179,7 @@ async def rules_agent(messages):
         if message.condition_message == None:
             await task_stream.send(value=(message.task_message))
         else:
-            re.addRule(message)
+            re.addNewRule(message)
 
 
 @app.page('/sensor-messages/')

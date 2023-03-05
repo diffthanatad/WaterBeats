@@ -10,8 +10,8 @@ import device_controller as dc
 async def process(message):
     tasks = re.analyse(message)
     for task in tasks:
-        actuator_data = dc.getActuatorData(task.actuator_target)
-        task_msg = bs.TaskMessage(task.actuator_target, actuator_data.device_type, task.state, task.intensity, task.duration)
+        actuator_data = dc.getActuatorData(task['actuator_target'])
+        task_msg = bs.TaskMessage(task['actuator_target'], actuator_data.device_type, task['state'], task['intensity'], task['duration'])
 
         await bs.task_stream.send(value=task_msg)
 

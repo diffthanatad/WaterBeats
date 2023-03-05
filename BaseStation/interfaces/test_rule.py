@@ -7,7 +7,7 @@ task1 = {'actuator_target':'test_actuator1', 'state':True, 'intensity':0.1, 'dur
 condition1 = {'sensor_subject':'test_sensor1', 'reading':20, 'relation':'<'}
 rule1 = {'task_message':task1, 'condition_message': condition1}
 
-p.send_rule_msg(rule1, True)
+#p.send_rule_msg(rule1, True)
 
 time.sleep(5)
 
