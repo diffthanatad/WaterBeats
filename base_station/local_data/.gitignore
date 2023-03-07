@@ -1,0 +1,5 @@
+*
+!.gitignore
+!sensors.csv
+!actuators.csv
+!rules.txt

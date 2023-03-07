@@ -1,0 +1,1 @@
+{"actuator_target": "test_actuator1", "state": true, "intensity": 0.1, "actuator_type": "", "duration": 10}	{"sensor_subject": "test_sensor1", "reading": 20, "relation": "<"}
