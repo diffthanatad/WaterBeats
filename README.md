@@ -31,7 +31,7 @@ Create a python virtual environment
 python -m venv bs_env
 ```
 
-Activate the environment appropriately in `bs_env/Scripts/`
+Activate the environment appropriately in `./bs_env/Scripts/`
 
 Install packages from requirements.txt
 ```
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ## Quick start
 ### Add a record of sensors and actuators
-Supply the relevant information for your sensors and actuators in `base_station/local_data/`
+Supply the relevant information for your sensors and actuators in `./base_station/local_data/`
 
 Here are some example values for `sensors.csv`
 | sensor_id | sensor_type | reading_unit | latitude | longitude |
@@ -60,6 +60,11 @@ On MacOS: `start_kafka.sh` then `start_faust.sh`
 Run `Faust/interfaces/sensor_interface.py` to start a local server and start communicating with IoT devices.  
 Post sensor data in standard JSON format containing only sensor_id and a reading.  
 Working examples are provided in `physical_devices/` for two ESP32 variants using the dht11 temperature and humidity sensor.
+
+## Testing
+Change directory to `./base_station/`
+
+Run `python -m pytest`
 
 ## User Guide
 ### Sending messages to channels
