@@ -1,14 +1,15 @@
 # Base Station
 
-This branch contains the full base station functionality.
+This branch contains the full base station functionality for our scalable IoT smart farming solution.
 
 ## Features
 
-- stream processing using Faust
-- sensor and actuator event management
-- sensor and actuator interfaces for Faust
-- sensor and actuator firmware for ESP32
-- local database and cloud database connections
+- stream IoT sensor data
+- connect any IoT sensor or actuator using our interface for handling JSON messages
+- process sensor data using lambda architecture with stream and batch processing routes
+- store sensor data locally, forward it to a data hub, or upload directly to cloud storage
+- automatically control actuators with rules containing tasks and conditions
+- receive and apply rule and tasks remotely
 
 ## Prerequisites
 ### Download Kafka
@@ -32,16 +33,34 @@ pip install -r requirements.txt
 ```
 
 ## Quick start
+### Add a few sensors and actuators
+Supply the relevant information for your sensors and actuators in `Faust/local_data/`
+
+Here are some example values for `sensors.csv`
+| device_id | sensor_type | reading_unit | latitude | longitude |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| 30:AE:A4:14:C2:90 | humidity sensor | Percent | 51.509865 | -0.118092 |
+| F4:12:FA:83:00:F0 | temperature sensor | Celsius | 51.508610 | -0.163611 |
+
+All fields including device_id can be changed freely. This example uses the MAC address as the device_id.  
+Longitude and latitude can be added to provide a map view of devices on the Main Hub web interface.
 
 ### Start zookeeper and kafka, then start a Faust worker
 On Windows: `start_kafka.bat` then `start_faust.bat`
 
 On MacOS: `start_kafka.sh` then `start_faust.sh`
 
-### Sending messages manually
-Each sensor readings channel is reponsible for one sensor type and has a corresponding agent to process these messages.  
-You can send a message to a channel manually (e.g., to @humidity_stream).
+## User Guide
+### Sending messages to channels
+Kafka channels are used to separate each message type: sensor, actuator, task, and rule messages  
+Use our message interface at `interfaces/producer.py` to send messages to these channels directly.
 
-On Windows: `faust -A base_station send @humidity_stream "{"""sensor_id""": """test_sensor1""", """reading""": """15"""}"`
+```
+producer.send_rule_message(rule_message = RuleMessage(task_message, condition_message), flush = True)
+```
 
-On MacOS: `faust -A base_station send @humidity_stream '{"sensor_id": "test_sensor1", "reading": "15"}'`
+Alternatively, you can send a message to a channel through command-line.
+
+On Windows: `faust -A base_station send @sensor_stream "{"""sensor_id""": """test_sensor1""", """reading""": """15"""}"`
+
+On MacOS: `faust -A base_station send @sensor_stream '{"sensor_id": "test_sensor1", "reading": "15"}'`
