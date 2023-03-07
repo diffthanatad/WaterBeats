@@ -1,6 +1,7 @@
 # Base Station
 
 The full base station functionality for our scalable IoT smart farming solution.  
+It works standalone via command-line, but is even better with the Main Hub to aggregate, display, and control devices, data and rules!  
 Just connect your sensors and actuators, then add smart rules to automatically manage your devices. That's it!
 
 Runs on a personal computer, dedicated hardware, or even a Raspberry Pi.
@@ -56,7 +57,7 @@ On Windows: `start_kafka.bat` then `start_faust.bat`
 On MacOS: `start_kafka.sh` then `start_faust.sh`
 
 ### Connect your sensors and actuators
-Run `Faust/interfaces/sensor_interface` to start a local server and start communicating with IoT devices.  
+Run `Faust/interfaces/sensor_interface.py` to start a local server and start communicating with IoT devices.  
 Post sensor data in standard JSON format containing only sensor_id and a reading.  
 Working examples are provided in `physical_devices/` for two ESP32 variants using the dht11 temperature and humidity sensor.
 
