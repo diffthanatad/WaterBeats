@@ -1,15 +1,17 @@
 # Base Station
 
-This branch contains the full base station functionality for our scalable IoT smart farming solution.
+The full base station functionality for our scalable IoT smart farming solution.
+Runs on a personal computer, dedicated hardware, or just a Raspberry Pi.
 
 ## Features
 
-- stream IoT sensor data
+- highly scalable streaming of IoT sensor data
 - connect any IoT sensor or actuator using our interface for handling JSON messages
 - process sensor data using lambda architecture with stream and batch processing routes
 - store sensor data locally, forward it to a data hub, or upload directly to cloud storage
 - automatically control actuators with rules containing tasks and conditions
 - receive and apply rule and tasks remotely
+- works online or offline for remote farming conditions
 
 ## Prerequisites
 ### Download Kafka
@@ -37,12 +39,12 @@ pip install -r requirements.txt
 Supply the relevant information for your sensors and actuators in `Faust/local_data/`
 
 Here are some example values for `sensors.csv`
-| device_id | sensor_type | reading_unit | latitude | longitude |
+| sensor_id | sensor_type | reading_unit | latitude | longitude |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | 30:AE:A4:14:C2:90 | humidity sensor | Percent | 51.509865 | -0.118092 |
 | F4:12:FA:83:00:F0 | temperature sensor | Celsius | 51.508610 | -0.163611 |
 
-All fields including device_id can be changed freely. This example uses the MAC address as the device_id.  
+All fields including sensor_id can be changed freely. This example uses MAC addresses as sensor_ids.  
 Longitude and latitude can be added to provide a map view of devices on the Main Hub web interface.
 
 ### Start zookeeper and kafka, then start a Faust worker
