@@ -22,5 +22,5 @@ CREATE TABLE "public"."users" (
 INSERT INTO "public"."users" ("id", "name", "username", "password", "disable", "role") VALUES
 (1, 'David Brown', 'david-b', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'f', 'admin'),
 (2, 'Daniel Smith', 'daniel-s', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'f', 'moderator'),
-(3, 'Bob Smith', 'bob-s', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'f', 'user'),
+(3, 'Bob Smith', 'bob-s', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'T', 'user'),
 (4, 'Alice Mac', 'alice-m', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'f', 'user');
