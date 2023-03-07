@@ -1,0 +1,14 @@
+version: '3'
+services:
+  front-end:
+    image: "diffs/ucl-waterbeats:front-end_1.0.2"
+    container_name: waterbeats-front-end
+    environment:
+      VUE_APP_SERVICE_URL: "https://waterbeats-proxy-server.azurewebsites.net"
+    ports:
+      - "8080:80"
+
+
+# Command to use for running this docker compose file
+# $ docker-compose up
+# $ docker-compose down --volumes --remove-orphans

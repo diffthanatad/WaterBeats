@@ -92,7 +92,7 @@ async function changePassword(req, res) {
         if (!errors.isEmpty()) { return res.status(400).json({ errors: errors.array() }); }
 
         const { id, oldPassword, newPassword } = req.body;
-        const result = await userService.changePassword(id, oldPassword, newPassword);
+        await userService.changePassword(id, oldPassword, newPassword);
 
         res.status(200).send();
     } catch (error) {

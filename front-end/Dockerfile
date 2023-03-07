@@ -1,13 +1,17 @@
-FROM node:lts-alpine
+FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY . .
+COPY ./ .
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM nginx:stable-alpine as production-stage
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app
+COPY nginx.conf /etc/nginx/nginx.conf
 
-## BUILD COMMAND = docker buildx build --platform=linux/amd64 . -t diffs/ucl-waterbeats:front-end_1.0.1 --no-cache
+COPY ./substitute_environment_variables.sh /substitute_environment_variables.sh
+RUN chmod +x /substitute_environment_variables.sh
+ENTRYPOINT ["/substitute_environment_variables.sh"]
+
+## BUILD COMMAND = docker buildx build --platform=linux/amd64 . -t diffs/ucl-waterbeats:front-end_1.1.0 --no-cache
