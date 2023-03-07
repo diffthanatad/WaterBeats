@@ -1,7 +1,10 @@
 # Base Station
 
-The full base station functionality for our scalable IoT smart farming solution.
-Runs on a personal computer, dedicated hardware, or just a Raspberry Pi.
+The full base station functionality for our scalable IoT smart farming solution.  
+It works standalone via command-line, but is even better with the Main Hub to aggregate, display, and control devices, data and rules!  
+Just connect your sensors and actuators, then add smart rules to automatically manage your devices. That's it!
+
+Runs on a personal computer, dedicated hardware, or even a Raspberry Pi.
 
 ## Features
 
@@ -12,13 +15,14 @@ Runs on a personal computer, dedicated hardware, or just a Raspberry Pi.
 - automatically control actuators with rules containing tasks and conditions
 - receive and apply rule and tasks remotely
 - works online or offline for remote farming conditions
+- data persistence and recovery built-in for power loss and poor connection scenarios
 
 ## Prerequisites
 ### Download Kafka
 Download the latest stable Apache Kafka (3.4.0) binary for Scala 2.13 from https://kafka.apache.org/downloads.
 
-Extract to the root directory (e.g., C:\ on Windows) and rename the directory to kafka.
-(macOS) Extract to the user's home directory (e.g., /Users/username where "username" is the name of your user account on the Mac.) and rename the directory to kafka.
+On Windows, extract to the root directory (e.g., C:\) and rename the directory to kafka.  
+On MacOS, extract to the user home directory (e.g., /Users/name/) and rename the directory to kafka.
 
 
 ### Set up a Python environment
@@ -35,7 +39,7 @@ pip install -r requirements.txt
 ```
 
 ## Quick start
-### Add a few sensors and actuators
+### Add a record of sensors and actuators
 Supply the relevant information for your sensors and actuators in `Faust/local_data/`
 
 Here are some example values for `sensors.csv`
@@ -51,6 +55,11 @@ Longitude and latitude can be added to provide a map view of devices on the Main
 On Windows: `start_kafka.bat` then `start_faust.bat`
 
 On MacOS: `start_kafka.sh` then `start_faust.sh`
+
+### Connect your sensors and actuators
+Run `Faust/interfaces/sensor_interface.py` to start a local server and start communicating with IoT devices.  
+Post sensor data in standard JSON format containing only sensor_id and a reading.  
+Working examples are provided in `physical_devices/` for two ESP32 variants using the dht11 temperature and humidity sensor.
 
 ## User Guide
 ### Sending messages to channels
