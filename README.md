@@ -21,8 +21,8 @@ Runs on a personal computer, dedicated hardware, or even a Raspberry Pi.
 ### Download Kafka
 Download the latest stable Apache Kafka (3.4.0) binary for Scala 2.13 from https://kafka.apache.org/downloads.
 
-Extract to the root directory (e.g., C:\ on Windows) and rename the directory to kafka.
-(macOS) Extract to the user's home directory (e.g., /Users/username where "username" is the name of your user account on the Mac.) and rename the directory to kafka.
+On Windows, extract to the root directory (e.g., C:\) and rename the directory to kafka.  
+On MacOS, extract to the user home directory (e.g., /Users/name/) and rename the directory to kafka.
 
 
 ### Set up a Python environment
