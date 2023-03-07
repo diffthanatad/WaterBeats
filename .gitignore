@@ -5,3 +5,5 @@ dist
 bs_env/
 base_station-data/
 wifiCredentials.h
+*.pyc
+**/__pycache__
