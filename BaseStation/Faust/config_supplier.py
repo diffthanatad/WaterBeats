@@ -17,5 +17,5 @@ try:
 except Exception as e:
   print(e)
 
-def get_base_station_configs():
+def get_configs():
   return configurations

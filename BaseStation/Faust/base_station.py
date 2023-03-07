@@ -1,112 +1,37 @@
 import time
-
 import faust
 import datetime
 
-import config_supplier
-import speed_processor as sp
+import config_supplier as cs
+import stream_processor as sp
 import batch_processor as bp
 import device_controller as dc
 import rule_engine as re
 
+from records import *
 
 
-configurations = config_supplier.get_base_station_configs()
+configurations = cs.get_configs()
 MAX_BATCH_SIZE = int(configurations['max_batch_size'])
-HUMIDITY_BATCH_INTERVAL = int(configurations['humidity_interval'])
-TEMPERATURE_BATCH_INTERVAL = int(configurations['temperature_interval'])
-SOIL_MOISTURE_BATCH_INTERVAL = int(configurations['soil_moisture_interval'])
-
-
+SENSOR_BATCH_INTERVAL = int(configurations['sensor_interval'])
 
 app = faust.App(
     'base_station',
     broker='kafka://localhost:9092',
     value_serializer='json',
 )
-
+ 
 def get_timestamp():
     return datetime.datetime.now()
 
-latest_sensor_message = 'No messages'
-latest_task_message = 'No messages'
-
-class SensorMessage(faust.Record):
-    sensor_id: str
-    reading: float
-    sensor_type: str = ''
-    reading_unit: str = ''
-    timestamp: str = ''
-    latitude: float = ''
-    longitude: float = ''
-
-class HumidityMessage(SensorMessage):
-    sensor_type: str = 'humidity sensor'
-
-class TemperatureMessage(SensorMessage):
-    sensor_type: str = 'temperature sensor'
-
-class SoilMoistureMessage(SensorMessage):
-    sensor_type: str = 'soil moisture sensor'
-
-class TaskMessage(faust.Record):
-    actuator_target: str
-    state: bool
-    intensity: float
-    actuator_type: str = ''
-    duration: int = -1
-
-
-# class TimeConditionMessage(ConditionMessage):
-#     sensor_subject: str
-#     reading: float
-#     relation: str
-
-class SensorConditionMessage(faust.Record):
-    sensor_subject: str
-    reading: float
-    relation: str
-
-class RuleMessage(faust.Record):
-    task_message: TaskMessage
-    condition_message: SensorConditionMessage = None
-
-# defines humidity, temperature, soil moisture topics to receive sensor messages
-humidity_stream = app.topic('humidity_stream', value_type=HumidityMessage)
-temperature_stream = app.topic('temperature_stream', value_type=TemperatureMessage)
-soil_moisture_stream = app.topic('soil_moisture_stream', value_type=SoilMoistureMessage)
-
-humidity_batch = app.topic('humidity_batch', value_type=HumidityMessage)
-temperature_batch = app.topic('temperature_batch', value_type=TemperatureMessage)
-soil_moisture_batch = app.topic('soil_moisture_batch', value_type=SoilMoistureMessage)
-
-task_stream = app.topic('task_stream', value_type=TaskMessage)
-rule_stream = app.topic('rule_stream', value_type=RuleMessage)
-
-# batch agents
-@app.agent(humidity_batch)
-async def batch_agent_humidity(batches):
-    async for batch in batches.take(MAX_BATCH_SIZE, within=HUMIDITY_BATCH_INTERVAL):
-        bp.store_locally(batch)
-
-@app.agent(temperature_batch)
-async def batch_agent_temperature(batches):
-    async for batch in batches.take(MAX_BATCH_SIZE, within=TEMPERATURE_BATCH_INTERVAL):
-        bp.store_locally(batch)
-
-@app.agent(soil_moisture_batch)
-async def batch_agent_soil_moisture(batches):
-    async for batch in batches.take(MAX_BATCH_SIZE, within=SOIL_MOISTURE_BATCH_INTERVAL):
-        bp.store_locally(batch)
-
-
-
+# fills sensor messages with metadata such as location and type of emitting sensor
 def fillSensorMessage(message):
     message.timestamp = get_timestamp()
-    sensor_data = dc.getSensorData(message.sensor_id)
-    message.reading_unit = sensor_data.reading_unit
-    message.latitude = sensor_data.latitude
-    message.longitude = sensor_data.longitude
+    sensor = dc.getDevice(message.sensor_id)
+    message.sensor_type = sensor.sensor_type
+    message.reading_unit = sensor.reading_unit
+    message.latitude = sensor.latitude
+    message.longitude = sensor.longitude
 
     global latest_sensor_message
     latest_sensor_message = message
@@ -114,8 +39,8 @@ def fillSensorMessage(message):
 
 def fillTaskMessage(message):
     message.timestamp = get_timestamp()
-    actuator_data = dc.getActuatorData(message.actuator_target)
-    message.actuator_type = actuator_data.device_type
+    actuator = dc.getDevice(message.actuator_target)
+    message.actuator_type = actuator.actuator_type
 
     global latest_task_message
     latest_task_message = message
@@ -131,62 +56,64 @@ def jsonMessage(message):
         "latitude" : message.latitude,
         "timestamp" : time.time_ns(), # This is just temporary used
     }
-# streaming agents
-@app.agent(humidity_stream, sink=[humidity_batch])
-async def stream_agent_humidity(messages):
+
+latest_sensor_message = 'No messages'
+latest_task_message = 'No messages'
+
+# defines topics/channels
+sensor_stream = app.topic('sensor_stream', value_type=SensorMessage)
+sensor_batch = app.topic('sensor_batch', value_type=SensorMessage)
+task_stream = app.topic('task_stream', value_type=TaskMessage)
+rule_stream = app.topic('rule_stream', value_type=RuleMessage)
+
+### batch agents
+# sensor messages
+@app.agent(sensor_batch)
+async def batch_agent_sensor(batches):
+    async for batch in batches.take(MAX_BATCH_SIZE, within=SENSOR_BATCH_INTERVAL):
+        bp.store_locally(batch)
+
+### streaming agents
+# sensor messages
+@app.agent(sensor_stream, sink=[sensor_batch])
+async def stream_agent_sensor(messages):
     async for message in messages:
         print(message)
         message = fillSensorMessage(message)
-        await sp.process(message)
+        await sp.processSensorMessage(message)
         #await sp.sendToHub(jsonMessage(message))
         yield message
 
-@app.agent(temperature_stream, sink=[temperature_batch])
-async def stream_agent_temperature(messages):
-    async for message in messages:
-        print(message)
-        message = fillSensorMessage(message)
-        await sp.process(message)
-        #await sp.sendToHub(jsonMessage(message))
-        yield message
-
-@app.agent(soil_moisture_stream, sink=[soil_moisture_batch])
-async def stream_agent_soil_moisture(messages):
-    async for message in messages:
-        message = fillSensorMessage(message)
-        await sp.process(message)
-        #await sp.sendToHub(jsonMessage(message))
-        yield message
-
-rules_table = app.Table('rules', default=RuleMessage)
-
-# tasks agent
+# task messages
 @app.agent(task_stream)
 async def tasks_agent(messages):
     async for message in messages:
-        print('received')
         message = fillTaskMessage(message)
         newState = 'ON' if message.state else 'OFF'
         print('Task Dispatched: ' + 'Actuator ' + message.actuator_target + ' of type ' 
               + message.actuator_type + ' to be turned ' + newState + ' at ' + str(message.intensity) 
               + ' intensity for ' + str(message.duration) + ' seconds ')
 
-
-# rules agent
+# rule messages
 @app.agent(rule_stream)
 async def rules_agent(messages):
     async for message in messages:
         if message.condition_message == None:
             await task_stream.send(value=(message.task_message))
         else:
-            re.addNewRule(message)
+            re.loadRule(message)
+            re.storeRule(message)
 
 
+
+### simple development web view
+# latest sensor message
 @app.page('/sensor-messages/')
 async def update_sensor_message(self, request):
     global latest_sensor_message
     return self.json(latest_sensor_message)
 
+# latest task message
 @app.page('/task-messages/')
 async def update_task_message(self, request):
     global latest_task_message
@@ -194,5 +121,6 @@ async def update_task_message(self, request):
 
 
 
+# Faust -> python executable
 if __name__ == '__main__':
     app.main()

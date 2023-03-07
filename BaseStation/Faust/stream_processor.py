@@ -6,15 +6,12 @@ import device_controller as dc
 
 
 
-# send to rule engine and retrieve applicable tasks
-async def process(message):
-    tasks = re.analyse(message)
+# process sensor messages
+# apply rules using rule engine, send new tasks to task stream
+async def processSensorMessage(message):
+    tasks = re.applyRules(message)
     for task in tasks:
-        actuator_data = dc.getActuatorData(task['actuator_target'])
-        task_msg = bs.TaskMessage(task['actuator_target'], actuator_data.device_type, task['state'], task['intensity'], task['duration'])
-
-        await bs.task_stream.send(value=task_msg)
-
+        await bs.task_stream.send(value=task)
 
 
 # forward to main hub

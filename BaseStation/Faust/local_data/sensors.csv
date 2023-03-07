@@ -1,4 +1,4 @@
-sensor_id,sensor_type,reading_unit,latitude,longitude
+device_id,sensor_type,reading_unit,latitude,longitude
 test_sensor1,humidity sensor,Percent,-90,180
 test_sensor2,temperature sensor,Celsius,-90,180
 test_sensor3,soil moisture sensor,Percent,-90,180
