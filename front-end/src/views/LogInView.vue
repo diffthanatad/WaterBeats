@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
   .sign-in-page {
-    background-color: #74E6F6;
+    background-image: url(".././assets/img/farm_background.jpg");
   }
 
   .card-title {

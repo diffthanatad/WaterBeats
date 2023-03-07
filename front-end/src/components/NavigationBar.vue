@@ -20,15 +20,17 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'Graph' }" style="text-decoration: none;">VISUALISATION</router-link>
+                                <router-link :to="{ name: 'Graph' }"
+                                    style="text-decoration: none;">VISUALISATION</router-link>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'ActuatorConfigurationView' }" style="text-decoration: none;">ACTUATOR CONFIGURATION</router-link>
+                                <router-link :to="{ name: 'ActuatorConfigurationView' }"
+                                    style="text-decoration: none;">ACTUATOR CONFIGURATION</router-link>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="navItemHide">
                             <a class="nav-link">
                                 <router-link :to="{ name: 'Admin' }" style="text-decoration: none;">ADMIN</router-link>
                             </a>
@@ -55,13 +57,22 @@ export default {
     components: {
     },
     computed: {
+        navItemHide() {
+            const role = localStorage.getItem('role');
+
+            if (role === "ROLE_ADMIN") {
+                return true;
+            } else {
+                return false;
+            }
+        },
     },
     methods: {
         async logOut() {
             localStorage.removeItem('username');
             localStorage.removeItem('jwt');
             localStorage.removeItem('role');
-            
+
             this.$router.push({ name: 'LogIn' })
         }
     }
