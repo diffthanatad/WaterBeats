@@ -1,8 +1,0 @@
-device_id,sensor_type,reading_unit,latitude,longitude
-test_sensor1,humidity sensor,Percent,-90,180
-test_sensor2,temperature sensor,Celsius,-90,180
-test_sensor3,soil moisture sensor,Percent,-90,180
-30:AE:A4:14:C2:90,humidity sensor,Percent,-90,180
-30:AE:A4:14:C2:91,temperature sensor,Celsius,-90,180
-F4:12:FA:83:00:F0_A,temperature sensor,Celsius,-90,180
-F4:12:FA:83:00:F0_B,humidity sensor,Percent,-90,180

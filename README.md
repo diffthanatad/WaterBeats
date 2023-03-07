@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ## Quick start
 ### Add a record of sensors and actuators
-Supply the relevant information for your sensors and actuators in `Faust/local_data/`
+Supply the relevant information for your sensors and actuators in `base_station/local_data/`
 
 Here are some example values for `sensors.csv`
 | sensor_id | sensor_type | reading_unit | latitude | longitude |
@@ -64,7 +64,7 @@ Working examples are provided in `physical_devices/` for two ESP32 variants usin
 ## User Guide
 ### Sending messages to channels
 Kafka channels are used to separate each message type: sensor, actuator, task, and rule messages  
-Use our message interface at `interfaces/producer.py` to send messages to these channels directly.
+Use our message interface at `base_station/interfaces/producer.py` to send messages to these channels directly.
 
 ```
 producer.send_rule_message(rule_message = RuleMessage(task_message, condition_message), flush = True)

@@ -7,3 +7,4 @@ base_station-data/
 wifiCredentials.h
 *.pyc
 **/__pycache__
+.pytest_cache

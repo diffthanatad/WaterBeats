@@ -1,1 +1,1 @@
-python BaseStation/Faust/base_station.py worker -l info
+python base_station/base_station_app.py worker -l info
