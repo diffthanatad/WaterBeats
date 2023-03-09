@@ -73,5 +73,5 @@ class server:
         webapp.run(host=self.url, port=self.port, debug=self.debug)
 
 if __name__ == "__main__":
-    webserver = server("localhost", 5555, True)
+    webserver = server("localhost", 5555, False)
     webserver.runserver()
