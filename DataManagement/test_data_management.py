@@ -8,13 +8,13 @@ import aiohttp
 @pytest.mark.asyncio
 async def test_insert_sensor_data_api():
     json_data = {
-        "sensor_id": f"sensor_{str(random.randint(1,100))}",
+        "sensor_id": f"tempsensor_{str(random.randint(1,100))}",
         "sensor_type": "temperature",
         "data": 26.4,
         "unit": "C",
         "longitude": 2134.1234124,
         "latitude": 321444.12341234,
-        "timestamp": 1677615251042000000
+        "timestamp": time.time_ns()
     }
     async with aiohttp.ClientSession() as session:
         async with session.post('http://localhost:5555/sensor_data', json=json_data) as resp:
@@ -59,7 +59,7 @@ async def test_insert_actuator_data_api():
         "status": "off",
         "longitude": random.uniform(-1000, 1000),
         "latitude": random.uniform(-1000, 1000),
-        "timestamp": 1677615251042000000
+        "timestamp": time.time_ns()
     }
     async with aiohttp.ClientSession() as session:
         async with session.post('http://localhost:5555/actuator_data', json=json_data) as resp:
