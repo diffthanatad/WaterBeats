@@ -45,6 +45,7 @@ class SensorDataGenerator:
             "latitude": self.latitude,
             "timestamp": self.timestamp,
             "data": self.data_y,
+            "status": ["on", "off", "error"][random.randint(0, 2)]
         }
 
 
@@ -68,7 +69,7 @@ for generator_args in [
 
 # save data to influxdb
 data_lines = map(
-    lambda x: f'sensor_data,sensor_id={x["sensor_id"]},sensor_type={x["sensor_type"]} unit="{x["unit"]}",longitude={x["longitude"]},latitude={x["latitude"]},data={x["data"]} {int(x["timestamp"].timestamp() * 1e9)}',
+    lambda x: f'sensor_data,sensor_id={x["sensor_id"]},sensor_type={x["sensor_type"]} unit="{x["unit"]}",longitude={x["longitude"]},latitude={x["latitude"]},data={x["data"]},status="{x["status"]}" {int(x["timestamp"].timestamp() * 1e9)}',
     data,
 )
 payload = "\n".join(data_lines)
