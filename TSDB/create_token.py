@@ -22,6 +22,8 @@ def find_waterbeats_buckets():
     payload = {}
     headers = {"Cookie": cookie}
     response = requests.request("GET", url, headers=headers, data=payload)
+    if response.status_code != 200:
+        raise Exception(f"Failed to get buckets: {response.status_code} {response.text}")
     data = response.json()
     waterbeats_bucket = [
         bucket for bucket in data["buckets"] if bucket["name"] == "WaterBeats"
