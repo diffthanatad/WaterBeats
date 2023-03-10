@@ -1,0 +1,16 @@
+services:
+  api_server:
+    container_name: api_server
+    working_dir: /app
+    build: .
+    ports:
+      - "5555:5555"
+    network_mode: host
+    command: python api.py
+  pytest:
+    working_dir: /app
+    build: .
+    network_mode: host
+    depends_on:
+      - api_server
+    command: pytest
