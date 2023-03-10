@@ -14,9 +14,9 @@ async def handle_request(request):
         data = await request.text()
         print(data)
         response = web.Response(text="Received data: {}".format(data))
-        async with aiohttp.ClientSession() as session:
-            async with session.post('http://localhost:5555/sensor_data', json=data) as resp:
-                print("Response Status: {}".format(resp.status))
+        # async with aiohttp.ClientSession() as session:
+        #     async with session.post('http://localhost:5555/sensor_data', json=data) as resp:
+        #         print("Response Status: {}".format(resp.status))
     else:
         response = web.Response(status=405)
     return response

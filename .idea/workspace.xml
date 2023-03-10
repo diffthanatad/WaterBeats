@@ -2,17 +2,10 @@
 <project version="4">
   <component name="BlackConnectSettings" triggerOnReformat="true" />
   <component name="ChangeListManager">
-    <list default="true" id="5ce2a09d-58ff-4f0e-9219-8b15532b4a7f" name="Changes" comment="Try to connect actuator with Faust">
+    <list default="true" id="60afff68-46f3-4040-8605-18315d264789" name="Changes" comment="Actuator Connection with Server">
+      <change afterPath="$PROJECT_DIR$/base_station/tests/locustfile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/interfaces/actuator_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_station/interfaces/actuator_interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/interfaces/testActuator.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_station/interfaces/testActuator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/tests/dictionaryTest.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/tests/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/tests/websocket_server.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/tests/x.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_station/tests/y.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/simulator/Actuator/actuator.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/Actuator/actuator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simulator/Actuator/sprinkler.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/Actuator/sprinkler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator/Sensor/test/NS.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulator/Sensor/test/NS.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +75,29 @@
       <recent name="$PROJECT_DIR$/Faust/connector" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.testActuator">
+  <component name="RunManager" selected="Python.NS">
+    <configuration name="NS" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="WaterBeats" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/simulator/Sensor/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simulator/Sensor/test/NS.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="WaterBeats" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="WaterBeats" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -127,7 +142,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="sensorTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WaterBeats" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -135,12 +150,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/base_station/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/simulator/Sensor" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/base_station/tests/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/simulator/Sensor/sensorTest.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -193,50 +208,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="y" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="WaterBeats" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/base_station/tests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/base_station/tests/y.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.WaterBeats" />
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.y" />
+      <item itemvalue="Python.NS" />
+      <item itemvalue="Python.sensorTest" />
       <item itemvalue="Python.actuator_interface (1)" />
       <item itemvalue="Python.sprinkler (1)" />
       <item itemvalue="Python.testActuator" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.NS" />
+        <item itemvalue="Python.sensorTest" />
+        <item itemvalue="Python.actuator_interface (1)" />
         <item itemvalue="Python.testActuator" />
         <item itemvalue="Python.sprinkler (1)" />
-        <item itemvalue="Python.actuator_interface (1)" />
-        <item itemvalue="Python.y" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5ce2a09d-58ff-4f0e-9219-8b15532b4a7f" name="Changes" comment="" />
+      <changelist id="60afff68-46f3-4040-8605-18315d264789" name="Changes" comment="Actuator Connection with Server" />
       <created>1673702053010</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -269,6 +262,7 @@
       <workItem from="1678031070035" duration="2933000" />
       <workItem from="1678355700090" duration="5150000" />
       <workItem from="1678363367631" duration="11325000" />
+      <workItem from="1678409296148" duration="3658000" />
     </task>
     <task id="LOCAL-00001" summary="test push">
       <created>1673706421042</created>
@@ -495,8 +489,8 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/WaterBeats$y.coverage" NAME="y Coverage Results" MODIFIED="1678378491290" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/base_station/tests" />
-    <SUITE FILE_PATH="coverage/WaterBeats$NS.coverage" NAME="NS Coverage Results" MODIFIED="1677425973591" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/IoTSimulator/serverTest" />
     <SUITE FILE_PATH="coverage/WaterBeats$NS__1_.coverage" NAME="NS (1) Coverage Results" MODIFIED="1677611367137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BaseStation/Faust/simulations/Sensor/test" />
+    <SUITE FILE_PATH="coverage/WaterBeats$NS.coverage" NAME="NS Coverage Results" MODIFIED="1678417155294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/simulator/Sensor/test" />
     <SUITE FILE_PATH="coverage/WaterBeats$actuator.coverage" NAME="actuator Coverage Results" MODIFIED="1674826098924" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wxb/iot" />
     <SUITE FILE_PATH="coverage/WaterBeats$pytest_for_test_data_management_test_insert_actuator_data_missing_data.coverage" NAME="pytest for test_data_management.test_insert_actuator_data_missing_data Coverage Results" MODIFIED="1677606315297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataManagement" />
     <SUITE FILE_PATH="coverage/WaterBeats$api__1_.coverage" NAME="api (1) Coverage Results" MODIFIED="1677782172965" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BaseStation/simulations/tests/Sensor/test" />
@@ -513,7 +507,7 @@
     <SUITE FILE_PATH="coverage/WaterBeats$pytest_in_test_rule_py.coverage" NAME="pytest in test_rule.py Coverage Results" MODIFIED="1678037507260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BaseStation/interfaces" />
     <SUITE FILE_PATH="coverage/WaterBeats$server.coverage" NAME="server Coverage Results" MODIFIED="1674958288738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wxb/iot" />
     <SUITE FILE_PATH="coverage/WaterBeats$pump.coverage" NAME="pump Coverage Results" MODIFIED="1675012057425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/IoTActuator" />
-    <SUITE FILE_PATH="coverage/WaterBeats$actuator_interface__1_.coverage" NAME="actuator_interface (1) Coverage Results" MODIFIED="1678381650528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/base_station/interfaces" />
+    <SUITE FILE_PATH="coverage/WaterBeats$actuator_interface__1_.coverage" NAME="actuator_interface (1) Coverage Results" MODIFIED="1678382030751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/base_station/interfaces" />
     <SUITE FILE_PATH="coverage/WaterBeats$client.coverage" NAME="client Coverage Results" MODIFIED="1674847009071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/wxb/iot" />
     <SUITE FILE_PATH="coverage/WaterBeats$main.coverage" NAME="main Coverage Results" MODIFIED="1678366779175" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/base_station/tests" />
     <SUITE FILE_PATH="coverage/WaterBeats$pytest_for_test_data_management_test_insert_actuator_data.coverage" NAME="pytest for test_data_management.test_insert_actuator_data Coverage Results" MODIFIED="1677606173913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataManagement" />
@@ -526,10 +520,10 @@
     <SUITE FILE_PATH="coverage/WaterBeats$trule.coverage" NAME="trule Coverage Results" MODIFIED="1678038161926" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BaseStation/interfaces" />
     <SUITE FILE_PATH="coverage/WaterBeats$serverTest.coverage" NAME="serverTest Coverage Results" MODIFIED="1675874820912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/IoTActuator" />
     <SUITE FILE_PATH="coverage/WaterBeats$api__2_.coverage" NAME="api (2) Coverage Results" MODIFIED="1677845647106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataManagement" />
-    <SUITE FILE_PATH="coverage/WaterBeats$testActuator.coverage" NAME="testActuator Coverage Results" MODIFIED="1678381653893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/base_station/interfaces" />
+    <SUITE FILE_PATH="coverage/WaterBeats$testActuator.coverage" NAME="testActuator Coverage Results" MODIFIED="1678382038765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/base_station/interfaces" />
     <SUITE FILE_PATH="coverage/WaterBeats$sensorConnector.coverage" NAME="sensorConnector Coverage Results" MODIFIED="1677240673916" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Faust/connector" />
-    <SUITE FILE_PATH="coverage/WaterBeats$sensorTest.coverage" NAME="sensorTest Coverage Results" MODIFIED="1677611369097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BaseStation/Faust/simulations/Sensor" />
-    <SUITE FILE_PATH="coverage/WaterBeats$sprinkler__1_.coverage" NAME="sprinkler (1) Coverage Results" MODIFIED="1678381652143" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/simulator/Actuator" />
+    <SUITE FILE_PATH="coverage/WaterBeats$sprinkler__1_.coverage" NAME="sprinkler (1) Coverage Results" MODIFIED="1678382034231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/simulator/Actuator" />
+    <SUITE FILE_PATH="coverage/WaterBeats$sensorTest.coverage" NAME="sensorTest Coverage Results" MODIFIED="1678416973621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/simulator/Sensor" />
     <SUITE FILE_PATH="coverage/WaterBeats$pytest_for_test_data_management_test_insert_sensor_data_api_2_interval.coverage" NAME="pytest for test_data_management.test_insert_sensor_data_api_2_interval Coverage Results" MODIFIED="1677783281552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DataManagement" />
     <SUITE FILE_PATH="coverage/WaterBeats$producer.coverage" NAME="producer Coverage Results" MODIFIED="1678031145386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/BaseStation/interfaces" />
     <SUITE FILE_PATH="coverage/WaterBeats$actuatorConnector.coverage" NAME="actuatorConnector Coverage Results" MODIFIED="1677246452777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Faust/connector" />
