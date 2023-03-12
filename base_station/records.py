@@ -28,8 +28,8 @@ class TaskMessage(faust.Record):
             'duration': self.duration,
             }
 
-# condition message - conditions belonging to rules
-class ConditionMessage(faust.Record):
+# sensor condition message - conditions belonging to rules
+class SensorConditionMessage(faust.Record):
     sensor_subject: str
     reading: float
     relation: str
@@ -40,8 +40,26 @@ class ConditionMessage(faust.Record):
             'reading' : self.reading,
             'relation': self.relation,
             }
+    
+# time condition message - conditions belonging to rules
+class TimeConditionMessage(faust.Record):
+    execute_time: str
+    # recurring: bool = False
+    # interval: int = -1 # in minutes
+
+    def toDict(self):
+        return {
+            'execute_time' : self.execute_time,
+            # 'recurring' : self.recurring,
+            # 'interval': self.interval,
+            }
 
 # rule message - complex rules that match tasks to conditions
 class RuleMessage(faust.Record):
     task_message: TaskMessage
-    condition_message: ConditionMessage = None
+    sensor_condition_message: SensorConditionMessage = None
+    time_condition_message: TimeConditionMessage = None
+
+# time message - records the current time for event scheduling
+class TimeMessage(faust.Record):
+    timestamp: str = ''

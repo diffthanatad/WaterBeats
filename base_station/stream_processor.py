@@ -12,6 +12,12 @@ async def processSensorMessage(message):
     for task in tasks:
         await bs.task_stream.send(value=task)
 
+# process time messages
+# apply rules using rule engine, send new tasks to task stream
+async def processTimeMessage(message):
+    tasks = re.checkTaskSchedule(message)
+    for task in tasks:
+        await bs.task_stream.send(value=task)
 
 # forward to main hub
 async def sendToHub(message):

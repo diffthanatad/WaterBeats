@@ -65,6 +65,7 @@ sensor_stream = app.topic('sensor_stream', value_type=SensorMessage)
 sensor_batch = app.topic('sensor_batch', value_type=SensorMessage)
 task_stream = app.topic('task_stream', value_type=TaskMessage)
 rule_stream = app.topic('rule_stream', value_type=RuleMessage)
+time_stream = app.topic('time_stream', value_type=TimeMessage)
 
 ### batch agents
 # sensor messages
@@ -97,11 +98,26 @@ async def tasks_agent(messages):
 @app.agent(rule_stream)
 async def rules_agent(messages):
     async for message in messages:
-        if message.condition_message == None:
+        if ((message.sensor_condition_message == None) and (message.time_condition_message == None)):
             await task_stream.send(value=(message.task_message))
         else:
             re.loadRule(message)
             re.storeRule(message)
+
+# time messages
+@app.agent(time_stream)
+async def time_agent(messages):
+    async for message in messages:
+        await sp.processTimeMessage(message)
+
+
+
+# execute task every interval -> sends time message
+@app.timer(interval = 60.0)
+async def send_time_message():
+    timestamp = str(get_timestamp().replace(second = 0, microsecond = 0))
+    time_message = TimeMessage(timestamp)
+    await time_stream.send(value=(time_message))
 
 
 
