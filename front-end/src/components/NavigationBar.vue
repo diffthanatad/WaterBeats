@@ -7,28 +7,30 @@
                     WaterBeats
                 </router-link>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item" >
+                        <li class="nav-item">
                             <a class="nav-link" aria-current="page" disabled="true">
                                 <router-link :to="{ name: 'Home' }" style="text-decoration: none;">HOME</router-link>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'Graph' }" style="text-decoration: none;">VISUALISATION</router-link>
+                                <router-link :to="{ name: 'Graph' }"
+                                    style="text-decoration: none;">VISUALISATION</router-link>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
-                                <router-link :to="{ name: 'ActuatorConfigurationView' }" style="text-decoration: none;">ACTUATOR CONFIG</router-link>
+                                <router-link :to="{ name: 'ActuatorConfigurationView' }"
+                                    style="text-decoration: none;">ACTUATOR CONFIGURATION</router-link>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="navItemHide">
                             <a class="nav-link">
                                 <router-link :to="{ name: 'Admin' }" style="text-decoration: none;">ADMIN</router-link>
                             </a>
@@ -39,7 +41,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-outline-success" type="button" @click.prevent="logOut">Sign Out</button>
+                            <button class="btn btn-outline-success" type="button" @click.prevent="logOut">SIGN OUT</button>
                         </li>
                     </ul>
                 </div>
@@ -55,9 +57,22 @@ export default {
     components: {
     },
     computed: {
+        navItemHide() {
+            const role = localStorage.getItem('role');
+
+            if (role === "ROLE_ADMIN") {
+                return true;
+            } else {
+                return false;
+            }
+        },
     },
     methods: {
         async logOut() {
+            localStorage.removeItem('username');
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('role');
+
             this.$router.push({ name: 'LogIn' })
         }
     }
@@ -70,7 +85,8 @@ export default {
     margin: 0;
     padding: 0;
     font-family: 'Kumbh Sans', sans-serif;
-    color: #fff;;
+    color: #fff;
+    ;
 }
 
 *:hover {
@@ -117,7 +133,7 @@ export default {
 
 .navbar-nav {
     display: flex;
-    align-items : center;
+    align-items: center;
     list-style: none;
     text-align: center;
 }
@@ -171,5 +187,4 @@ export default {
 .icon {
     width: 35px
 }
-
 </style>

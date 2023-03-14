@@ -1,9 +1,9 @@
 <template>
   <div class="marker-component">
     <l-marker :lat-lng="marker.location" @click="onClickMapMarker">
-      <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_water_blue" />
-      <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_water_black" />
-      <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_water_red" />
+      <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_blue" />
+      <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_black" />
+      <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_red" />
       <l-icon v-else-if="iconImage === 4" :icon-size="dynamicSize" :icon-url="icon_temperature_blue" />
       <l-icon v-else-if="iconImage === 5" :icon-size="dynamicSize" :icon-url="icon_temperature_black" />
       <l-icon v-else-if="iconImage === 6" :icon-size="dynamicSize" :icon-url="icon_temperature_red" />
@@ -15,21 +15,27 @@
       <l-icon v-else-if="iconImage === 12" :icon-size="dynamicSize" :icon-url="icon_pump_black" />
       <l-icon v-else-if="iconImage === 13" :icon-size="dynamicSize" :icon-url="icon_pump_green" />
       <l-icon v-else-if="iconImage === 14" :icon-size="dynamicSize" :icon-url="icon_pump_red" />
+      <l-icon v-else-if="iconImage === 15" :icon-size="dynamicSize" :icon-url="icon_water_level_blue" />
+      <l-icon v-else-if="iconImage === 16" :icon-size="dynamicSize" :icon-url="icon_water_level_black" />
+      <l-icon v-else-if="iconImage === 17" :icon-size="dynamicSize" :icon-url="icon_water_level_red" />
+      <l-icon v-else-if="iconImage === 18" :icon-size="dynamicSize" :icon-url="icon_water_pollution_blue" />
+      <l-icon v-else-if="iconImage === 19" :icon-size="dynamicSize" :icon-url="icon_water_pollution_black" />
+      <l-icon v-else-if="iconImage === 20" :icon-size="dynamicSize" :icon-url="icon_water_pollution_red" />
       <l-icon v-else :icon-size="dynamicSize" :icon-url="icon_questionMark_black" />
-      <l-popup style="width: 250px;">
+      <l-popup style="width: 300px;">
         <div>
-          <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }} {{ iconImage }}</h5>
+          <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }}</h5>
           <div class="row">
             <div class="col-4"><i class="bi bi-person-badge"></i></div>
             <div class="col-8"> {{ marker.id ? marker.id : "N/A" }} </div>
           </div>
           <div class="row">
             <div class="col-4"><i class="bi bi-clock"></i></div>
-            <div class="col-8"> {{ marker.timestamp ? marker.timestamp : "N/A" }} </div>
+            <div class="col-8"> {{ marker.timestamp }} </div>
           </div>
           <div class="row">
             <div class="col-4">Value</div>
-            <div class="col-8"> {{ marker.value ? marker.value : "N/A" }} </div>
+            <div class="col-8"> {{ marker.value ? marker.value : "N/A" }}</div>
           </div>
           <div class="row">
             <div class="col-4"> Status: </div>
@@ -42,21 +48,31 @@
 </template>
 
 <script>
-import icon_water_blue from "@/assets/icon_water_blue.png"
-import icon_water_black from "@/assets/icon_water_black.png"
-import icon_water_red from "@/assets/icon_water_red.png"
-import icon_temperature_blue from "@/assets/icon_temperature_blue.png"
-import icon_temperature_black from "@/assets/icon_temperature_black.png"
-import icon_temperature_red from "@/assets/icon_temperature_red.png"
-import icon_sprinkler_blue from "@/assets/icon_sprinkler_blue.png"
-import icon_sprinkler_black from "@/assets/icon_sprinkler_black.png"
-import icon_sprinkler_green from "@/assets/icon_sprinkler_green.png"
-import icon_sprinkler_red from "@/assets/icon_sprinkler_red.png"
-import icon_pump_blue from "@/assets/icon_pump_blue.png"
-import icon_pump_black from "@/assets/icon_pump_black.png"
-import icon_pump_green from "@/assets/icon_pump_green.png"
-import icon_pump_red from "@/assets/icon_pump_red.png"
-import icon_questionMark_black from "@/assets/icon_questionMark_black.png"
+/* Import sensor icons: blue (i.e., on), black (i.e., off) and red (i.e., error). */
+import icon_soil_moisture_blue from "@/assets/icon/icon_soil_moisture_blue.png";
+import icon_soil_moisture_black from "@/assets/icon/icon_soil_moisture_black.png";
+import icon_soil_moisture_red from "@/assets/icon/icon_soil_moisture_red.png";
+import icon_temperature_blue from "@/assets/icon/icon_temperature_blue.png";
+import icon_temperature_black from "@/assets/icon/icon_temperature_black.png";
+import icon_temperature_red from "@/assets/icon/icon_temperature_red.png";
+import icon_water_level_blue from "@/assets/icon/icon_water_level_blue.png";
+import icon_water_level_black from "@/assets/icon/icon_water_level_black.png";
+import icon_water_level_red from "@/assets/icon/icon_water_level_red.png";
+import icon_water_pollution_blue from "@/assets/icon/icon_water_pollution_blue.png";
+import icon_water_pollution_black from "@/assets/icon/icon_water_pollution_black.png";
+import icon_water_pollution_red from "@/assets/icon/icon_water_pollution_red.png";
+
+/* Import actuator icons: blue (i.e., on), green (i.e., working), black (i.e., off) and red (i.e., error). */
+import icon_sprinkler_blue from "@/assets/icon/icon_sprinkler_blue.png"
+import icon_sprinkler_black from "@/assets/icon/icon_sprinkler_black.png"
+import icon_sprinkler_green from "@/assets/icon/icon_sprinkler_green.png"
+import icon_sprinkler_red from "@/assets/icon/icon_sprinkler_red.png"
+import icon_pump_blue from "@/assets/icon/icon_pump_blue.png"
+import icon_pump_black from "@/assets/icon/icon_pump_black.png"
+import icon_pump_green from "@/assets/icon/icon_pump_green.png"
+import icon_pump_red from "@/assets/icon/icon_pump_red.png"
+
+import icon_questionMark_black from "@/assets/icon/icon_questionMark_black.png"
 
 import { LMarker, LIcon, LPopup } from '@vue-leaflet/vue-leaflet';
 
@@ -70,12 +86,18 @@ export default {
   },
   setup() {
     return { 
-      icon_water_blue,
-      icon_water_black,
-      icon_water_red,
+      icon_soil_moisture_blue,
+      icon_soil_moisture_black,
+      icon_soil_moisture_red,
       icon_temperature_blue,
       icon_temperature_black,
       icon_temperature_red,
+      icon_water_level_blue,
+      icon_water_level_black,
+      icon_water_level_red,
+      icon_water_pollution_blue,
+      icon_water_pollution_black,
+      icon_water_pollution_red,
       icon_sprinkler_blue,
       icon_sprinkler_black,
       icon_sprinkler_green,
@@ -122,24 +144,32 @@ export default {
       const deviceType = this.marker.type;
       const status = this.marker.status;
 
-      if (deviceType === "Soil Moisture Sensor") {
+      if (deviceType === "soil_moisture") {
         if (status === "on") { return 1; }
         else if (status === "off") { return 2; }
         else { return 3; }
-      } else if (deviceType === "Temperature Sensor") {
+      } else if (deviceType === "temperature") {
         if (status === "on") { return 4; }
         else if (status === "off") { return 5; }
         else { return 6; }
-      } else if (deviceType === "Water Sprinkler") {
+      } else if (deviceType === "sprinkler") {
         if (status === "on") { return 7; }
         else if (status === "off") { return 8; }
         else if (status === "watering") { return 9; }
         else { return 10; }
-      }  else if (deviceType === "Water Pump") {
+      }  else if (deviceType === "pump") {
         if (status === "on") { return 11; }
         else if (status === "off") { return 12; }
         else if (status === "pumping") { return 13; }
         else { return 14; }
+      } else if (deviceType === "water_level") {
+        if (status === "on") { return 15; }
+        else if (status === "off") { return 16; }
+        else { return 17; }
+      }  else if (deviceType === "water_pollution") {
+        if (status === "on") { return 18; }
+        else if (status === "off") { return 19; }
+        else { return 20; }
       }
     },
   },

@@ -23,6 +23,7 @@ pub struct SensorData {
     unit: String,
     longitude: f64,
     latitude: f64,
+    status: String,
 }
 
 #[derive(Debug, Default, FromDataPoint, Serialize, Clone)]
@@ -38,7 +39,9 @@ pub struct ActuatorData {
 #[derive(Clone, Debug, Serialize)]
 pub struct ActuatorDataExternal {
     time: DateTime<FixedOffset>,
+    #[serde(rename = "id")]
     actuator_id: String,
+    #[serde(rename = "type")]
     actuator_type: String,
     status: String,
     location: (f64, f64),
@@ -48,12 +51,15 @@ pub struct ActuatorDataExternal {
 #[derive(Debug, Serialize, Clone)]
 pub struct SensorDataExternal {
     time: DateTime<FixedOffset>,
+    #[serde(rename = "id")]
     sensor_id: String,
+    #[serde(rename = "type")]
     sensor_type: String,
     data: f64,
     unit: String,
     /// the location of the sensor, in the format of (longitude, latitude)
     location: (f64, f64),
+    status: String,
 }
 
 
@@ -64,7 +70,7 @@ impl Into<ActuatorDataExternal> for ActuatorData {
             actuator_id: self.actuator_id,
             actuator_type: self.actuator_type,
             status: self.status,
-            location: (self.longitude, self.latitude),
+            location: (self.latitude, self.longitude),
         }
     }
 }
@@ -90,7 +96,8 @@ impl Into<SensorDataExternal> for SensorData {
             sensor_type: self.sensor_type,
             data: self.data,
             unit: self.unit,
-            location: (self.longitude, self.latitude),
+            location: (self.latitude, self.longitude),
+            status: self.status
         }
     }
 }
@@ -137,6 +144,7 @@ mod test {
             unit: "unit".to_string(),
             longitude: 1.0,
             latitude: -3.0,
+            status: "on".to_string(),
         };
         let sensor_data_external: SensorDataExternal = sensor_data.clone().into();
         assert_eq!(sensor_data.time, sensor_data_external.time);
@@ -144,7 +152,8 @@ mod test {
         assert_eq!(sensor_data.sensor_type, sensor_data_external.sensor_type);
         assert_eq!(sensor_data.data, sensor_data_external.data);
         assert_eq!(sensor_data.unit, sensor_data_external.unit);
-        assert_eq!(sensor_data.longitude, sensor_data_external.location.0);
-        assert_eq!(sensor_data.latitude, sensor_data_external.location.1);
+        assert_eq!(sensor_data.longitude, sensor_data_external.location.1);
+        assert_eq!(sensor_data.latitude, sensor_data_external.location.0);
+        assert_eq!(sensor_data.status, sensor_data_external.status);
     }
 }

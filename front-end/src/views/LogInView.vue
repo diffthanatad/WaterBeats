@@ -30,7 +30,7 @@
 </template>
 
 <script>
-// import { logIn } from "@/services/userService.js";
+import { signIn } from "@/services/userService.js";
 
 export default {
   name: 'LogInPage',
@@ -51,23 +51,28 @@ export default {
   },
   methods: {
     async logIn() {
-      this.$router.push({ name: 'Home' })
-      // try {
-        // const obj = {
-        //   username: this.inputUsername,
-        //   password: this.inputPassword,
-        // }
+      try {
+        const obj = {
+          username: this.inputUsername,
+          password: this.inputPassword,
+        }
 
-        // const response = await logIn(obj);
-      //   if (response.status === 200) {
-      //     await this.$store.dispatch("user/signin", response.data);
-      //     this.$router.push({name: "Home"}); 
-      //   } else {
-      //     await this.$store.dispatch("user/signout");
-      //   }
-      // } catch (error) {
-      //   console.log("LogInView, logIn():", error, "\n");
-      // }
+        const response = await signIn(obj);
+        const data = response.data;
+        if (response.status === 200) {
+          localStorage.setItem('username', data.username);
+          localStorage.setItem('jwt', data.accessToken);
+          localStorage.setItem('role', data.role);
+          
+          this.$router.push({name: "Home"}); 
+        } else {
+          localStorage.removeItem('username');
+          localStorage.removeItem('jwt');
+          localStorage.removeItem('role');
+        }
+      } catch (error) {
+        console.log("LogInView, logIn():", error, "\n");
+      }
     },
   },
   watch: {
@@ -77,7 +82,7 @@ export default {
 
 <style scoped>
   .sign-in-page {
-    background-color: #74E6F6;
+    background-image: url(".././assets/img/farm_background.jpg");
   }
 
   .card-title {

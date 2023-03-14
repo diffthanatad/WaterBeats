@@ -3,16 +3,22 @@ import datetime
 import os
 import random
 from math import sin
+from typing import Tuple
 import requests
 
-
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8086")
 class SensorDataGenerator:
-    def __init__(self, sensor_id: str, sensor_type: str, unit: str) -> None:
+    def __init__(
+        self,
+        sensor_id: str,
+        sensor_type: str,
+        unit: str,
+        coordinates: Tuple[float, float],
+    ) -> None:
         self.sensor_id = sensor_id
         self.sensor_type = sensor_type
         self.unit = unit
-        self.longitude = 123.1
-        self.latitude = -42.0
+        (self.latitude, self.longitude) = coordinates
         # 1641773400 is 2022-01-10T00:10:00Z
         self.timestamp = dt.fromtimestamp(1641773400)
         self.data_y = 20
@@ -39,16 +45,22 @@ class SensorDataGenerator:
             "latitude": self.latitude,
             "timestamp": self.timestamp,
             "data": self.data_y,
+            "status": ["on", "off", "error"][random.randint(0, 2)]
         }
 
 
 data = []
 for generator_args in [
-    ("test_sensor_0", "temperature", "F"),
-    ("test_sensor_1", "temperature", "C"),
-    ("test_sensor_2", "soil_moisture", "%"),
-    ("test_sensor_3", "water_level", "mm"),
-    ("test_sensor_4", "water_pollution", "ppm"),
+    ("test_sensor_0", "temperature", "F", (55.16870067313674, -2.4134985245000102)),
+    ("test_sensor_1", "temperature", "C", (55.169293309649646, -2.412925235580431)),
+    ("test_sensor_2", "soil_moisture", "%", (55.16909847122022, -2.4127925736816853)),
+    ("test_sensor_3", "water_level", "mm", (55.169358255581216, -2.4111200861725)),
+    (
+        "test_sensor_4",
+        "water_pollution",
+        "ppm",
+        (55.16843005992712, -2.412110312488137),
+    ),
 ]:
     data_generator = SensorDataGenerator(*generator_args)
     for i in range(1000):
@@ -57,7 +69,7 @@ for generator_args in [
 
 # save data to influxdb
 data_lines = map(
-    lambda x: f'sensor_data,sensor_id={x["sensor_id"]},sensor_type={x["sensor_type"]} unit="{x["unit"]}",longitude={x["longitude"]},latitude={x["latitude"]},data={x["data"]} {int(x["timestamp"].timestamp() * 1e9)}',
+    lambda x: f'sensor_data,sensor_id={x["sensor_id"]},sensor_type={x["sensor_type"]} unit="{x["unit"]}",longitude={x["longitude"]},latitude={x["latitude"]},data={x["data"]},status="{x["status"]}" {int(x["timestamp"].timestamp() * 1e9)}',
     data,
 )
 payload = "\n".join(data_lines)
@@ -69,24 +81,24 @@ actuator_data_lines = map(
             "actuator_id": "test_actuator_1",
             "actuator_type": "pump",
             "status": "off",
-            "longitude": 123.1,
-            "latitude": -42.0,
+            "latitude": 55.16941237711002,
+            "longitude": -2.4152657705082987,
             "timestamp": dt.fromtimestamp(1641773400),
         },
         {
             "actuator_id": "test_actuator_1",
             "actuator_type": "pump",
             "status": "on",
-            "longitude": 123.1,
-            "latitude": -42.0,
+            "longitude": -2.414782502162869,
+            "latitude": 55.1680863785032,
             "timestamp": dt.fromtimestamp(1641773403),
         },
         {
             "actuator_id": "test_sprinkler_1",
             "actuator_type": "sprinkler",
             "status": "off",
-            "longitude": 2.08,
-            "latitude": -41.9,
+            "longitude": -2.412569891209205,
+            "latitude": 55.167951070033595,
             "timestamp": dt.fromtimestamp(1641773402),
         },
     ],
@@ -94,9 +106,10 @@ actuator_data_lines = map(
 
 token = os.environ["INFLUXDB_TOKEN"]
 
+
 def write_to_influxdb(payload):
     r = requests.post(
-        "http://localhost:8086/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
+        f"{BASE_URL}/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
         data=payload,
         headers={
             "Authorization": f"Token {token}",
@@ -105,6 +118,7 @@ def write_to_influxdb(payload):
     if r.status_code != 204:
         print("Error writing to InfluxDB")
         print(r.text)
+
 
 write_to_influxdb(payload)
 

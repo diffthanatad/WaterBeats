@@ -44,4 +44,19 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const authRequired = to.name !== "LogIn";
+  const loggedIn = localStorage.getItem('username');
+  const adminRoleRequired = to.name === "Admin";
+  const role = localStorage.getItem('role');
+
+  if (authRequired && !loggedIn) {
+    return next('/login');
+  } else if (adminRoleRequired && role !== "ROLE_ADMIN") {
+    return next('/');
+  } else {
+    next();
+  }
+})
+
 export default router
