@@ -6,8 +6,7 @@ import socket
 import json
 import producer as p
 from aiohttp import web
-
-import device_controller as dc
+from base_station import device_controller as dc
 
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
