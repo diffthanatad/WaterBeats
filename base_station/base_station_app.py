@@ -11,6 +11,7 @@ import rule_engine as re
 from records import *
 
 
+
 configurations = cs.get_configs()
 MAX_BATCH_SIZE = int(configurations['max_batch_size'])
 SENSOR_BATCH_INTERVAL = int(configurations['sensor_interval'])
@@ -73,6 +74,7 @@ time_stream = app.topic('time_stream', value_type=TimeMessage)
 async def batch_agent_sensor(batches):
     async for batch in batches.take(MAX_BATCH_SIZE, within=SENSOR_BATCH_INTERVAL):
         bp.store_locally(batch)
+        yield batch
 
 ### streaming agents
 # sensor messages

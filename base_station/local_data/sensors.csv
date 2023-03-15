@@ -1,5 +1,7 @@
 device_id,sensor_type,reading_unit,latitude,longitude
 30:AE:A4:14:C2:90_A,temperature sensor,Celsius,51.509865,-0.118092
 30:AE:A4:14:C2:90_B,humidity sensor,Percent,51.509865,-0.118092
+30:AE:A4:14:C2:90_C,soil moisture sensor,Percent,51.509865,-0.118092
 F4:12:FA:83:00:F0_A,temperature sensor,Celsius,51.508610,-0.163611
 F4:12:FA:83:00:F0_B,humidity sensor,Percent,51.508610,-0.163611
+F4:12:FA:83:00:F0_C,soil moisture sensor,Percent,51.508610,-0.163611

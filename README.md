@@ -38,7 +38,7 @@ Install packages from requirements.txt
 pip install -r requirements.txt
 ```
 
-## Quick start
+## Quick Start
 ### Add a record of sensors and actuators
 Supply the relevant information for your sensors and actuators in `./base_station/local_data/`
 
@@ -61,12 +61,15 @@ Run `Faust/interfaces/sensor_interface.py` to start a local server and start com
 Post sensor data in standard JSON format containing only sensor_id and a reading.  
 Working examples are provided in `physical_devices/` for two ESP32 variants using the dht11 temperature and humidity sensor.
 
-## Testing
+## Developer Instructions
+
+### Testing
 Change directory to `./base_station/`
 
 Run `python -m pytest`
 
-## User Guide
+To generate a coverage report, use `coverage run -m pytest .`, then `coverage report -m`
+
 ### Sending messages to channels
 Kafka channels are used to separate each message type: sensor, actuator, task, and rule messages  
 Use our message interface at `base_station/interfaces/producer.py` to send messages to these channels directly.
