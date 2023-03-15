@@ -69,6 +69,20 @@ services:
     command: bash -c 'pip3 install requests && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && python3 /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
     depends_on:
       - influxdb
+  data-management:
+    image: "zenonist/waterbeats-datamanagement:latest"
+    container_name: data-management-server
+    ports:
+      - "5555:5555"
+    depends_on:
+      - influxdb
+      - influxdb_init
+  data-management-mockup-data:
+    working_dir: ../DataManagement
+    command: pip install -r requirements.txt && pytest
+    depends_on:
+      - data-management
+    
 
 
 # Command to use for running this docker compose file
