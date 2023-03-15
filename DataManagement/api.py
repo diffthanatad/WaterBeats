@@ -6,6 +6,10 @@ from create_token import find_waterbeats_buckets, create_token_for_bucket
 
 webapp = Flask(__name__)
 
+random_data_generator_status = True
+wb_bucket = None
+wb_token = None
+
 class server:
 
     def __init__(self, url: str, port: int, debug: bool = False):
@@ -24,8 +28,6 @@ class server:
             longitude = float(data['longitude'])
             latitude = float(data['latitude'])
             timestamp = int(data['timestamp'])
-            wb_bucket = find_waterbeats_buckets()
-            wb_token = create_token_for_bucket(wb_bucket["id"],wb_bucket["orgID"])
             try :
                 response = asyncio.run(DataManagement.insert_sensor_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, "http://localhost:8086", sensor_id, sensor_type, sensor_data, unit, longitude, latitude, timestamp))
                 return (response, 200)
@@ -46,8 +48,6 @@ class server:
             longitude = float(data['longitude'])
             latitude = float(data['latitude'])
             timestamp = int(data['timestamp'])
-            wb_bucket = find_waterbeats_buckets()
-            wb_token = create_token_for_bucket(wb_bucket["id"],wb_bucket["orgID"])
             try :
                 response = asyncio.run(DataManagement.insert_actuator_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, "http://localhost:8086", actuator_id, actuator_type, actuator_status, longitude, latitude, timestamp))
                 return (response, 200)
@@ -57,7 +57,7 @@ class server:
             return (f"Some data is missing: {k}", 400)
         except Exception as e:
             return (f"Error: {e}", 500)
-
+            
     @webapp.errorhandler(code_or_exception=HTTPException)
     def handle_exception(self,e) -> json:
         response = e.get_response()
@@ -74,4 +74,6 @@ class server:
 
 if __name__ == "__main__":
     webserver = server("localhost", 5555, False)
+    wb_bucket = find_waterbeats_buckets()
+    wb_token = create_token_for_bucket(wb_bucket["id"],wb_bucket["orgID"])
     webserver.runserver()
