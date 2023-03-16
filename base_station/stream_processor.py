@@ -22,16 +22,6 @@ async def process_time_message(message):
     for task in tasks:
         await bs.task_stream.send(value=task)
 
-def task_json_message(message):
-    if message.state:
-        command = 'on'
-    else:
-        command = 'off'
-    return {
-        "type" : "instruction",
-        "target" : message.actuator_target,
-        "command" : command
-    }
 
 # forward to main hub for task
 async def send_task_to_server(message):
@@ -52,3 +42,15 @@ async def send_to_hub(message):
                 print("Response Status: {}".format(resp.status))
     except aiohttp.ClientConnectorError as e:
         print(f"connection is not available: {e}")
+
+
+def task_json_message(message):
+    if message.state:
+        command = 'on'
+    else:
+        command = 'off'
+    return {
+        "type" : "instruction",
+        "target" : message.actuator_target,
+        "command" : command
+    }

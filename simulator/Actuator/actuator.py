@@ -43,7 +43,7 @@ class Actuator:
         async with websockets.connect(self.end_point, ping_timeout = None) as ws:
             message = {
                 "type" : "actuator",
-                "connectionType" : "OPEN_CONNECTION",
+                "status" : "OPEN_CONNECTION",
                 "actuatorId": self.id,
                 "actuatorType": "sprinkler"
             }
@@ -52,7 +52,9 @@ class Actuator:
                 json_data = await ws.recv()
                 await ws.send(json.dumps({
                     "type" : "ACKNOWLEDGEMENT",
-                    "connectionType":"ACKNOWLEDGEMENT"}))
+                    "status": self.state,
+                    "actuatorId": self.id
+                }))
                 data = json.loads(json_data)
                 self.command = data["instruction"]
                 self.eve.set()
