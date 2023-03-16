@@ -90,7 +90,7 @@ services:
     container_name: rules-data-management
     environment:
       RULES_DB_NAME: "rules_db"
-      RULES_DB_USER: "waterbeats"
+      RULES_DB_USER: ${RULES_DB_USER}
       RULES_DB_PASSWORD: ${RULES_DB_PASSWORD}
       RULES_DB_HOST: "rules-postgres-db"
       RULES_DB_PORT: "3000"
