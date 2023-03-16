@@ -74,7 +74,7 @@ services:
     container_name: rules-postgres-db
     environment:
         POSTGRES_USER: "waterbeats"
-        POSTGRES_PASSWORD: "7mz3JL9Wfu9kcGAqtPhe"
+        POSTGRES_PASSWORD: ${RULES_DB_PASSWORD}
         POSTGRES_DB: "rules_db"
     volumes:
       - ./rules_database_schema.sql:/docker-entrypoint-initdb.d/rules_database_schema.sql
@@ -91,10 +91,10 @@ services:
     environment:
       RULES_DB_NAME: "rules_db"
       RULES_DB_USER: "waterbeats"
-      RULES_DB_PASSWORD: "7mz3JL9Wfu9kcGAqtPhe"
+      RULES_DB_PASSWORD: ${RULES_DB_PASSWORD}
       RULES_DB_HOST: "rules-postgres-db"
       RULES_DB_PORT: "3000"
-      TWILIO_AUTH_TOKEN: "a75b04d21ce6524b7d4b8155fe2381d4"
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
     ports:
       - "3001:3001"
     depends_on:
