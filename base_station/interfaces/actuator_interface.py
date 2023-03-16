@@ -13,15 +13,16 @@ async def handle_message(websocket, path):
             data = json.loads(json_message)
             if data["type"] == "actuator":
                 clients[data["actuatorId"]] = websocket
-                print(json_message)
+                print("Receive Actuator message: {}".format(json_message))
             elif data["type"] == "instruction":
                 target = data["target"]
                 command = data["command"]
+                print("Receive Instruction message: {}".format(json_message))
                 await sendCommand(target, command)
             else:
                 print("Received Message: {}".format(data))
     except Exception as e:
-        print("Connection Closed")
+        print("Connection Closed with exception: {}".format(e))
 
 async def sendCommand(actuatorId, command):
     global clients

@@ -56,5 +56,5 @@ class Sprinkler(Actuator):
 
 
 if __name__ == '__main__':
-    sprinkler = Sprinkler(1, "ws://localhost:8765")
+    sprinkler = Sprinkler('F4:12:FA:83:00:F0_D', "ws://localhost:8765")
     asyncio.run(sprinkler.receive_commands())

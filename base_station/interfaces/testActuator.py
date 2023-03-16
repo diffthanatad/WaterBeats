@@ -18,7 +18,7 @@ async def sendCommand(end_point, target, command):
 
 if __name__ == '__main__':
     end_point = "ws://localhost:8765"
-    target = 1
+    target = 'F4:12:FA:83:00:F0_D'
     command = "on"
     asyncio.run(sendCommand(end_point, target, command))
 
