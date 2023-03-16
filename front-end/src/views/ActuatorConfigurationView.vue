@@ -4,53 +4,28 @@
             <MapComp :inputDevices="devices" />
         </div>
         <div class="right-half">
-            <h1>Actuator Configuration Page</h1>
+            <h3 style="padding-top: 10px;">Actuator Rules Page</h3>
             <hr />
-            <div class="row mb-3">
-                <div class="col-6">
-                    <select class="form-select" name="field" as="select" v-model="deviceType">
-                        <option value="pump">Pump</option>
-                        <option value="sprinkler">Sprinkler</option>
-                    </select>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-primary col-6" @click.prevent="getActuatorByType">
-                        <i class="bi bi-search"></i>Search
-                    </button>
+            <div class="graph-tab d-flex justify-content-center">
+                <div class="tab">
+                <button
+                    v-for="tab in tabNames"
+                    :key="tab"
+                    :style="tabColor(tab)"
+                    @click="updateSelected(tab)">
+                    {{ tab }}
+                </button>
                 </div>
             </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01">Currently Selected Device</label>
-                <select class="form-select" id="inputGroupSelect01" v-model="selectedDevice">
-                    <option v-for="device in devices" :key="device.id" :value="device.id"> {{ device.id }} </option>
-                </select>
+            <br>
+            <div v-if='switchTabs' class='tab1'>
+                <div class="container">
+                    <FormRuleSetting />
+                </div>
             </div>
-            <hr />
-            <h3> Rules </h3>
-            <form @submit.prevent="onSubmitRule">
-                <div class="row mb-3">
-                    <FormRuleSetting label="Turn on when temperature is" firstInputLabel="Low"
-                        firstPlaceholder="low ..." :firstInputInitialValue="rules.temperatureLow"
-                        secondInputLabel="High" secondPlaceholder="high ..."
-                        :secondInputInitialValue="rules.temperatureHigh"
-                        @onChangeInputValue="changeInputValueForTemperature" />
-                </div>
-                <div class="row mb-3">
-                    <FormRuleSetting label="Turn on when soil moisture is" firstInputLabel="Low"
-                        firstPlaceholder="low ..." :firstInputInitialValue="rules.soilMoistureLow"
-                        secondInputLabel="High" secondPlaceholder="high ..."
-                        :secondInputInitialValue="rules.soilMoistureHigh"
-                        @onChangeInputValue="changeInputValueForSoilMoisture" />
-                </div>
-                <div class="row mb-3">
-                    <FormRuleSetting label="Turn on when time is" firstInputLabel="Min" firstPlaceholder="minutes?"
-                        :firstInputInitialValue="rules.minute" secondInputLabel="Time" secondPlaceholder=" 24 hr."
-                        :secondInputInitialValue="rules.time" @onChangeInputValue="changeInputValueForTime" />
-                </div>
-                <div class="row justify-content-center">
-                    <button class="btn btn-primary"><i class="bi bi-save2"></i>Save</button>
-                </div>
-            </form>
+            <div v-if='!switchTabs' class='tab2'>
+                <RulesTable />
+            </div>
         </div>
     </div>
 </template>
@@ -58,22 +33,22 @@
 <script>
 import MapComp from '@/components/Map/MapComp.vue'
 import FormRuleSetting from '@/components/Form/FormRuleSetting.vue';
+import RulesTable from '@/components/Table/RulesTable.vue';
 import { getActuatorByType } from '@/services/actuatorService.js';
-import { getRuleByActuatorId, updateRuleByActuatorId } from '@/services/ruleService.js';
-
-// import { Form } from 'vee-validate';
+import { getRuleByActuatorId } from '@/services/ruleService.js';
 
 export default {
     name: 'ActuatorConfigurationView',
     components: {
-        // Form,
         MapComp,
         FormRuleSetting,
+        RulesTable
     },
     data() {
         return {
-            selectedDevice: '',
-            deviceType: 'pump',
+            tabNames: ['ADD RULE', 'EXISTING RULES'],
+            switchTabs: true,
+            selectedTab: 'ADD RULE',
             devices: [
                 {
                     id: "5",
@@ -97,9 +72,6 @@ export default {
                 time: "10:00",
             },
         };
-    },
-    mounted() {
-        // this.getActuatorByType();
     },
     methods: {
         async getActuatorByType() {
@@ -132,44 +104,33 @@ export default {
                 console.log("ActuatorConfigurationView.vue, getRuleByActuatorId():", error);
             }
         },
-        async onSubmitRule() {
-            try {
-                const obj = {
-                    temperature_low: this.rules.temperatureLow,
-                    temperature_high: this.rules.temperatureHigh,
-                    soil_moisture_low: this.rules.soilMoistureLow,
-                    soil_moisture_high: this.rules.soilMoistureHigh,
-                    time_period: this.rules.minute,
-                    start_time: this.rules.time,
-                }
-                console.log("onSubmitRule():", obj);
-                await updateRuleByActuatorId(obj);
-            } catch (error) {
-                console.log("ActuatorConfigurationView.vue, onSubmitRule():", error);
+        tabColor(tabName) {
+            let color = (this.selectedTab === tabName) ? "#5cbcac" : "#3fd9b3"
+            return 'background-color: ' + color + ';'
+        },
+        updateSelected(tabName) {
+            if (tabName != this.selectedTab) {
+                this.selectedTab = tabName
+                this.switchTabs = !this.switchTabs
             }
-        },
-        changeInputValueForTemperature(obj) {
-            this.rules.temperatureLow = obj.firstInputValue;
-            this.rules.temperatureHigh = obj.secondInputValue;
-        },
-        changeInputValueForSoilMoisture(obj) {
-            this.rules.soilMoistureLow = obj.firstInputValue;
-            this.rules.soilMoistureHigh = obj.secondInputValue;
-        },
-        changeInputValueForTime(obj) {
-            this.rules.minute = obj.firstInputValue;
-            this.rules.time = obj.secondInputValue;
-        },
-    },
-    watch: {
-        selectedDevice() {
-            // this.getRuleByActuatorId();
         }
     },
+    created() {
+        this.selectedTab = this.tabNames[0]
+    }
 }
 </script>
 
 <style scoped>
+h3 {
+  text-align: center;
+  padding-top: 30px;
+}
+
+ActuatorSetting {
+    padding-bottom: 20px;
+}
+
 .configuration-page {
     height: 100%;
 }
@@ -185,14 +146,36 @@ export default {
 .left-half {
     position: absolute;
     left: 0px;
-    width: 50%;
+    width: 55%;
     height: 93.5%;
 }
 
 .right-half {
     position: absolute;
     right: 0px;
-    width: 50%;
+    width: 45%;
     padding: 10px 20px;
 }
-</style>>
+
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #3fd9b3;
+  overflow: hidden;
+  width: 100%;
+  height: 30px;
+  border: none;
+  font-size: 13px;
+}
+
+.tab button {
+  display: flex;
+  border: 1px solid #fff;
+  cursor: pointer;
+  padding: 14px 16px;
+  color: #fff;
+  width: 100%;
+  justify-content: center;
+}
+</style>

@@ -20,7 +20,8 @@ h1 {
   padding-top: 30px;
 }
 .map {
-  padding-left: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .space {
   padding-top:420px
@@ -28,7 +29,7 @@ h1 {
 </style>
 
 <script>
-import LineChart from '@/components/LineChart.vue'
+import LineChart from '@/components/Charts/LineChart.vue'
 import MapComp from '@/components/Map/MapComp.vue'
 
 export default {

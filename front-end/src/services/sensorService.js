@@ -2,20 +2,14 @@ import httpClient from './httpClient';
 
 const END_POINT = '/sensor';
 
-// const getAllSensorDetail = () => httpClient.get(`${END_POINT}`);
+const getAllLatest = () => httpClient.get(`${END_POINT}/allLatest`);
 
-// export {
-//     getAllSensorDetail
-// }
+const getLatestById = (id) => httpClient.get(`${END_POINT}/getLatestById?sensor_id=${id}`);
 
-export function getAllLatest() {
-    return httpClient.get(`${END_POINT}/allLatest`);
-}
+const getRecord = (id, start, end) => httpClient.get(`${END_POINT}/record?id=${id}&start=${start}&end=${end}`);
 
-export function getLatestById(id){
-    return httpClient.get(`${END_POINT}/getLatestById?sensor_id=` + id);
-}
-
-export function getRecord(id, start, end){
-    return httpClient.get(`${END_POINT}/record?id=$` + id + '&start=$' + start + '&end=$' + end);
+export {
+    getAllLatest,
+    getLatestById,
+    getRecord
 }
