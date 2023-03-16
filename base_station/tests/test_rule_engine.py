@@ -1,5 +1,4 @@
 import pytest
-import random
 import rule_engine
 import datetime
 from records import *
