@@ -19,11 +19,11 @@ ops = {
     '>': operator.gt,
 }
 
-def checkRelativeCondition(relation, sensor_reading, condition_reading):
+def check_relative_condition(relation, sensor_reading, condition_reading):
     return ops[relation](sensor_reading, condition_reading)
 
 # check if sensor readings match any rule conditions
-def applyRules(sensor_message):
+def apply_rules(sensor_message):
     tasks = []
     for ruleID in sensor_rules.get(sensor_message.sensor_id, {}):
         # if rule has a time condition, update the latest sensor reading
@@ -34,13 +34,13 @@ def applyRules(sensor_message):
         else:
             task = rules[ruleID].task_message
             condition = rules[ruleID].sensor_condition_message
-            if checkRelativeCondition(condition.relation, sensor_message.reading, condition.reading):
+            if check_relative_condition(condition.relation, sensor_message.reading, condition.reading):
                 tasks.append(task)
 
     return tasks
 
 # make rule active in rule engine
-def loadRule(rule_message):
+def load_rule(rule_message):
     global ruleID
     rules[ruleID] = rule_message
     if not rule_message.sensor_condition_message == None:
@@ -52,7 +52,7 @@ def loadRule(rule_message):
         ruleID += 1
 
 # store rule locally for persistence
-def storeRule(rule_message):
+def store_rule(rule_message):
     try:
         file_location = script_location / 'local_data/rules.txt'
         with open(file_location, 'a', newline='', encoding='utf8') as f:
@@ -71,7 +71,7 @@ def storeRule(rule_message):
 
 
 # apply scheduler
-def checkTaskSchedule(time_message):
+def check_task_schedule(time_message):
     tasks = []
     for rule in rules.values():
         if rule.time_condition_message == None:
@@ -87,7 +87,7 @@ def checkTaskSchedule(time_message):
                 sensor_condition = False
             else:
                 condition_reading = sensor_condition_message.reading
-                sensor_condition = checkRelativeCondition(relation, sensor_reading, condition_reading)
+                sensor_condition = check_relative_condition(relation, sensor_reading, condition_reading)
             if sensor_condition:
                 tasks.append(rule.task_message)
         else:
@@ -113,7 +113,7 @@ try:
             else:
                 time_condition_message = TimeConditionMessage(time_condition['execute_time'])
             rule_message = RuleMessage(task_message, sensor_condition_message, time_condition_message)
-            loadRule(rule_message)
+            load_rule(rule_message)
 
 except Exception as e:
     print('rule engine load local rules failed', e)

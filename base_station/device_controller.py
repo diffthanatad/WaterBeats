@@ -55,5 +55,5 @@ try:
 except Exception as e:
     print(e)
 
-def getDevice(device_id):
+def get_device(device_id):
     return devices.get(device_id, None)

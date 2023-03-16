@@ -1,4 +1,4 @@
 actuator_id,actuator_type,latitude,longitude
-test_actuator1,sprinkler,-90,180
-test_actuator2,pump,-90,180
-test_actuator3,motor,-90,180
+F4:12:FA:83:00:F0_D,sprinkler,-90,180
+F4:12:FA:83:00:F0_E,pump,-90,180
+F4:12:FA:83:00:F0_F,motor,-90,180

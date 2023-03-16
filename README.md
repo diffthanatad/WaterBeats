@@ -68,7 +68,7 @@ Change directory to `./base_station/`
 
 Run `python -m pytest`
 
-To generate a coverage report, use `coverage run -m pytest .`, then `coverage report -m`
+To run tests and also generate a coverage report, use `coverage run -m pytest .` and `coverage report -m`
 
 ### Sending messages to channels
 Kafka channels are used to separate each message type: sensor, actuator, task, and rule messages  
