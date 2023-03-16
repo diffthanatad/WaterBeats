@@ -22,7 +22,7 @@
           <div class="input-container">
             <button class='btn-input' id="btn-inc" @click="decreaseValue(alert['sensor_type']);">-</button>
             <div class="input-data">
-              <input class="alert-field" type="number" id="number" :value="alertsConfig[alert['sensor_type']]['threshold']"/>
+              <input class="alert-field" type="number" id="number" v-model="alertsConfig[alert['sensor_type']]['threshold']"/>
             </div>
             <button class='btn-input' id="btn-dec" @click="increaseValue(alert['sensor_type'])">+</button>
           </div>
