@@ -11,5 +11,3 @@ COPY --from=0 /usr/src/app/dist ./dist
 RUN npm install --only=production
 EXPOSE 9091
 CMD npm run-script run
-
-## BUILD COMMAND = docker buildx build --platform=linux/amd64 . -t diffs/ucl-waterbeats:auth-gateway_1.0.2 --no-cache
