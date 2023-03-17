@@ -19,8 +19,7 @@ npm run test
 | HTTP Verbs | Endpoints | Role |Action |
 | --- | --- | --- | --- |
 | GET | /api | admin, moderator, user | Default route which tell the service name and version number |
-| POST | /api/auth/signup 
-| admin | Create new user. |
+| POST | /api/auth/signup | admin | Create new user. |
 | POST | /api/auth/signin | admin, moderator, user | Sign in to the system. User will get the JWT in return along with other user's metadata. |
 | GET | /api/user/single/:username | admin, moderator, user | Get user's detail by username. |
 | GET | /api/user/pagination | admin, moderator, user | Get users' detail with username query and return in the pagination format. |
