@@ -8,6 +8,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.10"]
+    env:
+      influx_db_url: http://localhost:8086
     steps:
       - uses: actions/checkout@v3
       - name: Setup InfluxDB
