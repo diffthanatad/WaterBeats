@@ -10,6 +10,11 @@ npm install --save
 npm run start
 ```
 
+## Test
+```bash
+npm run test
+```
+
 ## API Endpoint
 | HTTP Verbs | Endpoints | Action |
 | --- | --- | --- |
