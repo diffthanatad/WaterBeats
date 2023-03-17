@@ -5,8 +5,8 @@ import asyncio
 
 class Sprinkler(Actuator):
     def __init__(self, id, end_point):
-        self.states = ["ON", "OFF", "WATER"]
-        self.events_handler = [self.onHandler, self.offHandler, self.waterHandler]
+        self.states = ["OFF", "ON", "WATER"]
+        self.events_handler = [self.offHandler, self.onHandler, self.waterHandler]
         super().__init__(id, self.states, self.events_handler, end_point)
 
     # event handler for ON state

@@ -42,21 +42,20 @@ async def sendCommand(actuatorId, command):
 
 def fill_db_message(data):
     actuator = dc.get_device(data["actuatorId"])
-    message = {
-        'actuator_id' : data["actuatorId"],
-        'actuator_type' : actuator.actuator_type,
-        'status' : data["status"],
-        'longitude' : actuator.longitude,
-        'latitude' : actuator.latitude,
-        'timestamp' : time.time_ns()
-    }
-    return json.dumps(message)
-
+    message = dict()
+    message['actuator_id'] = data["actuatorId"]
+    message['actuator_type'] = actuator.actuator_type
+    message['status'] = data['status']
+    message["longitude"] = actuator.longitude
+    message["latitude"] = actuator.latitude
+    message['timestamp'] = time.time_ns()
+    return message
 
 async def sendToDB(message):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://localhost:5555/actuator_data', json=message) as resp:
+            print(type(message))
+            async with session.post('https://datamanagement.purpleforest-dca89b1d.uksouth.azurecontainerapps.io/actuator_data', json=message) as resp:
                 print("Response Status: {}".format(resp.status))
     except aiohttp.ClientConnectorError as e:
         print(f"connection is not available: {e}")

@@ -50,11 +50,6 @@ class Actuator:
             await ws.send(json.dumps(message))
             while True:
                 json_data = await ws.recv()
-                await ws.send(json.dumps({
-                    "type" : "ACKNOWLEDGEMENT",
-                    "status": self.state,
-                    "actuatorId": self.id
-                }))
                 data = json.loads(json_data)
                 self.command = data["instruction"]
                 self.eve.set()
@@ -64,6 +59,11 @@ class Actuator:
                     self.thread = threading.Thread(target=self.threadCommandRunning)
                     self.thread.start()
                     self.eve.set()
+                await ws.send(json.dumps({
+                    "type": "ACKNOWLEDGEMENT",
+                    "status": 'activate',
+                    "actuatorId": self.id
+                }))
 
 
     def _add_event(self, state, handler):

@@ -19,8 +19,10 @@ time_condition2 = {'execute_time': future_time}
 print('time now', get_timestamp(), 'time future', future_time)
 #rule2 = {'task_message':task2, 'sensor_condition_message': sensor_condition2, 'time_condition_message': time_condition2}
 rule2 = {'task_message':task2, 'sensor_condition_message': sensor_condition2, 'time_condition_message': time_condition2}
-rule3 = {'task_message':task2}
-p.send_rule_msg(rule3, True)
+rule3 = {'task_message':task2, 'sensor_condition_message' : sensor_condition2}
+rule4 = {'task_message':task2}
+
+p.send_rule_msg(rule4, True)
 
 # time.sleep(5)
 

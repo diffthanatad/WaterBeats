@@ -1,11 +1,11 @@
 import json
+import time
 
 import aiohttp
 import websockets
 
 import base_station_app as bs
 import rule_engine as re
-
 
 
 # process sensor messages
@@ -38,11 +38,22 @@ async def send_task_to_server(message):
 async def send_to_hub(message):
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://localhost:5555/sensor_data', json=message) as resp:
+            async with session.post('https://datamanagement.purpleforest-dca89b1d.uksouth.azurecontainerapps.io/sensor_data', json=sensor_json_message(message)) as resp:
                 print("Response Status: {}".format(resp.status))
     except aiohttp.ClientConnectorError as e:
         print(f"connection is not available: {e}")
 
+def sensor_json_message(message):
+    dic = {
+        "sensor_id" : message.sensor_id,
+        "sensor_type" : message.sensor_type,
+        "data" : message.reading,
+        "unit" : message.reading_unit,
+        "longitude" : message.longitude,
+        "latitude" : message.latitude,
+        "timestamp" : time.time_ns()
+    }
+    return dic
 
 def task_json_message(message):
     if message.state:

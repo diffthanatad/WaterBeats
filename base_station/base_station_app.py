@@ -72,7 +72,7 @@ async def stream_agent_sensor(messages):
     async for message in messages:
         message = fill_sensor_message(message)
         await sp.process_sensor_message(message)
-        #await sp.send_to_hub(message)
+        await sp.send_to_hub(message)
         yield message
 
 # task messages

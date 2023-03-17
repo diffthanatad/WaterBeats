@@ -15,15 +15,11 @@ print("Device IP Address: "+IPAddr)
 
 async def handle_request(request):
     if request.method == 'POST':
-        data = await request.text()
-        print(data)
+        data = await request.json()
         response = web.Response(text="Received data: {}".format(data))
-        json_data = json.loads(data)
-        sensor_data = dc.getSensorData(json_data['sensor_id'])
-        if not sensor_data == None:
-            p.send_sensor_msg(json_data, sensor_data.device_type, True)
-        else:
-            print('sensor_id not found in record:', json_data['sensor_id'])
+        dic_data = json.loads(data)
+        message = {'sensor_id': dic_data["sensor_id"], 'reading': dic_data["reading"]}
+        p.send_sensor_msg(message, True)
     else:
         response = web.Response(status=405)
     return response
