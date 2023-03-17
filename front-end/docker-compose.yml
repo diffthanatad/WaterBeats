@@ -7,8 +7,3 @@ services:
       VUE_APP_SERVICE_URL: "https://waterbeats-proxy-server.azurewebsites.net"
     ports:
       - "8080:80"
-
-
-# Command to use for running this docker compose file
-# $ docker-compose up
-# $ docker-compose down --volumes --remove-orphans

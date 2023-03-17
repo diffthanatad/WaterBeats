@@ -35,11 +35,6 @@
                                 <router-link :to="{ name: 'Alerts' }" style="text-decoration: none;">ALERTS</router-link>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link">
-                                <router-link :to="{ name: 'Admin' }" style="text-decoration: none;">ADMIN</router-link>
-                            </a>
-                        </li>
                         <li class="nav-item" v-if="navItemHide">
                             <a class="nav-link">
                                 <router-link :to="{ name: 'Admin' }" style="text-decoration: none;">ADMIN</router-link>
