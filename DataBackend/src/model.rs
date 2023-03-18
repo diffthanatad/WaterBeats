@@ -1,6 +1,10 @@
+use std::collections::BTreeMap;
+
 use chrono::DateTime;
 use chrono::FixedOffset;
 use influxdb2::FromDataPoint;
+use influxdb2::FromMap;
+use influxdb2_structmap::value::Value;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -14,7 +18,7 @@ pub enum SensorType {
     WaterLevel,
 }
 
-#[derive(Debug, FromDataPoint, Default, Serialize, Clone)]
+#[derive(Debug, Default, Serialize, Clone)]
 pub struct SensorData {
     time: DateTime<FixedOffset>,
     pub sensor_id: String,
@@ -23,7 +27,59 @@ pub struct SensorData {
     unit: String,
     longitude: f64,
     latitude: f64,
-    status: String,
+    status: Option<String>,
+}
+
+impl FromMap for SensorData {
+    fn from_genericmap(map: BTreeMap<String, Value>) -> SensorData {
+        let mut sensor_data = SensorData::default();
+        for (k, v) in map {
+            match k.as_str() {
+                "time" => {
+                    if let Value::String(s) = v {
+                        sensor_data.time = DateTime::parse_from_rfc3339(&s).unwrap()
+                    }
+                }
+                "sensor_id" => {
+                    if let Value::String(s) = v {
+                        sensor_data.sensor_id = s
+                    }
+                }
+                "sensor_type" => {
+                    if let Value::String(s) = v {
+                        sensor_data.sensor_type = s
+                    }
+                }
+                "data" => {
+                    if let Value::Double(f) = v {
+                        sensor_data.data = f.into()
+                    }
+                }
+                "unit" => {
+                    if let Value::String(s) = v {
+                        sensor_data.unit = s
+                    }
+                }
+                "longitude" => {
+                    if let Value::Double(f) = v {
+                        sensor_data.longitude = f.into()
+                    }
+                }
+                "latitude" => {
+                    if let Value::Double(f) = v {
+                        sensor_data.latitude = f.into()
+                    }
+                }
+                "status" => {
+                    if let Value::String(s) = v {
+                        sensor_data.status = Some(s)
+                    }
+                }
+                _ => {}
+            }
+        }
+        sensor_data
+    }
 }
 
 #[derive(Debug, Default, FromDataPoint, Serialize, Clone)]
@@ -59,7 +115,7 @@ pub struct SensorDataExternal {
     unit: String,
     /// the location of the sensor, in the format of (longitude, latitude)
     location: (f64, f64),
-    status: String,
+    status: Option<String>,
 }
 
 
@@ -144,7 +200,7 @@ mod test {
             unit: "unit".to_string(),
             longitude: 1.0,
             latitude: -3.0,
-            status: "on".to_string(),
+            status: Some("on".to_string()),
         };
         let sensor_data_external: SensorDataExternal = sensor_data.clone().into();
         assert_eq!(sensor_data.time, sensor_data_external.time);
