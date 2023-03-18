@@ -1,9 +1,8 @@
 import axios from "axios";
-// import store from '@/store'
 
 const httpClient = axios.create({
     baseURL: process.env.VUE_APP_SERVICE_URL,
-    timeout: 6000, /* 6 seconds before timeout */
+    timeout: process.env.VUE_APP_TIMEOUT  || 6000, /* Default timeout of 6 seconds */
     headers: {
         "Content-Type": "application/json"
     }
@@ -12,8 +11,6 @@ const httpClient = axios.create({
 const getAuthToken = () => localStorage.getItem('jwt');
 
 const authInterceptor = (config) => {
-    // store.dispatch("loading/start");
-
     config.headers['Authorization'] = `Bearer ${getAuthToken()}`;
     return config;
 }
@@ -23,7 +20,6 @@ const errorInterceptor = error => {
     /*  check if it's a server error */
     if (!error.response) {
         console.error("Service httpClient, errorInterceptor, server error:", error, "\n");
-        // store.dispatch("loading/finish");
         return Promise.reject(error);
     }
 
@@ -43,7 +39,6 @@ const errorInterceptor = error => {
             console.error("Service httpClient, errorInterceptor, status other status code:", error, "\n");
     }
 
-    // store.dispatch("loading/finish");
     return Promise.reject(error);
 }
 
@@ -59,7 +54,6 @@ const responseInterceptor = response => {
             break;
     }
 
-    // store.dispatch("loading/finish");
     return response;
 }
 

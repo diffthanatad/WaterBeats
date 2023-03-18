@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <MapComp :inputDevices="devices" />
+    <MapComp />
   </div>
 </template>
 
@@ -17,23 +17,38 @@ export default {
   data() {
     return {
       devices: [],
+      sendAPIQueryInterval: null,
     };
   },
   mounted() {
-    this.getAllDevices();
+    this.getAllDevices()
+    this.repeatTheAPICall()
+    this.$store.dispatch("device/start");
+  },
+  computed: {
+    keepCallAPI() {
+      return this.$store.getters['device/getAutomatic'];
+    }
   },
   methods: {
+    repeatTheAPICall() {
+      try {
+        this.sendAPIQueryInterval = setInterval(async () => await this.getAllDevices(), 5000);
+      } catch (error) {
+        console.log("HomeView.vue, repeatTheAPICall():", error);
+      }
+    },
     async getAllDevices() {
       try {
         const response = await getLatestReadingForAllDevices();
 
         if (response.status === 200) {
           var DEVICES = response.data.data;
-          
+
           DEVICES.forEach(element => {
-            element.timestamp = moment(element.time).format('MMMM Do YYYY, h:mm:ss a');
+            element.timestamp = moment(element.time).format('Do MMMM YYYY, h:mm:ss a');
             var temp = Number(element.data);
-            if (temp) { element.value = `${temp.toFixed(2)} ${element.unit}`; } 
+            if (temp) { element.value = `${temp.toFixed(2)} ${element.unit}`; }
             else { element.value = "" }
           });
 
@@ -42,8 +57,17 @@ export default {
       } catch (error) {
         console.log("HomeView.vue, getAllDevices():", error);
       }
-
+    },
+    stopRecurrentAPICall() {
+      clearInterval(this.sendAPIQueryInterval);
     }
   },
+  watch: {
+    keepCallAPI(newValue) {
+      if (newValue === false) {
+        this.stopRecurrentAPICall();
+      }
+    }
+  }
 }
 </script>

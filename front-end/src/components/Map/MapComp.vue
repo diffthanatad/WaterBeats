@@ -18,10 +18,6 @@ import MapMarker from '@/components/Map/MapMarker.vue'
 export default {
     name: "MapComponent",
     props: {
-        inputDevices: {
-            type: Array,
-            required: true
-        }
     },
     components: {
         LMap,

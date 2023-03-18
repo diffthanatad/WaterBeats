@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const httpClient = axios.create({
-    baseURL: "http://localhost:3001",
-    timeout: 6000, /* 6 seconds before timeout */
+    baseURL: process.env.VUE_APP_SERVICE_URL_RULE,
+    timeout: process.env.VUE_APP_TIMEOUT  || 6000, /* Default timeout of 6 seconds */
     headers: {
         "Content-Type": "application/json"
     }

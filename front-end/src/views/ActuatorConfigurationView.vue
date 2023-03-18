@@ -1,20 +1,16 @@
 <template>
     <div class="configuration-page">
         <div class="left-half">
-            <MapComp :inputDevices="devices" />
+            <MapComp />
         </div>
         <div class="right-half">
             <h3 style="padding-top: 10px;">Actuator Rules Page</h3>
             <hr />
             <div class="graph-tab d-flex justify-content-center">
                 <div class="tab">
-                <button
-                    v-for="tab in tabNames"
-                    :key="tab"
-                    :style="tabColor(tab)"
-                    @click="updateSelected(tab)">
-                    {{ tab }}
-                </button>
+                    <button v-for="tab in tabNames" :key="tab" :style="tabColor(tab)" @click="updateSelected(tab)">
+                        {{ tab }}
+                    </button>
                 </div>
             </div>
             <br>
@@ -34,8 +30,9 @@
 import MapComp from '@/components/Map/MapComp.vue'
 import FormRuleSetting from '@/components/Form/FormRuleSetting.vue';
 import RulesTable from '@/components/Table/RulesTable.vue';
-import { getActuatorByType } from '@/services/actuatorService.js';
 import { getRuleByActuatorId } from '@/services/ruleService.js';
+import { getLatestReadingForAllDevices } from "@/services/deviceService.js";
+import moment from 'moment';
 
 export default {
     name: 'ActuatorConfigurationView',
@@ -49,20 +46,6 @@ export default {
             tabNames: ['ADD RULE', 'EXISTING RULES'],
             switchTabs: true,
             selectedTab: 'ADD RULE',
-            devices: [
-                {
-                    id: "5",
-                    type: "Water Sprinkler",
-                    status: "watering",
-                    location: [51.52397881654594, -0.130105538694122]
-                },
-                {
-                    id: "6",
-                    type: "Water Sprinkler",
-                    status: "off",
-                    location: [51.52329792648238, -0.13508371862180735]
-                }
-            ],
             rules: {
                 temperatureLow: "1",
                 temperatureHigh: "2",
@@ -73,20 +56,28 @@ export default {
             },
         };
     },
+    mounted() {
+        this.getAllDevices()
+    },
     methods: {
-        async getActuatorByType() {
+        async getAllDevices() {
             try {
-                console.log("getActuatorByType():", this.deviceType)
+                const response = await getLatestReadingForAllDevices();
 
-                this.actuators.length = 0;
-                const response = await getActuatorByType(this.deviceType);
+                if (response.status === 200) {
+                    var DEVICES = response.data.data;
 
-                if (response.status !== 200) { return; }
+                    DEVICES.forEach(element => {
+                        element.timestamp = moment(element.time).format('Do MMMM YYYY, h:mm:ss a');
+                        var temp = Number(element.data);
+                        if (temp) { element.value = `${temp.toFixed(2)} ${element.unit}`; }
+                        else { element.value = "" }
+                    });
 
-                const data = response.data;
-                this.actuators = data;
+                    this.$store.dispatch("device/update", DEVICES);
+                }
             } catch (error) {
-                console.log("ActuatorConfigurationView.vue, getActuatorByType():", error);
+                console.log("HomeView.vue, getAllDevices():", error);
             }
         },
         async getRuleByActuatorId() {
@@ -123,8 +114,8 @@ export default {
 
 <style scoped>
 h3 {
-  text-align: center;
-  padding-top: 30px;
+    text-align: center;
+    padding-top: 30px;
 }
 
 ActuatorSetting {
@@ -158,24 +149,24 @@ ActuatorSetting {
 }
 
 .tab {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  background-color: #3fd9b3;
-  overflow: hidden;
-  width: 100%;
-  height: 30px;
-  border: none;
-  font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #3fd9b3;
+    overflow: hidden;
+    width: 100%;
+    height: 30px;
+    border: none;
+    font-size: 13px;
 }
 
 .tab button {
-  display: flex;
-  border: 1px solid #fff;
-  cursor: pointer;
-  padding: 14px 16px;
-  color: #fff;
-  width: 100%;
-  justify-content: center;
+    display: flex;
+    border: 1px solid #fff;
+    cursor: pointer;
+    padding: 14px 16px;
+    color: #fff;
+    width: 100%;
+    justify-content: center;
 }
 </style>

@@ -69,29 +69,7 @@ export default {
       currentPage: 0,
       totalPages: 0,
       totalItems: 0,
-      users: [
-        {
-          id: 1,
-          name: "Adam Smith",
-          username: "adam01",
-          role: "admin",
-          disable: 1
-        },
-        {
-          id: 2,
-          name: "David Brown",
-          username: "david01",
-          role: "user",
-          disable: 0
-        },
-        {
-          id: 3,
-          name: "Magnus Carlsen",
-          username: "magnus",
-          role: "admin",
-          disable: 1
-        },
-      ]
+      users: []
     }
   },
   mounted() {

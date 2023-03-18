@@ -7,6 +7,8 @@ import SettingView from '../views/SettingView.vue'
 import LogInView from '../views/LogInView.vue'
 import AlertsView from '../views/AlertsView.vue'
 
+import store from '@/store'
+
 const routes = [
   {
     path: '/',
@@ -61,6 +63,7 @@ router.beforeEach((to, from, next) => {
   } else if (adminRoleRequired && role !== "ROLE_ADMIN") {
     return next('/');
   } else {
+    store.dispatch("device/clear");
     next();
   }
 })
