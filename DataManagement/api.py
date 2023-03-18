@@ -28,12 +28,13 @@ class server:
             sensor_id = str(data['sensor_id'])
             sensor_type = str(data['sensor_type'])
             sensor_data = float(data['data'])
+            sensor_status = str(data['status'])
             unit = str(data['unit'])
             longitude = float(data['longitude'])
             latitude = float(data['latitude'])
             timestamp = int(data['timestamp'])
             try :
-                response = asyncio.run(DataManagement.insert_sensor_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, f'http://{os.getenv("influx_db_url")}', sensor_id, sensor_type, sensor_data, unit, longitude, latitude, timestamp))
+                response = asyncio.run(DataManagement.insert_sensor_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, f'http://{os.getenv("influx_db_url")}', sensor_id, sensor_type, sensor_data, unit, longitude, latitude, sensor_status, timestamp))
                 return (response, 200)
             except Exception as e:
                 return (f"Error while inserting data to the Database {e}", 500)
