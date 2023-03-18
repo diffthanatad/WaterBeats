@@ -3,6 +3,10 @@ import asyncio
 from werkzeug.exceptions import HTTPException
 from data_management import DataManagement
 from create_token import find_waterbeats_buckets, create_token_for_bucket
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 webapp = Flask(__name__)
 
@@ -16,7 +20,7 @@ class server:
         self.url = url
         self.port = port
         self.debug = debug
-
+    
     @webapp.route('/sensor_data', methods=['POST'])
     def __receive_sensor_data() -> tuple:
         data = request.json
@@ -29,10 +33,10 @@ class server:
             latitude = float(data['latitude'])
             timestamp = int(data['timestamp'])
             try :
-                response = asyncio.run(DataManagement.insert_sensor_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, "http://localhost:8086", sensor_id, sensor_type, sensor_data, unit, longitude, latitude, timestamp))
+                response = asyncio.run(DataManagement.insert_sensor_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, f'http://{os.getenv("influx_db_url")}', sensor_id, sensor_type, sensor_data, unit, longitude, latitude, timestamp))
                 return (response, 200)
             except Exception as e:
-                return (f"Error while inserting data to the DataBuffer: {e}", 500)
+                return (f"Error while inserting data to the Database {e}", 500)
         except KeyError as k:
             return (f"Some data is missing: {k}", 400)
         except Exception as e:
@@ -49,10 +53,10 @@ class server:
             latitude = float(data['latitude'])
             timestamp = int(data['timestamp'])
             try :
-                response = asyncio.run(DataManagement.insert_actuator_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, "http://localhost:8086", actuator_id, actuator_type, actuator_status, longitude, latitude, timestamp))
+                response = asyncio.run(DataManagement.insert_actuator_data(wb_bucket["id"], wb_bucket["orgID"], wb_token, f'http://{os.getenv("influx_db_url")}', actuator_id, actuator_type, actuator_status, longitude, latitude, timestamp))
                 return (response, 200)
             except Exception as e:
-                return (f"Error while inserting data to the DataBuffer: {e}", 500)
+                return (f"Error while inserting data to the Database: {e}", 500)
         except KeyError as k:
             return (f"Some data is missing: {k}", 400)
         except Exception as e:
@@ -73,7 +77,7 @@ class server:
         webapp.run(host=self.url, port=self.port, debug=self.debug)
 
 if __name__ == "__main__":
-    webserver = server("localhost", 5555, False)
+    webserver = server("0.0.0.0", 5555, False)
     wb_bucket = find_waterbeats_buckets()
     wb_token = create_token_for_bucket(wb_bucket["id"],wb_bucket["orgID"])
     webserver.runserver()
