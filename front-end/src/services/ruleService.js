@@ -1,14 +1,6 @@
-import axios from "axios";
+import httpClient from './httpClient';
 
-const httpClient = axios.create({
-    baseURL: process.env.VUE_APP_SERVICE_URL_RULE,
-    timeout: process.env.VUE_APP_TIMEOUT  || 6000, /* Default timeout of 6 seconds */
-    headers: {
-        "Content-Type": "application/json"
-    }
-});
-
-const END_POINT = '/rule';
+const END_POINT = '/rule-service/rule';
 
 const getAllRules = () => httpClient.get(`${END_POINT}/getAllRules`);
 

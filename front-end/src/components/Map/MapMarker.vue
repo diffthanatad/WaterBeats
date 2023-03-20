@@ -4,23 +4,38 @@
       <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_blue" />
       <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_black" />
       <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_red" />
+
       <l-icon v-else-if="iconImage === 4" :icon-size="dynamicSize" :icon-url="icon_temperature_blue" />
       <l-icon v-else-if="iconImage === 5" :icon-size="dynamicSize" :icon-url="icon_temperature_black" />
       <l-icon v-else-if="iconImage === 6" :icon-size="dynamicSize" :icon-url="icon_temperature_red" />
+      
       <l-icon v-else-if="iconImage === 7" :icon-size="dynamicSize" :icon-url="icon_sprinkler_blue" />
       <l-icon v-else-if="iconImage === 8" :icon-size="dynamicSize" :icon-url="icon_sprinkler_black" />
       <l-icon v-else-if="iconImage === 9" :icon-size="dynamicSize" :icon-url="icon_sprinkler_green" />
       <l-icon v-else-if="iconImage === 10" :icon-size="dynamicSize" :icon-url="icon_sprinkler_red" />
+      
       <l-icon v-else-if="iconImage === 11" :icon-size="dynamicSize" :icon-url="icon_pump_blue" />
       <l-icon v-else-if="iconImage === 12" :icon-size="dynamicSize" :icon-url="icon_pump_black" />
       <l-icon v-else-if="iconImage === 13" :icon-size="dynamicSize" :icon-url="icon_pump_green" />
       <l-icon v-else-if="iconImage === 14" :icon-size="dynamicSize" :icon-url="icon_pump_red" />
+
       <l-icon v-else-if="iconImage === 15" :icon-size="dynamicSize" :icon-url="icon_water_level_blue" />
       <l-icon v-else-if="iconImage === 16" :icon-size="dynamicSize" :icon-url="icon_water_level_black" />
       <l-icon v-else-if="iconImage === 17" :icon-size="dynamicSize" :icon-url="icon_water_level_red" />
+
       <l-icon v-else-if="iconImage === 18" :icon-size="dynamicSize" :icon-url="icon_water_pollution_blue" />
       <l-icon v-else-if="iconImage === 19" :icon-size="dynamicSize" :icon-url="icon_water_pollution_black" />
       <l-icon v-else-if="iconImage === 20" :icon-size="dynamicSize" :icon-url="icon_water_pollution_red" />
+
+      <l-icon v-else-if="iconImage === 21" :icon-size="dynamicSize" :icon-url="icon_motor_blue" />
+      <l-icon v-else-if="iconImage === 22" :icon-size="dynamicSize" :icon-url="icon_motor_black" />
+      <l-icon v-else-if="iconImage === 23" :icon-size="dynamicSize" :icon-url="icon_motor_green" />
+      <l-icon v-else-if="iconImage === 24" :icon-size="dynamicSize" :icon-url="icon_motor_red" />
+
+      <l-icon v-else-if="iconImage === 25" :icon-size="dynamicSize" :icon-url="icon_humidity_blue" />
+      <l-icon v-else-if="iconImage === 26" :icon-size="dynamicSize" :icon-url="icon_humidity_black" />
+      <l-icon v-else-if="iconImage === 27" :icon-size="dynamicSize" :icon-url="icon_humidity_red" />
+      
       <l-icon v-else :icon-size="dynamicSize" :icon-url="icon_questionMark_black" />
       <l-popup style="width: 300px;">
         <div>
@@ -61,16 +76,23 @@ import icon_water_level_red from "@/assets/icon/icon_water_level_red.png";
 import icon_water_pollution_blue from "@/assets/icon/icon_water_pollution_blue.png";
 import icon_water_pollution_black from "@/assets/icon/icon_water_pollution_black.png";
 import icon_water_pollution_red from "@/assets/icon/icon_water_pollution_red.png";
+import icon_humidity_blue from "@/assets/icon/icon_humidity_blue.png";
+import icon_humidity_black from "@/assets/icon/icon_humidity_black.png";
+import icon_humidity_red from "@/assets/icon/icon_humidity_red.png";
 
 /* Import actuator icons: blue (i.e., on), green (i.e., working), black (i.e., off) and red (i.e., error). */
-import icon_sprinkler_blue from "@/assets/icon/icon_sprinkler_blue.png"
-import icon_sprinkler_black from "@/assets/icon/icon_sprinkler_black.png"
-import icon_sprinkler_green from "@/assets/icon/icon_sprinkler_green.png"
-import icon_sprinkler_red from "@/assets/icon/icon_sprinkler_red.png"
-import icon_pump_blue from "@/assets/icon/icon_pump_blue.png"
-import icon_pump_black from "@/assets/icon/icon_pump_black.png"
-import icon_pump_green from "@/assets/icon/icon_pump_green.png"
-import icon_pump_red from "@/assets/icon/icon_pump_red.png"
+import icon_sprinkler_blue from "@/assets/icon/icon_sprinkler_blue.png";
+import icon_sprinkler_black from "@/assets/icon/icon_sprinkler_black.png";
+import icon_sprinkler_green from "@/assets/icon/icon_sprinkler_green.png";
+import icon_sprinkler_red from "@/assets/icon/icon_sprinkler_red.png";
+import icon_pump_blue from "@/assets/icon/icon_pump_blue.png";
+import icon_pump_black from "@/assets/icon/icon_pump_black.png";
+import icon_pump_green from "@/assets/icon/icon_pump_green.png";
+import icon_pump_red from "@/assets/icon/icon_pump_red.png";
+import icon_motor_blue from "@/assets/icon/icon_motor_blue.png";
+import icon_motor_black from "@/assets/icon/icon_motor_black.png";
+import icon_motor_green from "@/assets/icon/icon_motor_green.png";
+import icon_motor_red from "@/assets/icon/icon_motor_red.png";
 
 import icon_questionMark_black from "@/assets/icon/icon_questionMark_black.png"
 
@@ -106,6 +128,13 @@ export default {
       icon_pump_black,
       icon_pump_green,
       icon_pump_red,
+      icon_motor_blue,
+      icon_motor_black,
+      icon_motor_green,
+      icon_motor_red,
+      icon_humidity_blue,
+      icon_humidity_black,
+      icon_humidity_red,
       icon_questionMark_black,
     }
   },
@@ -144,11 +173,11 @@ export default {
       const deviceType = this.marker.type;
       const status = this.marker.status;
 
-      if (deviceType === "soil_moisture") {
+      if (deviceType === "moisture sensor") {
         if (status === "on") { return 1; }
         else if (status === "off") { return 2; }
         else { return 3; }
-      } else if (deviceType === "temperature") {
+      } else if (deviceType === "temperature sensor") {
         if (status === "on") { return 4; }
         else if (status === "off") { return 5; }
         else { return 6; }
@@ -162,14 +191,23 @@ export default {
         else if (status === "off") { return 12; }
         else if (status === "pumping") { return 13; }
         else { return 14; }
-      } else if (deviceType === "water_level") {
+      } else if (deviceType === "water level") {
         if (status === "on") { return 15; }
         else if (status === "off") { return 16; }
         else { return 17; }
-      }  else if (deviceType === "water_pollution") {
+      }  else if (deviceType === "water pollution") {
         if (status === "on") { return 18; }
         else if (status === "off") { return 19; }
         else { return 20; }
+      } else if (deviceType === "motor") {
+        if (status === "on") { return 21; }
+        else if (status === "off") { return 22; }
+        else if (status === "rotating") { return 23; }
+        else { return 24; }
+      } else if (deviceType === "humidity sensor") {
+        if (status === "on") { return 25; }
+        else if (status === "off") { return 26; }
+        else { return 27; }
       }
     },
   },

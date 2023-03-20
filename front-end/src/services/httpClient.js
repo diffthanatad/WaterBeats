@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from '../router/index.js'
 
 const httpClient = axios.create({
     baseURL: process.env.VUE_APP_SERVICE_URL,
@@ -28,6 +29,7 @@ const errorInterceptor = error => {
         case 400:
             break;
         case 401:
+            router.push({ name: "LogIn" });
             break;
         case 403:
             break;
@@ -36,6 +38,7 @@ const errorInterceptor = error => {
         case 502:
             break;
         default:
+            router.push({ name: "LogIn" });
             console.error("Service httpClient, errorInterceptor, status other status code:", error, "\n");
     }
 
