@@ -173,7 +173,7 @@ export default {
       const deviceType = this.marker.type;
       const status = this.marker.status;
 
-      if (deviceType === "moisture sensor") {
+      if (deviceType === "soil moisture sensor") {
         if (status === "on") { return 1; }
         else if (status === "off") { return 2; }
         else { return 3; }
