@@ -40,17 +40,13 @@ export default {
     methods: {
         async showUpdateUserModal() {
             try {
-                var status;
-                if (this.$props.item.status === "Deactivate") { status = 1; }
-                else { status = 0; }
-
                 const ok = await this.$refs.updateUserDialogue.show({
                     title: 'Update User',
                     okButton: 'yes',
                     name: this.$props.item.name,
                     username: this.$props.item.username,
                     role: this.$props.item.role,
-                    status: status,
+                    status: this.$props.item.disable ? 1 : 0,
                     id: this.$props.item.id,
                 });
 

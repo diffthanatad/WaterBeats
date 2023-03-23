@@ -1,14 +1,14 @@
 version: '3'
 services:
   front-end:
-    image: "diffs/ucl-waterbeats:front-end_1.1.0"
+    image: "diffs/ucl-waterbeats:front-end_1.3.5"
     container_name: waterbeats-front-end
     environment:
       VUE_APP_SERVICE_URL: "http://localhost:9091/"
     ports:
       - "8080:80"
   proxy-server:
-    image: "diffs/ucl-waterbeats:auth-gateway_1.0.3"
+    image: "diffs/ucl-waterbeats:auth-gateway_1.1.0"
     container_name: waterbeats-auth-gateway
     environment:
       JWT_SECRET: Thursday2March2023
@@ -69,22 +69,16 @@ services:
     command: bash -c 'pip3 install requests && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && python3 /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
     depends_on:
       - influxdb
-  data-management:
-    image: "zenonist/waterbeats-datamanagement:latest"
-    container_name: data-management-server
-    ports:
-      - "5555:5555"
-    depends_on:
-      - influxdb
-      - influxdb_init
-  data-management-mockup-data:
-    working_dir: ../DataManagement
-    command: pip install -r requirements.txt && pytest
-    depends_on:
-      - data-management
-    
-
-
-# Command to use for running this docker compose file
-# $ docker-compose up
-# $ docker-compose down --volumes --remove-orphans
+  # data-management:
+  #   image: "zenonist/waterbeats-datamanagement:latest"
+  #   container_name: data-management-server
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - influxdb
+  #     - influxdb_init
+  # data-management-mockup-data:
+  #   working_dir: ../DataManagement
+  #   command: pip install -r requirements.txt && pytest
+  #   depends_on:
+  #     - data-management
