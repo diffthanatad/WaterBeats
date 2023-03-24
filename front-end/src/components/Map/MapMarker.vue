@@ -145,7 +145,7 @@ export default {
       } else if (deviceType === "sprinkler") {
         if (status === "on") { return icon_sprinkler_blue; }
         else if (status === "off") { return icon_sprinkler_black; }
-        else if (status === "sprinkling") { return icon_sprinkler_green; }
+        else if (status === "watering") { return icon_sprinkler_green; }
         else { return icon_sprinkler_red; }
       }  else if (deviceType === "pump") {
         if (status === "on") { return icon_pump_blue; }
@@ -163,7 +163,7 @@ export default {
       } else if (deviceType === "motor") {
         if (status === "on") { return icon_motor_blue; }
         else if (status === "off") { return icon_motor_black; }
-        else if (status === "working") { return icon_motor_green; }
+        else if (status === "rotating") { return icon_motor_green; }
         else { return icon_motor_red; }
       } else if (deviceType === "humidity sensor") {
         if (status === "on") { return icon_humidity_blue; }
