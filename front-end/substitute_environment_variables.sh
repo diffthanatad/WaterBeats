@@ -6,6 +6,7 @@ ROOT_DIR=/app
 for file in $ROOT_DIR/js/*.js* $ROOT_DIR/index.html $ROOT_DIR/precache-manifest*.js;
 do
   sed -i 's|VUE_APP_SERVICE_URL_PLACEHOLDER|'${VUE_APP_SERVICE_URL}'|g' $file
+  sed -i 's|VUE_APP_TIMEOUT_PLACEHOLDER|'${VUE_APP_TIMEOUT_PLACEHOLDER}'|g' $file
   # Your other variables here...
 done
 # Starting NGINX

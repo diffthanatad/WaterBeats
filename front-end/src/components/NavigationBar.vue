@@ -27,7 +27,12 @@
                         <li class="nav-item">
                             <a class="nav-link">
                                 <router-link :to="{ name: 'ActuatorConfigurationView' }"
-                                    style="text-decoration: none;">ACTUATOR CONFIGURATION</router-link>
+                                    style="text-decoration: none;">ACTUATOR RULES</router-link>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link">
+                                <router-link :to="{ name: 'Alerts' }" style="text-decoration: none;">ALERTS</router-link>
                             </a>
                         </li>
                         <li class="nav-item" v-if="navItemHide">

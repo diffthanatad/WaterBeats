@@ -63,21 +63,6 @@ wss.on('connection', function connection(ws) {
     }
   }, 5000);
 
-  /*
-    actuator off line
-    back online?
-    data buffer
-
-    accept instruction from REST API
-    put into global
-    websocket:
-      first, check the global -> send
-      second, check data buffer -> send ------- GET /instruction?actuatorId=1 give me only latest ONE. Just remove it from Redis.
-    
-      set 2 seconds out. Then, send the instruction to the Data buffer.
-    
-  */
-
   ws.on('message', function incoming(req) {
     /* 
       The received message is in byte array format in the buffer.

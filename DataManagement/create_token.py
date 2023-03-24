@@ -1,8 +1,12 @@
 import datetime
 import json
 import requests
+import os
+from dotenv import load_dotenv
 
-url = "http://localhost:8086/api/v2/signin"
+load_dotenv()
+
+url = f'http://{os.getenv("influx_db_url")}/api/v2/signin'
 
 payload = {}
 headers = {
@@ -11,14 +15,11 @@ headers = {
 
 response = requests.request("POST", url, headers=headers, data=payload)
 
-# print(response.status_code)
-# print(response.headers)
-# print(response.text)
 cookie = response.headers["Set-Cookie"]
 
 
 def find_waterbeats_buckets():
-    url = "http://localhost:8086/api/v2/buckets"
+    url = f"http://{os.getenv('influx_db_url')}/api/v2/buckets"
     payload = {}
     headers = {"Cookie": cookie}
     response = requests.request("GET", url, headers=headers, data=payload)
@@ -28,7 +29,7 @@ def find_waterbeats_buckets():
     return waterbeats_bucket
 
 def create_token_for_bucket(bucket_id, org_id):
-    url = "http://localhost:8086/api/v2/authorizations"
+    url = f"http://{os.getenv('influx_db_url')}/api/v2/authorizations"
     payload = {
         "description": f"WaterBeats DevAPI {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
         "orgID": org_id,
@@ -63,5 +64,3 @@ def create_token_for_bucket(bucket_id, org_id):
 wb_bucket = find_waterbeats_buckets()
 bucket_id = wb_bucket["id"]
 org_id = wb_bucket["orgID"]
-# print(f"Bucket ID: {bucket_id}, Org ID: {org_id}")
-# print(create_token_for_bucket(bucket_id, org_id))
