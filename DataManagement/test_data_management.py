@@ -1,5 +1,3 @@
-from data_management import DataManagement
-from create_token import find_waterbeats_buckets, create_token_for_bucket
 import pytest
 import time
 import random
@@ -11,6 +9,7 @@ async def test_insert_sensor_data_api():
         "sensor_id": f"tempsensor_{str(random.randint(1,100))}",
         "sensor_type": "temperature",
         "data": 26.4,
+        "status": "on",
         "unit": "C",
         "longitude": 2134.1234124,
         "latitude": 321444.12341234,
@@ -26,6 +25,7 @@ async def test_insert_sensor_data_api_missing_data():
         "sensor_id": f"sensor_{str(random.randint(1,100))}",
         "sensor_type": "temperature",
         "data": 26.4,
+        "status": "on",
         "unit": "C",
         "longitude": 2134.1234124,
         "latitude": 321444.12341234
@@ -40,6 +40,7 @@ async def test_insert_sensor_data_api_2_interval():
         "sensor_id": f"sensor_{str(random.randint(1,100))}",
         "sensor_type": "temperature",
         "data": random.uniform(-10, 1000),
+        "status": "on",
         "unit": "C",
         "longitude": random.uniform(-1000, 1000),
         "latitude": random.uniform(-1000, 1000),

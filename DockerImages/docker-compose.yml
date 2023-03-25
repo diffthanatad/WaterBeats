@@ -69,6 +69,36 @@ services:
     command: bash -c 'pip3 install requests && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && python3 /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
     depends_on:
       - influxdb
+  rules-postgres-database:
+    image: postgres
+    container_name: rules-postgres-db
+    environment:
+        POSTGRES_USER: "waterbeats"
+        POSTGRES_PASSWORD: ${RULES_DB_PASSWORD}
+        POSTGRES_DB: "rules_db"
+    volumes:
+      - ./rules_database_schema.sql:/docker-entrypoint-initdb.d/rules_database_schema.sql
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    command: -p 3000
+  rules-data-management:
+    build:
+      context: ../RulesDataManagement
+      dockerfile: "Dockerfile"
+    container_name: rules-data-management
+    environment:
+      RULES_DB_NAME: "rules_db"
+      RULES_DB_USER: ${RULES_DB_USER}
+      RULES_DB_PASSWORD: ${RULES_DB_PASSWORD}
+      RULES_DB_HOST: "rules-postgres-db"
+      RULES_DB_PORT: "3000"
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - rules-postgres-database
   data-management:
     image: "zenonist/waterbeats-datamanagement:latest"
     container_name: data-management-server
