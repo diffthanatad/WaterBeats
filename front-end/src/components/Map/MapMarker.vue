@@ -1,42 +1,7 @@
 <template>
-  <div class="marker-component">
-    <l-marker :lat-lng="marker.location" @click="onClickMapMarker">
-      <l-icon v-if="iconImage === 1" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_blue" />
-      <l-icon v-else-if="iconImage === 2" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_black" />
-      <l-icon v-else-if="iconImage === 3" :icon-size="dynamicSize" :icon-url="icon_soil_moisture_red" />
-
-      <l-icon v-else-if="iconImage === 4" :icon-size="dynamicSize" :icon-url="icon_temperature_blue" />
-      <l-icon v-else-if="iconImage === 5" :icon-size="dynamicSize" :icon-url="icon_temperature_black" />
-      <l-icon v-else-if="iconImage === 6" :icon-size="dynamicSize" :icon-url="icon_temperature_red" />
-      
-      <l-icon v-else-if="iconImage === 7" :icon-size="dynamicSize" :icon-url="icon_sprinkler_blue" />
-      <l-icon v-else-if="iconImage === 8" :icon-size="dynamicSize" :icon-url="icon_sprinkler_black" />
-      <l-icon v-else-if="iconImage === 9" :icon-size="dynamicSize" :icon-url="icon_sprinkler_green" />
-      <l-icon v-else-if="iconImage === 10" :icon-size="dynamicSize" :icon-url="icon_sprinkler_red" />
-      
-      <l-icon v-else-if="iconImage === 11" :icon-size="dynamicSize" :icon-url="icon_pump_blue" />
-      <l-icon v-else-if="iconImage === 12" :icon-size="dynamicSize" :icon-url="icon_pump_black" />
-      <l-icon v-else-if="iconImage === 13" :icon-size="dynamicSize" :icon-url="icon_pump_green" />
-      <l-icon v-else-if="iconImage === 14" :icon-size="dynamicSize" :icon-url="icon_pump_red" />
-
-      <l-icon v-else-if="iconImage === 15" :icon-size="dynamicSize" :icon-url="icon_water_level_blue" />
-      <l-icon v-else-if="iconImage === 16" :icon-size="dynamicSize" :icon-url="icon_water_level_black" />
-      <l-icon v-else-if="iconImage === 17" :icon-size="dynamicSize" :icon-url="icon_water_level_red" />
-
-      <l-icon v-else-if="iconImage === 18" :icon-size="dynamicSize" :icon-url="icon_water_pollution_blue" />
-      <l-icon v-else-if="iconImage === 19" :icon-size="dynamicSize" :icon-url="icon_water_pollution_black" />
-      <l-icon v-else-if="iconImage === 20" :icon-size="dynamicSize" :icon-url="icon_water_pollution_red" />
-
-      <l-icon v-else-if="iconImage === 21" :icon-size="dynamicSize" :icon-url="icon_motor_blue" />
-      <l-icon v-else-if="iconImage === 22" :icon-size="dynamicSize" :icon-url="icon_motor_black" />
-      <l-icon v-else-if="iconImage === 23" :icon-size="dynamicSize" :icon-url="icon_motor_green" />
-      <l-icon v-else-if="iconImage === 24" :icon-size="dynamicSize" :icon-url="icon_motor_red" />
-
-      <l-icon v-else-if="iconImage === 25" :icon-size="dynamicSize" :icon-url="icon_humidity_blue" />
-      <l-icon v-else-if="iconImage === 26" :icon-size="dynamicSize" :icon-url="icon_humidity_black" />
-      <l-icon v-else-if="iconImage === 27" :icon-size="dynamicSize" :icon-url="icon_humidity_red" />
-      
-      <l-icon v-else :icon-size="dynamicSize" :icon-url="icon_questionMark_black" />
+  <div ref="refMapMarker" class="marker-component">
+    <l-marker :lat-lng="marker.location">
+      <l-icon :icon-size="dynamicSize" :icon-url="iconImage" />
       <l-popup style="width: 300px;">
         <div>
           <h5 style="text-align: center;"><i class="fas fa-tablet-alt"></i>{{ marker.type }}</h5>
@@ -146,9 +111,8 @@ export default {
   data() {
     return {
       staticAnchor: [16, 37],
-      customText: "Foobar",
       iconSize: 40,
-      iconImage: 0,
+      iconImage: icon_questionMark_black,
     }
   },
   computed: {
@@ -163,9 +127,6 @@ export default {
     this.selectIcon();
   },
   methods: {
-    onClickMapMarker() {
-      console.log("onClickMapMarker()", this.marker.id);
-    },
     selectIcon() {
       this.iconImage = this.findIcon();
     },
@@ -174,62 +135,54 @@ export default {
       const status = this.marker.status;
 
       if (deviceType === "soil moisture sensor") {
-        if (status === "on") { return 1; }
-        else if (status === "off") { return 2; }
-        else { return 3; }
+        if (status === "on") { return icon_soil_moisture_blue; }
+        else if (status === "off") { return icon_soil_moisture_black; }
+        else { return icon_soil_moisture_red; }
       } else if (deviceType === "temperature sensor") {
-        if (status === "on") { return 4; }
-        else if (status === "off") { return 5; }
-        else { return 6; }
+        if (status === "on") { return icon_temperature_blue; }
+        else if (status === "off") { return icon_temperature_black; }
+        else { return icon_temperature_red; }
       } else if (deviceType === "sprinkler") {
-        if (status === "on") { return 7; }
-        else if (status === "off") { return 8; }
-        else if (status === "watering") { return 9; }
-        else { return 10; }
+        if (status === "on") { return icon_sprinkler_blue; }
+        else if (status === "off") { return icon_sprinkler_black; }
+        else if (status === "watering") { return icon_sprinkler_green; }
+        else { return icon_sprinkler_red; }
       }  else if (deviceType === "pump") {
-        if (status === "on") { return 11; }
-        else if (status === "off") { return 12; }
-        else if (status === "pumping") { return 13; }
-        else { return 14; }
+        if (status === "on") { return icon_pump_blue; }
+        else if (status === "off") { return icon_pump_black; }
+        else if (status === "pumping") { return icon_pump_green; }
+        else { return icon_pump_red; }
       } else if (deviceType === "water level") {
-        if (status === "on") { return 15; }
-        else if (status === "off") { return 16; }
-        else { return 17; }
+        if (status === "on") { return icon_water_level_blue; }
+        else if (status === "off") { return icon_water_level_black; }
+        else { return icon_water_level_red; }
       }  else if (deviceType === "water pollution") {
-        if (status === "on") { return 18; }
-        else if (status === "off") { return 19; }
-        else { return 20; }
+        if (status === "on") { return icon_water_pollution_blue; }
+        else if (status === "off") { return icon_water_pollution_black; }
+        else { return icon_water_pollution_red; }
       } else if (deviceType === "motor") {
-        if (status === "on") { return 21; }
-        else if (status === "off") { return 22; }
-        else if (status === "rotating") { return 23; }
-        else { return 24; }
+        if (status === "on") { return icon_motor_blue; }
+        else if (status === "off") { return icon_motor_black; }
+        else if (status === "rotating") { return icon_motor_green; }
+        else { return icon_motor_red; }
       } else if (deviceType === "humidity sensor") {
-        if (status === "on") { return 25; }
-        else if (status === "off") { return 26; }
-        else { return 27; }
+        if (status === "on") { return icon_humidity_blue; }
+        else if (status === "off") { return icon_humidity_black; }
+        else { return icon_humidity_red; }
+      } else {
+        return icon_questionMark_black;
       }
     },
   },
   watch: {
+    marker() {
+      this.selectIcon();
+    },
   }
 }
 </script>
 
 <style scoped>
-/* .marker-icon {
-    height: 50px;
-    width: auto;
-  }
-  .leaflet-popup-content-wrapper {
-    width: 300px;
-  }
-  .fas {
-    margin-right: 10px;
-  }
-  div {
-    font-size: 16px;
-  } */
   .marker-icon {
     height: 50px;
     width: auto;

@@ -1,9 +1,8 @@
 <template>
     <div>
-        <l-map :center="center" :zoom="zoom" class="map" ref="map" @update:zoom="zoomUpdated" @update:center="centerUpdated"
-            style="width: 100%">
+        <l-map :center="center" :zoom="zoom" class="map" @update:zoom="zoomUpdated" @update:center="centerUpdated" style="width: 100%">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-            <map-marker v-for="item in device.devices" :key="item.id" :marker="item"></map-marker>
+            <map-marker v-for="item in devices" :key="item.id" :marker="item"></map-marker>
         </l-map>
     </div>
 </template>
@@ -31,19 +30,14 @@ export default {
             attribution: '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             zoom: 19,
             interval: 7,
-            devices: [],
         };
     },
     mounted() {
-        this.loadDevice();
     },
     computed: {
-        ...mapState(['device']),
+        ...mapState('device', ['devices']),
     },
     methods: {
-        loadDevice() {
-            this.devices = this.$store.getters['device/getDevices'];
-        },
         zoomUpdated(zoom) {
             this.zoom = zoom;
         },

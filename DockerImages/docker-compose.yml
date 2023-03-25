@@ -1,7 +1,7 @@
 version: '3'
 services:
   front-end:
-    image: "diffs/ucl-waterbeats:front-end_1.3.5"
+    image: "diffs/ucl-waterbeats:front-end_1.4.0"
     container_name: waterbeats-front-end
     environment:
       VUE_APP_SERVICE_URL: "http://localhost:9091/"
