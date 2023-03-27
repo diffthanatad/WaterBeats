@@ -1,14 +1,12 @@
 import { createStore } from 'vuex'
+import alerts from './alerts.js'
+import device from './device.js'
+import sensors from './sensors.js'
 
 export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
+    alerts,
+    device,
+    sensors
   }
 })

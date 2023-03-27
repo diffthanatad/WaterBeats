@@ -5,6 +5,9 @@ import ActuatorConfigurationView from '../views/ActuatorConfigurationView.vue'
 import AdminView from '../views/AdminView.vue'
 import SettingView from '../views/SettingView.vue'
 import LogInView from '../views/LogInView.vue'
+import AlertsView from '../views/AlertsView.vue'
+
+import store from '@/store'
 
 const routes = [
   {
@@ -36,6 +39,11 @@ const routes = [
     path: '/login',
     name: 'LogIn',
     component: LogInView
+  },
+  {
+    path: '/alerts',
+    name: 'Alerts',
+    component: AlertsView
   }
 ]
 
@@ -47,10 +55,15 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authRequired = to.name !== "LogIn";
   const loggedIn = localStorage.getItem('username');
+  const adminRoleRequired = to.name === "Admin";
+  const role = localStorage.getItem('role');
 
   if (authRequired && !loggedIn) {
     return next('/login');
+  } else if (adminRoleRequired && role !== "ROLE_ADMIN") {
+    return next('/');
   } else {
+    store.dispatch("device/clear");
     next();
   }
 })

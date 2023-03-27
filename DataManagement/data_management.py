@@ -4,7 +4,7 @@ from influxdb_client.client.write_api import ASYNCHRONOUS
 
 class DataManagement:
     @staticmethod
-    async def insert_sensor_data(bucket: str, org: str, token: str, url: str,sensor_id: str, sensor_type: str, data: float, unit: str, longitude: float, latitude: float, timestamp: int) -> str:
+    async def insert_sensor_data(bucket: str, org: str, token: str, url: str,sensor_id: str, sensor_type: str, data: float, unit: str, longitude: float, latitude: float, status: str, timestamp: int) -> str:
         """insert data to database
         Args:
             sensor_id (int): Sensor ID
@@ -25,7 +25,9 @@ class DataManagement:
             .field("unit", unit) \
             .field("longitude", longitude) \
             .field("latitude", latitude) \
+            .field("status", status) \
             .time(timestamp)
+            
         # * Write data to database
         async with InfluxDBClientAsync(url=url, token=token, org=org) as client:
             write_api = client.write_api()
@@ -53,6 +55,7 @@ class DataManagement:
             .field("longitude", longitude) \
             .field("latitude", latitude) \
             .time(timestamp)
+            
         # * Write data to database
         async with InfluxDBClientAsync(url=url, token=token, org=org) as client:
             write_api = client.write_api()

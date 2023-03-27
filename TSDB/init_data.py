@@ -6,7 +6,7 @@ from math import sin
 from typing import Tuple
 import requests
 
-
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8086")
 class SensorDataGenerator:
     def __init__(
         self,
@@ -45,6 +45,7 @@ class SensorDataGenerator:
             "latitude": self.latitude,
             "timestamp": self.timestamp,
             "data": self.data_y,
+            "status": ["on", "off", "error"][random.randint(0, 2)]
         }
 
 
@@ -68,7 +69,7 @@ for generator_args in [
 
 # save data to influxdb
 data_lines = map(
-    lambda x: f'sensor_data,sensor_id={x["sensor_id"]},sensor_type={x["sensor_type"]} unit="{x["unit"]}",longitude={x["longitude"]},latitude={x["latitude"]},data={x["data"]} {int(x["timestamp"].timestamp() * 1e9)}',
+    lambda x: f'sensor_data,sensor_id={x["sensor_id"]},sensor_type={x["sensor_type"]} unit="{x["unit"]}",longitude={x["longitude"]},latitude={x["latitude"]},data={x["data"]},status="{x["status"]}" {int(x["timestamp"].timestamp() * 1e9)}',
     data,
 )
 payload = "\n".join(data_lines)
@@ -108,7 +109,7 @@ token = os.environ["INFLUXDB_TOKEN"]
 
 def write_to_influxdb(payload):
     r = requests.post(
-        "http://localhost:8086/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
+        f"{BASE_URL}/api/v2/write?org=WaterBeats&bucket=WaterBeats&precision=ns",
         data=payload,
         headers={
             "Authorization": f"Token {token}",

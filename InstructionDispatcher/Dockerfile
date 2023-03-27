@@ -11,5 +11,3 @@ COPY --from=0 /usr/src/app/dist ./dist
 RUN npm install --only=production
 EXPOSE 9090
 CMD npm start
-
-## BUILD COMMAND = docker buildx build --platform=linux/amd64 . -t diffs/ucl-waterbeats:instruction-dispatcher_1.0.0 --no-cache

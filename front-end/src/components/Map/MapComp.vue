@@ -1,9 +1,8 @@
 <template>
     <div>
-        <l-map :center="center" :zoom="zoom" class="map" ref="map" @update:zoom="zoomUpdated"
-            @update:center="centerUpdated" style="width: 100%">
+        <l-map :center="center" :zoom="zoom" class="map" @update:zoom="zoomUpdated" @update:center="centerUpdated" style="width: 100%">
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-            <map-marker v-for="device in devices" :key="device.id" :marker="device"></map-marker>
+            <map-marker v-for="item in devices" :key="item.id" :marker="item"></map-marker>
         </l-map>
     </div>
 </template>
@@ -12,15 +11,12 @@
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 
+import { mapState } from "vuex";
 import MapMarker from '@/components/Map/MapMarker.vue'
 
 export default {
     name: "MapComponent",
     props: {
-        inputDevices: {
-            type: Array,
-            required: true
-        }
     },
     components: {
         LMap,
@@ -30,12 +26,16 @@ export default {
     data() {
         return {
             url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            center: [51.52498676710948, -0.1344647153442085], /* University College London */
+            center: [55.168784332733914, -2.413875061176684], /* Ferny Rigg Alpacas */
             attribution: '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            zoom: 16,
+            zoom: 19,
             interval: 7,
-            devices: this.inputDevices,
         };
+    },
+    mounted() {
+    },
+    computed: {
+        ...mapState('device', ['devices']),
     },
     methods: {
         zoomUpdated(zoom) {
@@ -44,7 +44,7 @@ export default {
         centerUpdated(center) {
             this.center = center;
         },
-    }
+    },
 };
 </script>
   

@@ -1,10 +1,11 @@
 {
   "name": "authgateway",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/index.js",
+    "start": "nodemon --inspect ./src/index.js",
+    "run": "node dist/index.js",
     "build": "babel src --out-dir dist",
     "test": "jest --verbose --detectOpenHandles --coverage"
   },
@@ -15,6 +16,11 @@
     "Authorisation Service"
   ],
   "author": "Thanatad Songpetchmongkol",
+  "contributors": [
+    {
+      "name": "SeanChao"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
     "axios": "^1.3.4",
@@ -23,6 +29,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-validator": "^6.15.0",
+    "http-proxy": "^1.18.1",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",

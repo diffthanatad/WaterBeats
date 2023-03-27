@@ -10,6 +10,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     acquire: 30000,
     idle: 10000
   },
+  logging: false
 });
 
 const db = {};

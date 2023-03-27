@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 name = "data_backend"
-version = "0.1.0"
+version = "0.1.2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -11,6 +11,7 @@ chrono = "0.4.23"
 futures = {version = "0.3.26"}
 influxdb2 = "0.3"
 influxdb2-structmap = "0.2" # required by influxdb2
+log = "0.4.17"
 env_logger = "0.10.0"
 num-traits = "0.2" # required by influxdb2
 serde = {version = "1.0", features = ["derive"]}

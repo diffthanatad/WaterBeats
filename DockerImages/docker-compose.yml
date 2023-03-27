@@ -1,5 +1,24 @@
 version: '3'
 services:
+  front-end:
+    image: "diffs/ucl-waterbeats:front-end_1.4.0"
+    container_name: waterbeats-front-end
+    environment:
+      VUE_APP_SERVICE_URL: "http://localhost:9091/"
+    ports:
+      - "8080:80"
+  proxy-server:
+    image: "diffs/ucl-waterbeats:auth-gateway_1.1.0"
+    container_name: waterbeats-auth-gateway
+    environment:
+      JWT_SECRET: Thursday2March2023
+      DATABASE_URL: postgres://user:pass@postgres14-waterbeats/waterbeats
+      CLIENT_ORIGIN: http://localhost:8080
+      BACKEND_URL: http://data-backend:8888/
+    ports:
+      - "9091:9091"
+    depends_on:
+      - database
   database:
     image: "postgres:14"
     container_name: postgres14-waterbeats
@@ -11,7 +30,85 @@ services:
       - ./postgres_database_schema.sql:/docker-entrypoint-initdb.d/postgres_database_schema.sql
     ports:
       - "5432:5432"
-
-# Command to use for running this docker compose file
-# $ docker-compose up
-# $ docker-compose down --volumes --remove-orphans
+  data-backend:
+    build:
+      context: ../DataBackend
+      dockerfile: "DataBackendInit.Dockerfile"
+    container_name: data-backend
+    environment:
+      RUST_LOG: "DEBUG"
+      WB_ADDRESS: "0.0.0.0:8888"
+      INFLUXDB_HOST: "http://influxdb:8086"
+      BASE_URL: "http://influxdb:8086"
+    ports:
+      - "8888:8888"
+    depends_on:
+      - influxdb
+      - influxdb_init
+    volumes:
+      - ../TSDB:/scripts
+    command: bash -c 'sleep 5 && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && data_backend'
+  influxdb:
+    image: "influxdb:2.6.1"
+    container_name: influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: "setup"
+      DOCKER_INFLUXDB_INIT_USERNAME: "WaterBeats"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "WaterBeats"
+      DOCKER_INFLUXDB_INIT_ORG: "WaterBeats"
+      DOCKER_INFLUXDB_INIT_BUCKET: "WaterBeats"
+    ports:
+      - "8086:8086"
+  influxdb_init:
+    image: python:3
+    container_name: influxdb_init
+    environment:
+      BASE_URL: "http://influxdb:8086"
+    volumes:
+      - ../TSDB:/scripts
+    command: bash -c 'pip3 install requests && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && python3 /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
+    depends_on:
+      - influxdb
+  rules-postgres-database:
+    image: postgres
+    container_name: rules-postgres-db
+    environment:
+        POSTGRES_USER: "waterbeats"
+        POSTGRES_PASSWORD: ${RULES_DB_PASSWORD}
+        POSTGRES_DB: "rules_db"
+    volumes:
+      - ./rules_database_schema.sql:/docker-entrypoint-initdb.d/rules_database_schema.sql
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    command: -p 3000
+  rules-data-management:
+    build:
+      context: ../RulesDataManagement
+      dockerfile: "Dockerfile"
+    container_name: rules-data-management
+    environment:
+      RULES_DB_NAME: "rules_db"
+      RULES_DB_USER: ${RULES_DB_USER}
+      RULES_DB_PASSWORD: ${RULES_DB_PASSWORD}
+      RULES_DB_HOST: "rules-postgres-db"
+      RULES_DB_PORT: "3000"
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - rules-postgres-database
+  data-management:
+    image: "zenonist/waterbeats-datamanagement:latest"
+    container_name: data-management-server
+    ports:
+      - "5555:5555"
+    depends_on:
+      - influxdb
+      - influxdb_init
+  data-management-mockup-data:
+    working_dir: ../DataManagement
+    command: pip install -r requirements.txt && pytest
+    depends_on:
+      - data-management

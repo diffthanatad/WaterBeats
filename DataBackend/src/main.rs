@@ -14,7 +14,7 @@ use crate::model::SensorDataExternal;
 async fn main() -> tide::Result<()> {
     env_logger::init();
 
-    let listen_addr = std::env::var("WB_ADDRESS").unwrap_or("localhost:8080".to_string());
+    let listen_addr = std::env::var("WB_ADDRESS").unwrap_or("localhost:8888".to_string());
     let mut app = tide::new();
 
     let cors = tide::security::CorsMiddleware::new()
@@ -99,7 +99,7 @@ async fn get_latest_record_by_id(req: tide::Request<()>) -> tide::Result {
     Ok(json!(ApiResponse::<SensorDataExternal> {
         error: 0,
         message: None,
-        data: Some(data_res.unwrap().into()),
+        data: data_res.unwrap().map(|e| e.into()),
     })
     .into())
 }
