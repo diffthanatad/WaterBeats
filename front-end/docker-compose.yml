@@ -4,6 +4,6 @@ services:
     image: "diffs/ucl-waterbeats:front-end_1.1.0"
     container_name: waterbeats-front-end
     environment:
-      VUE_APP_SERVICE_URL: "https://waterbeats-proxy-server.azurewebsites.net"
+      VUE_APP_SERVICE_URL: <Authentication_Gateway_service_URL>
     ports:
       - "8080:80"
