@@ -54,11 +54,3 @@ CREATE TRIGGER set_timestamp_alerts
 BEFORE UPDATE ON alerts
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
-
-INSERT INTO "public"."rules"
-("subject_sensor", "sensor_reading", "relation", "actuator_id",
-"actuator_type", "actuator_state", "intensity", "duration") VALUES
-('test_sensor_0', '16', '>=', 'test_sprinkler_1', 'sprinkler', TRUE, '100', '30');
-
-INSERT INTO "public"."alerts" ("sensor_id", "sensor_type", "threshold", "relation") VALUES
-('test_sensor_0', 'temperature', '16', '>=');

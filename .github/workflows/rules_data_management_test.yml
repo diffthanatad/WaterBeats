@@ -1,0 +1,29 @@
+name: Rules Data Management
+on: [push, pull_request]
+
+jobs:
+  test_rules_data_management:
+    runs-on: ubuntu-latest
+    env:
+      RULES_API_URL: "http://localhost:3001/alert/sendAlert"
+      RULES_BACKEND_URL: "http://localhost:23334/rules_data/send_rules"
+      RULES_DB_NAME: "rules_db"
+      RULES_DB_USER: "waterbeats"
+      RULES_DB_PASSWORD: "password"
+      RULES_DB_HOST: "localhost"
+      RULES_DB_PORT: "3000"
+      INFLUXDB_BASE_URL: "http://localhost:8086"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Start PostgreSQL, DataBackend, and InfluxDB
+        working-directory: RulesDataManagement/tests
+        run: |
+          docker-compose -f test_setup.yml up -d
+      - name: Install package dependencies
+        working-directory: RulesDataManagement
+        run: |
+          pip install -r requirements.txt
+      - name: Run pytest
+        working-directory: RulesDataManagement/tests
+        run: |
+          pytest -v

@@ -69,12 +69,12 @@ services:
     command: bash -c 'pip3 install requests && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && python3 /scripts/init_data.py && echo INFLUXDB_TOKEN=$$INFLUXDB_TOKEN > /scripts/token.tmp'
     depends_on:
       - influxdb
-  rules-postgres-database:
+  rules-postgres-db:
     image: postgres
     container_name: rules-postgres-db
     environment:
         POSTGRES_USER: "waterbeats"
-        POSTGRES_PASSWORD: ${RULES_DB_PASSWORD}
+        POSTGRES_PASSWORD: "password"
         POSTGRES_DB: "rules_db"
     volumes:
       - ./rules_database_schema.sql:/docker-entrypoint-initdb.d/rules_database_schema.sql
@@ -83,22 +83,37 @@ services:
     ports:
       - "3000:3000"
     command: -p 3000
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U waterbeats -d rules_db -p 3000"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
   rules-data-management:
+    image: "slball/waterbeats-rules-data-management"
     build:
       context: ../RulesDataManagement
       dockerfile: "Dockerfile"
     container_name: rules-data-management
     environment:
+      RULES_API_URL: "http://rules-data-management:3001/alert/sendAlert"
+      RULES_BACKEND_URL: "http://localhost:23334/rules_data/send_rules"
       RULES_DB_NAME: "rules_db"
-      RULES_DB_USER: ${RULES_DB_USER}
-      RULES_DB_PASSWORD: ${RULES_DB_PASSWORD}
+      RULES_DB_USER: "waterbeats"
+      RULES_DB_PASSWORD: "password"
       RULES_DB_HOST: "rules-postgres-db"
       RULES_DB_PORT: "3000"
-      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      INFLUXDB_BASE_URL: "http://influxdb:8086"
     ports:
       - "3001:3001"
     depends_on:
-      - rules-postgres-database
+      influxdb:
+        condition: service_started
+      influxdb_init:
+        condition: service_completed_successfully
+      data-backend:
+        condition: service_started
+      rules-postgres-db:
+        condition: service_healthy
   data-management:
     image: "zenonist/waterbeats-datamanagement:latest"
     container_name: data-management-server
