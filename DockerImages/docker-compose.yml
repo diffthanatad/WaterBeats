@@ -7,7 +7,7 @@ services:
       VUE_APP_SERVICE_URL: "http://localhost:9091/"
     ports:
       - "8080:80"
-  proxy-server:
+  authentication-gateway-service:
     image: "diffs/ucl-waterbeats:auth-gateway_1.1.0"
     container_name: waterbeats-auth-gateway
     environment:
