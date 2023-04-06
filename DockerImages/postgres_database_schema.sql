@@ -19,6 +19,8 @@ CREATE TABLE "public"."users" (
     PRIMARY KEY ("id")
 );
 
+-- It is strongly recommended to hash a new password before using the system in the PRODUCTION system. 
+-- These passwords are only used for development.
 INSERT INTO "public"."users" ("id", "name", "username", "password", "disable", "role") VALUES
 (1, 'David Brown', 'david-b', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'f', 'admin'),
 (2, 'Daniel Smith', 'daniel-s', '$2a$12$JSR03lduQ6WNuM5ltjcUh.ANvLywn1F0GkjVJ.z5Rc.zfNU80fNOu', 'f', 'moderator'),
