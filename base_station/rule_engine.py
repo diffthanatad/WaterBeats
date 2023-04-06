@@ -20,7 +20,7 @@ ops = {
 }
 
 def check_relative_condition(relation, sensor_reading, condition_reading):
-    return ops[relation](sensor_reading, condition_reading)
+    return ops[relation](float(sensor_reading), condition_reading)
 
 # check if sensor readings match any rule conditions
 def apply_rules(sensor_message):

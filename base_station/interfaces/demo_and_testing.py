@@ -13,16 +13,16 @@ condition1 = {'sensor_subject':'30:AE:A4:14:C2:90_A', 'reading':20, 'relation':'
 rule1 = {'task_message':task1, 'condition_message': condition1}
 
 task2 = {'actuator_target':'F4:12:FA:83:00:F0_D', 'state':True, 'intensity':0.1, 'duration': 10}
-sensor_condition2 = {'sensor_subject':'F4:12:FA:83:00:F0_A', 'reading':20, 'relation':'<'}
+sensor_condition2 = {'sensor_subject':'F4:12:FA:83:00:F0_A', 'reading':23, 'relation':'>'}
 future_time = str(get_timestamp() + datetime.timedelta(minutes = 1))
 time_condition2 = {'execute_time': future_time}
-print('time now', get_timestamp(), 'time future', future_time)
+#print('time now', get_timestamp(), 'time future', future_time)
 #rule2 = {'task_message':task2, 'sensor_condition_message': sensor_condition2, 'time_condition_message': time_condition2}
 rule2 = {'task_message':task2, 'sensor_condition_message': sensor_condition2, 'time_condition_message': time_condition2}
 rule3 = {'task_message':task2, 'sensor_condition_message' : sensor_condition2}
 rule4 = {'task_message':task2}
 
-p.send_rule_msg(rule4, True)
+# p.send_rule_msg(rule3, True)
 
 # time.sleep(5)
 

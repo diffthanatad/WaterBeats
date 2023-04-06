@@ -36,8 +36,8 @@ async def test_batch_processor_writes_to_disk(test_app):
     with patch("batch_processor.open", mocked_open, create=True):
         batch_processor.store_locally(batch)
 
-    script_location = Path(__file__).absolute().parent.parent
-    cold_store_file = script_location / 'local_data/sensor_data_cold_store.csv'
+    script_location = Path(__file__).absolute().parent
+    cold_store_file = script_location / '../local_data/sensor_data_cold_store.csv'
 
     mocked_open.assert_called_with(cold_store_file, 'a', newline='', encoding='utf8')
     mocked_open.return_value.write.assert_has_calls(expected_calls)

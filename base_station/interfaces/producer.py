@@ -8,6 +8,8 @@ producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=
     
 def send_sensor_msg(sensor_message, flush = False):
     print('Producer sending sensor message', sensor_message)
+    if not type(sensor_message) is dict:
+        sensor_message = sensor_message.toDict()
     producer.send('sensor_stream', sensor_message)
     if flush:
         producer.flush()

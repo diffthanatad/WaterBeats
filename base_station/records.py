@@ -11,6 +11,17 @@ class SensorMessage(faust.Record):
     latitude: float = ''
     longitude: float = ''
 
+    def toDict(self):
+        return {
+            'sensor_id' : self.sensor_id,
+            'reading' : self.reading,
+            'sensor_type': self.sensor_type,
+            'reading_unit': self.reading_unit,
+            'timestamp': self.timestamp,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            }
+
 # task message - tasks to execute immediately, e.g. turn actuator off right now
 class TaskMessage(faust.Record):
     actuator_target: str

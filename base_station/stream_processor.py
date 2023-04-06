@@ -6,12 +6,14 @@ import websockets
 
 import base_station_app as bs
 import rule_engine as re
+import interfaces.physical_actuator_interface as pai
 
 
 # process sensor messages
 # apply rules using rule engine, send new tasks to task stream
 async def process_sensor_message(message):
     tasks = re.apply_rules(message)
+    print(message)
     for task in tasks:
         await bs.task_stream.send(value=task)
 
@@ -21,6 +23,11 @@ async def process_time_message(message):
     tasks = re.check_task_schedule(message)
     for task in tasks:
         await bs.task_stream.send(value=task)
+
+# process task messages
+# send task to actuator
+async def process_task_message(message):
+    await pai.send_task_to_actuator(message)
 
 
 # forward to main hub for task

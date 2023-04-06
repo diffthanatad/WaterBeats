@@ -72,7 +72,7 @@ async def stream_agent_sensor(messages):
     async for message in messages:
         message = fill_sensor_message(message)
         await sp.process_sensor_message(message)
-        await sp.send_to_hub(message)
+        #await sp.send_to_hub(message)
         yield message
 
 # task messages
@@ -80,7 +80,7 @@ async def stream_agent_sensor(messages):
 async def tasks_agent(messages):
     async for message in messages:
         message = fill_task_message(message)
-        await sp.send_task_to_server(message)
+        #await sp.send_task_to_server(message)
         newState = 'ON' if message.state else 'OFF'
         print('Task Dispatched: ' + 'Actuator ' + message.actuator_target + ' of type ' 
               + message.actuator_type + ' to be turned ' + newState + ' at ' + str(message.intensity) 

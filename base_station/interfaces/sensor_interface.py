@@ -5,8 +5,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import socket
 import json
 import producer as p
+import records
 from aiohttp import web
-from base_station import device_controller as dc
 
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
@@ -15,11 +15,14 @@ print("Device IP Address: "+IPAddr)
 
 async def handle_request(request):
     if request.method == 'POST':
-        data = await request.json()
+        data = await request.text()
+        #print(data)
         response = web.Response(text="Received data: {}".format(data))
-        dic_data = json.loads(data)
-        message = {'sensor_id': dic_data["sensor_id"], 'reading': dic_data["reading"]}
-        p.send_sensor_msg(message, True)
+        json_data = json.loads(data)
+        #print(json_data.get("sensor_id"))
+        sensor_message = records.SensorMessage(json_data.get("sensor_id"), json_data.get("reading"))
+        #print(json_data)
+        p.send_sensor_msg(sensor_message, True)
     else:
         response = web.Response(status=405)
     return response
