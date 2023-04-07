@@ -62,7 +62,7 @@ export default {
                  { img_src: {img_pollution}, sensor_type: "water_pollution", color: " #2deca4" }
       ],
       sensorIdList: {temperature: [], soil_moisture: [], water_level: [], water_pollution: []},
-      relationList: [">", "<", ">=", "<=", "=="]
+      relationList: [">", "<", ">=", "<="]
     }
   },
   methods: {
@@ -107,8 +107,8 @@ export default {
         return
       }
     },
-    async updateAlert(sensorId, threshold, relation) {
-      const response = await updateAlertBySensorId(sensorId, threshold, relation)
+    async updateAlert(sensorId, sensorType, threshold, relation) {
+      const response = await updateAlertBySensorId(sensorId, sensorType, threshold, relation)
 
       if (response.status !== 200) {
         return
@@ -120,7 +120,6 @@ export default {
       this.alertsConfig[sensorType]['threshold'] = 0
     },
     async onAddAlert(sensorType) {
-
       const sensorId = this.alertsConfig[sensorType]['sensor_id']
       const threshold = this.alertsConfig[sensorType]['threshold']
       const relation = this.alertsConfig[sensorType]['relation']
@@ -130,11 +129,11 @@ export default {
       }
       const response = await getAlertBySensorId(sensorId)
 
-      if (response.data.data.length === 0) {
+      if (response.data.data == null) {
         await this.addAlert(sensorId, sensorType, threshold, relation)
       }
       else {
-        await this.updateAlert(sensorId, threshold, relation)
+        await this.updateAlert(sensorId, sensorType, threshold, relation)
       }
       await store.dispatch('alerts/updateAlertList')
       this.resetAlertBox(sensorType)

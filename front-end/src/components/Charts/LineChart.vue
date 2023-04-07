@@ -59,6 +59,7 @@ export default {
             }
           },
           x: {
+            display: false,
             title: {
               display:true,
               text: "TIMESTAMP"
