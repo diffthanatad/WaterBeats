@@ -25,7 +25,6 @@ const mutations = {
         Object.assign(state, getDefaultState());
     },
     RESET_SENSOR_LIST(state) {
-        console.log("RESET")
         state.currentSensorId = ""
         state.currentSensorData = ""
         state.currentSensorUnit = ""

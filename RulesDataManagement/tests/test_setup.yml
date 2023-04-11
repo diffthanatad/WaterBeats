@@ -1,0 +1,44 @@
+version: '3'
+services:
+  data-backend:
+    build:
+      context: ../../DataBackend
+      dockerfile: "DataBackendInit.Dockerfile"
+    container_name: data-backend
+    environment:
+      RUST_LOG: "DEBUG"
+      WB_ADDRESS: "0.0.0.0:8888"
+      INFLUXDB_HOST: "http://influxdb:8086"
+      BASE_URL: "http://influxdb:8086"
+    ports:
+      - "8888:8888"
+    depends_on:
+      - influxdb
+    volumes:
+      - ../../TSDB:/scripts
+    command: bash -c 'sleep 5 && export INFLUXDB_TOKEN=$$(python3 /scripts/create_token.py | tail -n 1) && data_backend'
+  influxdb:
+    image: "influxdb:2.6.1"
+    container_name: influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: "setup"
+      DOCKER_INFLUXDB_INIT_USERNAME: "WaterBeats"
+      DOCKER_INFLUXDB_INIT_PASSWORD: "WaterBeats"
+      DOCKER_INFLUXDB_INIT_ORG: "WaterBeats"
+      DOCKER_INFLUXDB_INIT_BUCKET: "WaterBeats"
+    ports:
+      - "8086:8086"
+  rules-postgres-db:
+    image: postgres
+    container_name: rules-postgres-db
+    environment:
+        POSTGRES_USER: "waterbeats"
+        POSTGRES_PASSWORD: "password"
+        POSTGRES_DB: "rules_db"
+    volumes:
+      - ../../DockerImages/rules_database_schema.sql:/docker-entrypoint-initdb.d/rules_database_schema.sql
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    command: -p 3000

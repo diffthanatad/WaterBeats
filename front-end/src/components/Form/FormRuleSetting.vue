@@ -214,18 +214,17 @@ export default {
       const total_duration_in_minutes = (hours * 60) + minutes
 
       const subject_sensor = event.target.elements.sensor_id.value
-      const sensor_reading = event.target.elements.reading.value
+      const sensor_reading = event.target.elements.reading.value ? event.target.elements.reading.value : 0
       const relation = event.target.elements.relation.value
       const actuator_id = event.target.elements.actuator_id.value
       const actuator_type = event.target.elements.actuator_type.value
-      const actuator_state = event.target.elements.actuator_state.value
+      const actuator_state = event.target.elements.actuator_state.checked ? 1 : 0
       const intensity = event.target.elements.intensity.value.replace("%", "")
       const duration = total_duration_in_minutes
 
-      if (this.isMissingFields(subject_sensor, sensor_reading, relation, actuator_id, intensity, hours, minutes)) {
+      if (this.isMissingFields(subject_sensor, relation, actuator_id, intensity, hours, minutes)) {
         return
       }
-
       const response = await getRuleByActuatorId(actuator_id)
 
       if (response.data.data == null || response.data.data.length === 0) {
@@ -242,20 +241,13 @@ export default {
       }
       this.resetForm()
     },
-    isMissingFields(subject_sensor, sensor_reading, relation, actuator_id, intensity, hours, minutes) {
+    isMissingFields(subject_sensor, relation, actuator_id, intensity, hours, minutes) {
       let missingFieldCondition = ""
       let missingFieldTask = ""
 
       let isMissingFieldCondition = false
       let isMissingFieldTask = false
 
-      if (subject_sensor == 0) {
-        missingFieldCondition = "Sensor Reading"
-        isMissingFieldCondition = true
-
-        const element = document.querySelector('#sensor-reading');
-        element.style.borderColor = 'red';
-      }
       if (relation == 0) {
         missingFieldCondition = "Relation"
         isMissingFieldCondition = true
