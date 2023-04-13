@@ -1,1 +1,0 @@
-{"actuator_target": "F4:12:FA:83:00:F0_D", "state": true, "intensity": 0.1, "actuator_type": "", "duration": 10}	{"sensor_subject": "F4:12:FA:83:00:F0_A", "reading": 23, "relation": ">"}	{"msg": "empty"}

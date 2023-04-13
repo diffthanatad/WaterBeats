@@ -21,4 +21,3 @@ if __name__ == '__main__':
     target = 'F4:12:FA:83:00:F0_D'
     command = "on"
     asyncio.run(sendCommand(end_point, target, command))
-

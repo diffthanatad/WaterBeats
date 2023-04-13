@@ -1,5 +1,4 @@
 from pathlib import Path
-import time
 import csv
 
 script_location = Path(__file__).absolute().parent

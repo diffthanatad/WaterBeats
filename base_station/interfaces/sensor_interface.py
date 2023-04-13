@@ -16,12 +16,9 @@ print("Device IP Address: "+IPAddr)
 async def handle_request(request):
     if request.method == 'POST':
         data = await request.text()
-        #print(data)
         response = web.Response(text="Received data: {}".format(data))
         json_data = json.loads(data)
-        #print(json_data.get("sensor_id"))
         sensor_message = records.SensorMessage(json_data.get("sensor_id"), json_data.get("reading"))
-        #print(json_data)
         p.send_sensor_msg(sensor_message, True)
     else:
         response = web.Response(status=405)

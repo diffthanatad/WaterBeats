@@ -1,4 +1,3 @@
-import time
 import faust
 import datetime
 

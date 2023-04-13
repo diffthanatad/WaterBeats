@@ -5,7 +5,6 @@ from records import *
 
 
 
-
 ruleID = 0
 rules = {} # ruleID : RuleMessage
 sensor_rules = {} # sensorID : ruleID[] to find rules applicable to a sensor
