@@ -1,0 +1,1 @@
+start "" python "%~dp0\base_station\base_station_app.py" worker -l info

@@ -1,19 +1,39 @@
 # WaterBeats
+WaterBeats is a self-contained solution for data-driven farming. It is designed to be highly scalable, reliable, and usable without advanced knowledge.
+It has its own data and rule processing engine connected to a multi-featured web interface without relying on Azure or FarmBeats API.
 
-## Backend Service Database
+Our product WaterBeats uses two main components: Main Hub and Base Station. \
+You can find links to component and sub-components including their documentation in the list below.
 
-We adopted a NoSQL timeseries database called InfluxDB to store the data.
+## Components
+- [Base Station](./BaseStation)
+- [Web Interface Front-end](./front-end)
+- [Backend Service Database](./TSDB)
+- [Authentication Gateway](./AuthGateway)
 
-Details [here](./TSDB/README.md).
+## Features
+- Interactive map device view
+- Graph-based sensor data visualisation
+- Mobile alert system
+- Automation rule system
+- Storage of sensor data and rules
+- Real IoT device hardware connections
 
-## [Backend Data Service](./DataBackend/README.md)
+## Web Interface Showcase
+Alert Configuration
+![Adding an alert](./Media/alert_view.png)
 
-## Front-end
-The web front-end interface provides user with devices' visualisation, rules and alert management, and administrator tool.
+Rule Configuration
+![Adding a rule](./Media/rule_view.png)
 
-Details [Front-end](./front-end/README.md).
+Device Map View
+![Viewing the device map](./Media/device_map_view.png)
 
-## Authentication Gateway
-Authentication Gateway acts as a proxy server between Front-end and the rest of back-end services in the Farmer PC. It responsible for authentication and authorisation. Then, it redirects the valid request to the target back-end service.
+User Settings
+![Viewing the device map](./Media/user_details_view.png)
 
-Details [Authentication Gateway](./AuthGateway/README.md).
+Admin Settings
+![Viewing the device map](./Media/admin_config_view.png)
+
+Login Screen
+![Viewing the device map](./Media/login_view.png)
