@@ -1,19 +1,16 @@
 # WaterBeats
 
-## Backend Service Database
+WaterBeats is a self-contained product for data-driven farming. It is designed to be highly scalable, reliable, and usable without advanced knowledge.
+It has its own data and rule processing engine connected to a multi-featured web interface without relying on Azure or FarmBeats API.
 
-We adopted a NoSQL timeseries database called InfluxDB to store the data.
+Our product WaterBeats uses two main components: Main Hub and Base Station. \
+You can find links to component and sub-components including their documentation in the list below.
 
-Details [here](./TSDB/README.md).
+## Components
 
-## [Backend Data Service](./DataBackend/README.md)
+- [Backend Service Database](./TSDB)
+- [Web Interface Front-end](./front-end)
+- [Authentication Gateway](./AuthGateway)
+- [Base Station](./BaseStation)
 
-## Front-end
-The web front-end interface provides user with devices' visualisation, rules and alert management, and administrator tool.
-
-Details [Front-end](./front-end/README.md).
-
-## Authentication Gateway
-Authentication Gateway acts as a proxy server between Front-end and the rest of back-end services in the Farmer PC. It responsible for authentication and authorisation. Then, it redirects the valid request to the target back-end service.
-
-Details [Authentication Gateway](./AuthGateway/README.md).
+## Features
