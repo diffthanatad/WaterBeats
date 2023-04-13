@@ -8,9 +8,15 @@ You can find links to component and sub-components including their documentation
 
 ## Components
 
-- [Backend Service Database](./TSDB)
-- [Web Interface Front-end](./front-end)
-- [Authentication Gateway](./AuthGateway)
 - [Base Station](./BaseStation)
+- [Web Interface Front-end](./front-end)
+- [Backend Service Database](./TSDB)
+- [Authentication Gateway](./AuthGateway)
 
 ## Features
+- Interactive map device view
+- Graph-based sensor data visualisation
+- Mobile alert system
+- Automation rule system
+- Storage of sensor data and rules
+- Real IoT device hardware connections
